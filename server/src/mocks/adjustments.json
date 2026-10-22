@@ -1,8 +1,98 @@
 {
+  "to": {
+    "name": "Ana",
+    "role": "Engineering Manager"
+  },
   "adjustments": [
-    { "need_id": "fast-standups", "title": "Written async standup", "how_to_ask": "Ask your manager if you can post your standup in Slack before the call.", "cost": "$0", "sources": ["Brightline Engineering Handbook > Standups", "Directive 2000/78 art. 5"] },
-    { "need_id": "unclear-tickets", "title": "Written acceptance criteria on every ticket", "how_to_ask": "Ask that tickets assigned to you include acceptance criteria.", "cost": "$0", "sources": ["Law 448/2006"] }
+    {
+      "id": "async-written-standup",
+      "need_id": "fast-standups",
+      "need_ids": [
+        "fast-standups"
+      ],
+      "title": "Written async standup",
+      "what": "Post yesterday / today / blockers in the standup thread instead of speaking in the call.",
+      "how_to_ask": "I'd like to post my standup update in writing in the team thread before 10:00 instead of speaking in the call.",
+      "cost": "$0",
+      "company_source": "Engineering Handbook > 3.2 Standup format (async standup is allowed)",
+      "company_gap": null,
+      "sources": [
+        "Brightline Engineering Handbook > 3.2 Standup format (async standup is allowed)",
+        "Directive 2000/78/EC, Article 5",
+        "Law 448/2006 (Romania)"
+      ]
+    },
+    {
+      "id": "captions-transcript",
+      "need_id": "fast-standups",
+      "need_ids": [
+        "fast-standups"
+      ],
+      "title": "Live captions and a written transcript for team ceremonies",
+      "what": "Turn on captions in Google Meet for planning, refinement and retro, and share the transcript or notes afterwards.",
+      "how_to_ask": "I'd like captions turned on in our team meetings and the transcript or notes shared afterwards.",
+      "cost": "$0 (Meet captions) to ~$0.22/hour for a transcription service",
+      "company_source": null,
+      "company_gap": "Engineering Handbook > 4.3: only Pulse is captioned; team ceremonies are not recorded.",
+      "sources": [
+        "UN CRPD, Article 27",
+        "Directive 2000/78/EC, Article 5",
+        "Law 448/2006 (Romania)"
+      ]
+    },
+    {
+      "id": "agenda-in-advance",
+      "need_id": "fast-standups",
+      "need_ids": [
+        "fast-standups",
+        "unclear-tickets"
+      ],
+      "title": "Agenda and materials the day before",
+      "what": "Get the agenda and the tickets to discuss at least one working day before planning and refinement.",
+      "how_to_ask": "I'd like to receive the agenda and the tickets for planning and refinement the day before.",
+      "cost": "$0",
+      "company_source": "Engineering Handbook > 3.1 Sprints (agenda posted the day before)",
+      "company_gap": null,
+      "sources": [
+        "Brightline Engineering Handbook > 3.1 Sprints (agenda posted the day before)",
+        "Directive 2000/78/EC, Article 5"
+      ]
+    },
+    {
+      "id": "written-acceptance-criteria",
+      "need_id": "unclear-tickets",
+      "need_ids": [
+        "unclear-tickets"
+      ],
+      "title": "Written acceptance criteria on every ticket",
+      "what": "Tickets assigned to me include acceptance criteria before I start.",
+      "how_to_ask": "I'd like the tickets assigned to me to include written acceptance criteria before I start.",
+      "cost": "$0",
+      "company_source": "Engineering Handbook > 3.3 Definition of Done (acceptance criteria are checked off)",
+      "company_gap": "The repository has no issue templates, so many issues have no acceptance criteria.",
+      "sources": [
+        "Brightline Engineering Handbook > 3.3 Definition of Done (acceptance criteria are checked off)",
+        "Directive 2000/78/EC, Article 5",
+        "Law 448/2006 (Romania)"
+      ]
+    },
+    {
+      "id": "extended-review-turnaround",
+      "need_id": "unclear-tickets",
+      "need_ids": [
+        "unclear-tickets"
+      ],
+      "title": "More time for reviews and reading",
+      "what": "Two working days instead of one to review a pull request or answer review comments.",
+      "how_to_ask": "I'd like two working days instead of one to do and answer code reviews.",
+      "cost": "$0",
+      "company_source": null,
+      "company_gap": null,
+      "sources": [
+        "Directive 2000/78/EC, Article 5"
+      ]
+    }
   ],
-  "letter": "Hi Ana,\n\nTo work at my best I'd like to propose two changes:\n1. Posting my standup in writing before the call.\n2. Written acceptance criteria on my tickets.\n\nBoth are free to set up. Happy to talk about it.\n\nAndrei",
-  "disclaimer": "Informational, not legal advice."
+  "letter": "Hi Ana,\n\nI wanted to share a few changes that would make my work easier and more effective. Most of these cost little or nothing; I suggest we try them for four weeks and then review how it went.\n\n1. I’d like to post my standup update in writing in the team thread before 10:00 instead of speaking in the call — our Engineering Handbook already allows async standups.\n2. I’d like captions turned on in our team meetings and the transcript or notes shared afterwards (meet captions are free; transcription is about $0.22/hour if we use a service).\n3. I’d like to receive the agenda and the tickets for planning and refinement the day before — the Engineering Handbook asks for agenda posted the day before.\n4. I’d like the tickets assigned to me to include written acceptance criteria before I start — the Engineering Handbook includes acceptance criteria in the Definition of Done.\n5. I’d like two working days instead of one to do and respond to code reviews.\n\nThanks for considering these. I’m happy to discuss any of them and try the set for four weeks, then regroup.\n\nAndrei",
+  "disclaimer": "Informational, not legal advice. OnRamp does not store your choices or this letter."
 }
