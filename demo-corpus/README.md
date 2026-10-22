@@ -51,13 +51,13 @@ which date format finance wants either.
 
 ## Company documents (D3)
 
-Upload these through `POST /api/company/ingest` (the `.md` files are the editable sources):
+Upload these through `POST /api/company/ingest` (the `.md` files are the editable sources). The PDF file name becomes the document title, so keep the names:
 
 | File to upload | Source | Notes |
 |---|---|---|
-| `company-docs/engineering-handbook.pdf` (5 pages) | `engineering-handbook.md` | **DoD is on page 3** (matches the mocks). Buddy, async standup, focus time, cameras optional, on-call after 6 months, CAB (only Atlas routing + payment providers) |
-| `company-docs/workplace-adjustments-policy.pdf` (2 pages) | `workplace-adjustments-policy.md` | **Incomplete on purpose:** no response time, no confidentiality / health data clause (GDPR art. 9), no assistive technology (screen readers, captioning), no appeal, and it sends people to a public Slack channel |
-| `company-docs/security-training.docx` | `security-training.md` | Deadline: **30 days after start date** (good for `enrich.deadlines`) |
+| `company-docs/Engineering Handbook.pdf` (5 pages) | `engineering-handbook.md` | **DoD is on page 3** (matches the mocks). Buddy, async standup, focus time, cameras optional, on-call after 6 months, CAB (only Atlas routing + payment providers) |
+| `company-docs/Workplace Adjustments Policy.pdf` (2 pages) | `workplace-adjustments-policy.md` | **Incomplete on purpose:** no response time, no confidentiality / health data clause (GDPR art. 9), no assistive technology (screen readers, captioning), no appeal, and it sends people to a public Slack channel |
+| `company-docs/Security Training.docx` | `security-training.md` | Deadline: **30 days after start date** (good for `enrich.deadlines`) |
 
 **Process criteria for F9:** present: DoD, buddy, async standup, focus norms, agenda the day before + written decisions, on-call deferred.
 Partial: captions (only Pulse is captioned; planning, refinement and retro are not recorded).

@@ -1,13 +1,187 @@
 {
   "_owner": "Track D writes the catalog; Track C consumes it. Needs only, never diagnoses.",
+  "_fields": "needs[].adjustments → ids in adjustments{}. company_source = where Brightline already allows it (cite it), null if the company docs say nothing. legal = file names in data/legal/ without .md. how_to_ask is first person, describes the need and the change only.",
   "needs": [
     { "id": "fast-standups", "label": "Standups are spoken too fast", "adjustments": ["async-written-standup", "captions-transcript", "agenda-in-advance"] },
-    { "id": "screen-reader", "label": "I use a screen reader", "adjustments": ["vscode-nvda", "live-share-pairing", "diagram-text"] },
-    { "id": "notifications", "label": "Notifications overwhelm me", "adjustments": ["focus-blocks", "single-buddy"] },
-    { "id": "typing-fatigue", "label": "Typing tires me", "adjustments": ["voice-coding", "ergonomic-hardware"] },
-    { "id": "unclear-tickets", "label": "Tickets are unclear", "adjustments": ["written-acceptance-criteria", "extended-review-turnaround"] }
+    { "id": "spoken-meetings", "label": "I can't follow spoken meetings", "adjustments": ["captions-transcript", "written-decisions", "chat-first-questions"] },
+    { "id": "screen-reader", "label": "I use a screen reader", "adjustments": ["vscode-nvda", "live-share-pairing", "diagram-text", "accessible-tools"] },
+    { "id": "notifications", "label": "Notifications overwhelm me", "adjustments": ["focus-blocks", "single-buddy", "batched-notifications"] },
+    { "id": "typing-fatigue", "label": "Typing tires me", "adjustments": ["voice-coding", "ergonomic-hardware", "flexible-breaks"] },
+    { "id": "unclear-tickets", "label": "Tickets are unclear", "adjustments": ["written-acceptance-criteria", "extended-review-turnaround", "agenda-in-advance"] },
+    { "id": "reading-load", "label": "Long documents take me a long time", "adjustments": ["text-to-speech", "summaries-first", "extended-review-turnaround"] },
+    { "id": "on-call-stress", "label": "Being on call worries me", "adjustments": ["deferred-on-call", "written-runbooks"] }
   ],
   "adjustments": {
-    "async-written-standup": { "title": "Written async standup", "cost": "$0", "how_to_ask": "TODO(D)", "legal": ["dir-2000-78-art5"] }
+    "async-written-standup": {
+      "title": "Written async standup",
+      "what": "Post yesterday / today / blockers in the standup thread instead of speaking in the call.",
+      "cost": "$0",
+      "how_to_ask": "I'd like to post my standup update in writing in the team thread before 10:00 instead of speaking in the call.",
+      "company_source": "Engineering Handbook > 3.2 Standup format (async standup is allowed)",
+      "legal": ["dir-2000-78-art5", "law-448-2006-oug-127-2024"]
+    },
+    "captions-transcript": {
+      "title": "Live captions and a written transcript for team ceremonies",
+      "what": "Turn on captions in Google Meet for planning, refinement and retro, and share the transcript or notes afterwards.",
+      "cost": "$0 (Meet captions) to ~$0.22/hour for a transcription service",
+      "how_to_ask": "I'd like captions turned on in our team meetings and the transcript or notes shared afterwards.",
+      "company_source": null,
+      "company_gap": "Engineering Handbook > 4.3: only Pulse is captioned; team ceremonies are not recorded.",
+      "legal": ["crpd-27", "dir-2000-78-art5", "law-448-2006-oug-127-2024"]
+    },
+    "agenda-in-advance": {
+      "title": "Agenda and materials the day before",
+      "what": "Get the agenda and the tickets to discuss at least one working day before planning and refinement.",
+      "cost": "$0",
+      "how_to_ask": "I'd like to receive the agenda and the tickets for planning and refinement the day before.",
+      "company_source": "Engineering Handbook > 3.1 Sprints (agenda posted the day before)",
+      "legal": ["dir-2000-78-art5"]
+    },
+    "written-decisions": {
+      "title": "Written decisions and action items after meetings",
+      "what": "Someone posts the decisions and who does what in the team channel after each meeting.",
+      "cost": "$0",
+      "how_to_ask": "I'd like the decisions and action items from our meetings written in the team channel afterwards.",
+      "company_source": "Engineering Handbook > 4.3 Meetings and cameras",
+      "legal": ["dir-2000-78-art5"]
+    },
+    "chat-first-questions": {
+      "title": "Questions in chat during meetings",
+      "what": "Ask and answer questions in the meeting chat; the facilitator reads them out.",
+      "cost": "$0",
+      "how_to_ask": "I'd like to ask my questions in the meeting chat and have the facilitator read them out.",
+      "company_source": null,
+      "legal": ["crpd-27", "dir-2000-78-art5"]
+    },
+    "vscode-nvda": {
+      "title": "VS Code set up for a screen reader",
+      "what": "VS Code with screen reader optimised mode, accessible diff viewer and audio cues; NVDA or JAWS licence if needed.",
+      "cost": "$0 (NVDA) to ~$100/year (JAWS)",
+      "how_to_ask": "I'd like my development setup to support a screen reader: VS Code in screen reader mode and the licence I need.",
+      "company_source": "Engineering Handbook > 7. Tools (internal tools should work with a screen reader)",
+      "legal": ["dir-2000-78-art5", "law-448-2006-oug-127-2024", "eaa-law-232-2022"]
+    },
+    "live-share-pairing": {
+      "title": "Pairing through Live Share",
+      "what": "Pair programming in each person's own editor (VS Code Live Share) instead of watching a shared screen.",
+      "cost": "$0",
+      "how_to_ask": "When we pair, I'd like us to use Live Share so I can follow in my own editor.",
+      "company_source": null,
+      "legal": ["dir-2000-78-art5"]
+    },
+    "diagram-text": {
+      "title": "Text version of every diagram",
+      "what": "Architecture and flow diagrams come with a text description or outline.",
+      "cost": "$0",
+      "how_to_ask": "I'd like diagrams we use to come with a short text description.",
+      "company_source": null,
+      "company_gap": "ARCHITECTURE.md and docs/setup.md have images without alt text.",
+      "legal": ["eaa-law-232-2022", "dir-2000-78-art5"]
+    },
+    "accessible-tools": {
+      "title": "Accessible internal tools",
+      "what": "Tools that do not work with a keyboard or screen reader are reported and fixed or replaced.",
+      "cost": "Varies",
+      "how_to_ask": "Some tools I need don't work with my screen reader; I'd like them reported as bugs and fixed or replaced.",
+      "company_source": "Engineering Handbook > 7. Tools (report in #it-help, counts as a bug)",
+      "legal": ["eaa-law-232-2022", "law-448-2006-oug-127-2024"]
+    },
+    "focus-blocks": {
+      "title": "Protected focus blocks",
+      "what": "Blocks of up to 3 hours a day with Slack on Focus; no pings except incidents.",
+      "cost": "$0",
+      "how_to_ask": "I'd like to keep focus blocks in my calendar where I'm not pinged except for incidents.",
+      "company_source": "Engineering Handbook > 4.2 Focus time and notifications",
+      "legal": ["dir-2000-78-art5"]
+    },
+    "single-buddy": {
+      "title": "One main point of contact",
+      "what": "Questions go to one buddy first instead of many people.",
+      "cost": "$0",
+      "how_to_ask": "I'd like one main person to go to with questions, so I don't have to follow many channels.",
+      "company_source": "Engineering Handbook > 2.1 Buddy",
+      "legal": ["dir-2000-78-art5"]
+    },
+    "batched-notifications": {
+      "title": "Batched notifications",
+      "what": "GitHub and Slack notifications delivered as a digest a few times a day.",
+      "cost": "$0",
+      "how_to_ask": "I'd like to get non-urgent notifications as a digest a few times a day.",
+      "company_source": null,
+      "legal": ["dir-2000-78-art5"]
+    },
+    "voice-coding": {
+      "title": "Voice coding and dictation",
+      "what": "Dictation for messages and reviews; voice coding tools (e.g. Talon) where useful.",
+      "cost": "$0 to ~$25/month",
+      "how_to_ask": "I'd like to use dictation and voice coding tools for part of my work.",
+      "company_source": null,
+      "legal": ["dir-2000-78-art5", "law-448-2006-oug-127-2024"]
+    },
+    "ergonomic-hardware": {
+      "title": "Ergonomic hardware",
+      "what": "Ergonomic or split keyboard, vertical mouse, standing desk.",
+      "cost": "~$100–600 one-off",
+      "how_to_ask": "I'd like an ergonomic keyboard and mouse to reduce strain.",
+      "company_source": "Workplace Adjustments Policy > 3. Examples of adjustments (equipment)",
+      "legal": ["dir-2000-78-art5", "law-448-2006-oug-127-2024"]
+    },
+    "flexible-breaks": {
+      "title": "More frequent breaks",
+      "what": "Short breaks every hour without having to explain them.",
+      "cost": "$0",
+      "how_to_ask": "I'd like to take short breaks every hour.",
+      "company_source": "Workplace Adjustments Policy > 3. Examples of adjustments (schedule)",
+      "legal": ["dir-2000-78-art5"]
+    },
+    "written-acceptance-criteria": {
+      "title": "Written acceptance criteria on every ticket",
+      "what": "Tickets assigned to me include acceptance criteria before I start.",
+      "cost": "$0",
+      "how_to_ask": "I'd like the tickets assigned to me to include written acceptance criteria before I start.",
+      "company_source": "Engineering Handbook > 3.3 Definition of Done (acceptance criteria are checked off)",
+      "company_gap": "The repository has no issue templates, so many issues have no acceptance criteria.",
+      "legal": ["dir-2000-78-art5", "law-448-2006-oug-127-2024"]
+    },
+    "extended-review-turnaround": {
+      "title": "More time for reviews and reading",
+      "what": "Two working days instead of one to review a pull request or answer review comments.",
+      "cost": "$0",
+      "how_to_ask": "I'd like two working days instead of one to do and answer code reviews.",
+      "company_source": null,
+      "legal": ["dir-2000-78-art5"]
+    },
+    "text-to-speech": {
+      "title": "Text-to-speech for documents",
+      "what": "A text-to-speech tool for long documents, specs and tickets.",
+      "cost": "$0 (built-in) to ~$10/month",
+      "how_to_ask": "I'd like to use a text-to-speech tool for long documents.",
+      "company_source": null,
+      "legal": ["dir-2000-78-art5", "eaa-law-232-2022"]
+    },
+    "summaries-first": {
+      "title": "Summary at the top of long documents",
+      "what": "Specs and RFCs start with a short summary and the decisions needed.",
+      "cost": "$0",
+      "how_to_ask": "I'd like long documents and RFCs to start with a short summary.",
+      "company_source": null,
+      "legal": ["dir-2000-78-art5"]
+    },
+    "deferred-on-call": {
+      "title": "Later start on on-call",
+      "what": "Join on-call later than six months, with more shadow weeks.",
+      "cost": "$0",
+      "how_to_ask": "I'd like more shadow weeks before I'm on call alone.",
+      "company_source": "Engineering Handbook > 2.3 On-call (no on-call in the first six months, two shadow weeks)",
+      "legal": ["dir-2000-78-art5"]
+    },
+    "written-runbooks": {
+      "title": "Step-by-step runbooks for every alert",
+      "what": "Every alert links to a written runbook with the first steps.",
+      "cost": "$0",
+      "how_to_ask": "I'd like every alert I might get to have a written runbook.",
+      "company_source": "Engineering Handbook > 2.3 On-call (every alert has a runbook)",
+      "legal": ["dir-2000-78-art5"]
+    }
   }
 }
