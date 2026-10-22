@@ -1,12 +1,25 @@
 /* Owner: Track B. Profile (F1) is applied through data-* attributes on <html>. */
 @import "tailwindcss";
 
+/* Design tokens. Contrast on --bg (WCAG): normal ≥ 4.5:1 for text, high ≥ 7:1.
+   normal: fg 17.4, muted 8.9, accent/link/focus 6.4, danger 6.5, success 6.5, border 4.5, accent-fg on accent 6.4
+   high:   fg 21, accent/link/focus 14.7, danger 10.3, success 13.3, border 21, accent-fg on accent 14.7 */
 :root {
-  --bg: #ffffff; --fg: #1a1a1a; --muted: #4a4a4a; --accent: #0b57d0; --focus: #0b57d0; --border: #767676;
+  --bg: #ffffff; --surface: #f3f4f6; --fg: #1a1a1a; --muted: #4a4a4a;
+  --accent: #0b57d0; --accent-fg: #ffffff; --link: #0b57d0; --focus: #0b57d0; --border: #767676;
+  --danger: #b3261e; --success: #146c2e;
   --text-scale: 1; --line-height: 1.5; --letter-spacing: normal;
   --font-body: system-ui, -apple-system, "Segoe UI", sans-serif;
 }
-:root[data-contrast="high"] { --bg: #000; --fg: #fff; --muted: #fff; --accent: #ffd400; --focus: #ffd400; --border: #fff; }
+:root[data-contrast="high"] {
+  --bg: #000000; --surface: #1a1a1a; --fg: #ffffff; --muted: #ffffff;
+  --accent: #ffd400; --accent-fg: #000000; --link: #ffd400; --focus: #ffd400; --border: #ffffff;
+  --danger: #ff9b8f; --success: #7ee2a8;
+}
+/* OS-level "increase contrast" tightens the normal palette without overriding the user's choice. */
+@media (prefers-contrast: more) {
+  :root:not([data-contrast="high"]) { --muted: #1a1a1a; --border: #1a1a1a; }
+}
 :root[data-text-size="l"] { --text-scale: 1.2; }
 :root[data-text-size="xl"] { --text-scale: 1.45; }
 :root[data-font="readable"] { --font-body: "Atkinson Hyperlegible", Verdana, sans-serif; }
@@ -14,8 +27,34 @@
 :root[data-motion="reduced"] *, :root[data-motion="reduced"] *::before { animation: none !important; transition: none !important; }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 
-html { font-size: calc(100% * var(--text-scale)); }
-body { background: var(--bg); color: var(--fg); font-family: var(--font-body); line-height: var(--line-height); letter-spacing: var(--letter-spacing); }
-:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
-button, a, input, select, textarea { min-height: 44px; }
-.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+/* Tokens as Tailwind colors: bg-bg, text-fg, text-muted, border-border, bg-accent text-accent-fg, ... */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-link: var(--link);
+  --color-focus: var(--focus);
+  --color-border: var(--border);
+  --color-danger: var(--danger);
+  --color-success: var(--success);
+}
+
+/* In the base layer so Tailwind utilities (text-fg, no-underline, outline-none...) can override them. */
+@layer base {
+  html { font-size: calc(100% * var(--text-scale)); }
+  body {
+    background: var(--bg); color: var(--fg); font-family: var(--font-body);
+    line-height: var(--line-height); letter-spacing: var(--letter-spacing);
+    overflow-wrap: anywhere; /* reflow at 320px: long URLs and identifiers wrap */
+  }
+  a { color: var(--link); text-decoration: underline; text-underline-offset: 0.2em; }
+  img, svg, video, canvas { max-width: 100%; height: auto; }
+  pre { overflow-x: auto; }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+  @media (forced-colors: active) { :focus-visible { outline-color: Highlight; } }
+  button, input, select, textarea { min-height: 44px; }
+}
+/* .sr-only / .not-sr-only come from Tailwind, so focus:not-sr-only can reveal the skip link. */
