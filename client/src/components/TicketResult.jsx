@@ -8,6 +8,8 @@ import Checklist from './Checklist.jsx';
 import SourceList from './SourceList.jsx';
 import HelpChat from './HelpChat.jsx';
 import Diagram from './Diagram.jsx';
+import GlossaryTerm, { GlossaryText } from './GlossaryTerm.jsx';
+import { useGlossary } from '../lib/glossary.js';
 
 function Section({ id, title, children, className = '' }) {
   return (
@@ -28,7 +30,7 @@ function Unclear({ items, title, ticketUrl }) {
       <ul className="mt-3 flex flex-col gap-3">
         {items.map((u, i) => (
           <li key={u.question} className="rounded-xl bg-accent-soft p-3">
-            <p className="font-medium">{u.issue}</p>
+            <p className="font-medium"><GlossaryText text={u.issue} /></p>
             <p className="mt-1">Question to ask: <q>{u.question}</q></p>
             {open === i ? (
               <HelpChat
@@ -75,6 +77,7 @@ export default function TicketResult({ data, sourceUrl, saved }) {
   const [criteria, setCriteria] = useState([]);
   const [steps, setSteps] = useState([]);
   const announce = useAnnounce();
+  const glossary = useGlossary();
 
   useEffect(() => {
     setCriteria(data.acceptance_criteria.map((c) => ({ text: c.text, note: c.inferred ? 'inferred' : null, done: false })));
@@ -98,7 +101,7 @@ export default function TicketResult({ data, sourceUrl, saved }) {
   return (
     <article aria-labelledby="tk-title" className="mt-6">
       <h2 id="tk-title" className="text-2xl font-bold">{data.title}</h2>
-      <p className="mt-2 max-w-prose text-lg">{data.summary}</p>
+      <p className="mt-2 max-w-prose text-lg"><GlossaryText text={data.summary} /></p>
 
       <Unclear items={data.unclear ?? []} title={data.title} ticketUrl={sourceUrl} />
 
@@ -124,7 +127,7 @@ export default function TicketResult({ data, sourceUrl, saved }) {
             {data.files.map((f) => (
               <li key={f.path}>
                 <code className="rounded bg-accent-soft px-1.5 font-mono text-sm">{f.path}</code>
-                <span className="block text-muted">{f.why}</span>
+                <span className="block text-muted"><GlossaryText text={f.why} /></span>
               </li>
             ))}
           </ul>
@@ -133,7 +136,8 @@ export default function TicketResult({ data, sourceUrl, saved }) {
 
       {data.definition_of_done?.length > 0 && (
         <Section id="tk-dod" title="Done means">
-          <ul className="mt-2 list-disc pl-6">{data.definition_of_done.map((d) => <li key={d}>{d}</li>)}</ul>
+          {glossary.find('DoD') && <p className="text-sm text-muted">From your team&apos;s <GlossaryTerm term="DoD" variant="inline">Definition of Done</GlossaryTerm>.</p>}
+          <ul className="mt-2 list-disc pl-6">{data.definition_of_done.map((d) => <li key={d}><GlossaryText text={d} /></li>)}</ul>
         </Section>
       )}
 

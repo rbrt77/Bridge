@@ -3,6 +3,8 @@
 import Markdown, { parseBlocks, plainText } from '../lib/markdown.jsx';
 import SourceList from './SourceList.jsx';
 import AudioButton from './AudioButton.jsx';
+import GlossaryTerm, { GlossaryText } from './GlossaryTerm.jsx';
+import { useGlossary } from '../lib/glossary.js';
 
 const MODES = [['shorter', 'Shorter'], ['simpler', 'Simpler'], ['more', 'More detail'], ['steps', 'As steps']];
 
@@ -32,6 +34,9 @@ export default function AdaptiveAnswer({ turn, prefs, busy, onReAdapt, onRetry, 
   const hasList = answer && parseBlocks(answer).some((b) => b.type === 'ol');
   const steps = !hasList && !prefs?.output?.steps && enrich?.steps?.length > 0 && enrich.steps;
   const deadlines = enrich?.deadlines ?? [];
+  const glossary = useGlossary();
+  const terms = [...new Set(enrich?.glossary_terms_used ?? [])].filter((t) => glossary.find(t));
+  const renderText = (text) => <GlossaryText text={text} />;
 
   return (
     <div aria-busy={streaming} className="mt-3">
@@ -46,7 +51,7 @@ export default function AdaptiveAnswer({ turn, prefs, busy, onReAdapt, onRetry, 
         <p className="mb-3 rounded-lg bg-accent-soft p-3"><strong>TL;DR:</strong> {tldr}</p>
       )}
 
-      {answer && <Markdown text={answer} cite={cite} />}
+      {answer && <Markdown text={answer} cite={cite} renderText={streaming ? undefined : renderText} />}
 
       {status === 'stopped' && <p className="mt-2 text-muted">You stopped this answer.</p>}
       {status === 'error' && (
@@ -71,7 +76,12 @@ export default function AdaptiveAnswer({ turn, prefs, busy, onReAdapt, onRetry, 
       )}
 
       <SourceList sources={sources} idPrefix={prefix} />
-      {/* TODO(B7): render enrich.glossary_terms_used as <GlossaryTerm> chips */}
+      {terms.length > 0 && (
+        <section aria-labelledby={`${key}-terms`} className="mt-4">
+          <h3 id={`${key}-terms`} className="font-semibold">Terms in this answer</h3>
+          <ul className="mt-2 flex flex-wrap gap-2">{terms.map((t) => <li key={t}><GlossaryTerm term={t} /></li>)}</ul>
+        </section>
+      )}
 
       {streaming ? (
         <div className="mt-4">
