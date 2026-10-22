@@ -9,16 +9,65 @@ Format intrare:
 
 --- Ce e bine ---
 
+[Claude] [2026-10-22] [§1.1, §11]
+- Fiecare criteriu de jurizare are un raspuns explicit. Pastram tabelul ca checklist si in deck.
+[Claude] [2026-10-22] [§4.3]
+- Preseturile pe nevoi (nu pe diagnostic) sunt cel mai puternic argument etic si de UX. Merita aratate in primele 30 s de demo.
+[Claude] [2026-10-22] [§6 Eval]
+- Tabelul vector-only vs hybrid vs hybrid+rerank da un numar concret in pitch. Putine echipe vor avea asa ceva.
+[Claude] [2026-10-22] [§9 corpus]
+- Workplace Adjustments Policy lasata intentionat incompleta: auditul gaseste goluri reale in demo. Idee foarte buna.
 
 
 --- Ce trebuie schimbat ---
 
+[Claude] [2026-10-22] [§3, §10]
+- Scope prea mare: sunt ~9 functii MUST (1, 2, 3, 6, 9, C1, C2, N1 + wizard) in ~22h, cu 4 oameni.
+  Propunere: MUST real = Ask adaptat + citari, Procedura -> checklist, Meeting -> My tasks, Adjustments + scrisoare.
+  Anonim, audit si voce trec la SHOULD; restul la COULD.
+[Claude] [2026-10-22] [§10]
+- Deploy-ul e abia la 05:00-08:00. Ar trebui facut un deploy "hello world" (Vercel + Render cu SSE) inca de la Milestone 1 (19:00),
+  ca problemele de SSE / CORS / cold start sa iasa devreme, nu dimineata.
+[Claude] [2026-10-22] [§11 pitch]
+- Demo-ul de 3:00 are 6 momente (~30 s fiecare). E prea strans pentru live. Propunere: 4 momente
+  (wizard + aceeasi intrebare pe 2 profiluri, procedura -> checklist, sedinta -> My tasks, scrisoare de adaptare)
+  si partea de firma doar pe slide.
+[Claude] [2026-10-22] [§4.4]
+- Se spune "<= 5 pagini in navigatie", dar lista principala are 6 (/start, /, /ask, /procedures, /meetings, /adjustments).
+  De decis care intra in nav si care raman in submeniu.
+[Claude] [2026-10-22] [general]
+- De redenumit fisierul planului in PLAN.md (numele actual e greu de gasit / citat in README).
 
 
 --- Ce lipseste ---
 
+[Claude] [2026-10-22] [§10]
+- Nume concrete pe track-uri (cine e A, B, C, D). Acum sunt doar litere.
+[Claude] [2026-10-22] [§7, §12]
+- Insights cere k >= 5, dar in demo vor fi < 5 intrebari anonime, deci dashboard-ul va fi gol.
+  Trebuie seed cu intrebari anonime fictive (si spus onest ca e seed).
+[Claude] [2026-10-22] [§3 #3]
+- "Ask anonymously": utilizatorul e totusi logat (JWT), deci anonimatul e doar la stocare. De formulat onest in UI
+  (ex. "HR sees the question, never who asked").
+[Claude] [2026-10-22] [§5]
+- Riscuri de verificat inainte de demo: limita de rate a cheii trial Cohere (fallback-ul trebuie testat);
+  Web Speech API merge doar in Chrome/Safari, deci demo-ul se face pe Chrome.
+[Claude] [2026-10-22] [§5, §11]
+- ARASAAC e CC BY-NC-SA (necomercial), dar pitch-ul e B2B SaaS. Juriul poate intreba; trebuie un raspuns pregatit
+  (acord comercial pe roadmap sau alt set de pictograme).
+[Claude] [2026-10-22] [§8]
+- Testarea cu VoiceOver cere macOS: cine are Mac? Daca nimeni, NVDA pe Windows devine principalul test.
+[Claude] [2026-10-22] [§6 Eval]
+- Cine scrie cele 25+5 intrebari din golden.json si cand? Nu apare in timeline. Propunere: D, imediat dupa corpus (pana la 19:00).
+[Claude] [2026-10-22] [§10]
+- Plan B daca pica Supabase / OpenAI in timpul demo-ului: video-ul de backup acopera asta, dar trebuie inregistrat devreme,
+  nu doar la 10:00-12:00.
 
 
 --- Intrebari deschise ---
 
+[Claude] [2026-10-22]
+- Pitch-ul se tine in engleza sau in romana? UI-ul e doar EN, dar juriul e roman. Poate merita un slide care sa arate roadmap-ul RO.
+- Workshop-ul de la 13:30 se suprapune cu bootstrap-ul repo-ului. Cine merge (doar D)?
+- Fisierele test din repo (din commit-urile "test v12", "mesaj") raman sau le stergem la bootstrap?
 
