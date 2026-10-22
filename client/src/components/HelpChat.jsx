@@ -1,14 +1,14 @@
 // Owner: Track B (F5 UI). After an abstain: ask the manager by name, or anonymously to the team FAQ.
 // Pre-filled draft, the user edits and presses Send: nothing is sent automatically.
 // Once sent, the conversation continues right here, live (HelpThread).
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { Link } from 'react-router';
 import { api } from '../lib/api.js';
 import { askAnonymously } from '../lib/help.js';
 import { useAnnounce } from '../a11y/Announcer.jsx';
 import HelpThread from './HelpThread.jsx';
 
-export default function HelpChat({ handoff, question, onClose, onSent }) {
+export default function HelpChat({ handoff, question, ticketUrl, onClose, onSent, headingLevel = 3 }) {
   const helper = handoff.helper ?? { name: 'your manager' };
   const [how, setHow] = useState('direct'); // direct | anon
   const [draft, setDraft] = useState(handoff.draft);
@@ -17,6 +17,8 @@ export default function HelpChat({ handoff, question, onClose, onSent }) {
   const [error, setError] = useState('');
   const [sent, setSent] = useState(handoff.sent ?? null); // { thread } | { anon }
   const announce = useAnnounce();
+  const uid = useId().replace(/:/g, '');
+  const H = `h${headingLevel}`;
 
   const send = async (e) => {
     e.preventDefault();
@@ -24,7 +26,7 @@ export default function HelpChat({ handoff, question, onClose, onSent }) {
     setError('');
     try {
       const result = how === 'direct'
-        ? { thread: (await api('/help/threads', { method: 'POST', body: { question, draft } })).thread }
+        ? { thread: (await api('/help/threads', { method: 'POST', body: { question, draft, ticket_url: ticketUrl } })).thread }
         : { anon: await askAnonymously(anonText) };
       setSent(result);
       onSent?.(result);
@@ -54,31 +56,31 @@ export default function HelpChat({ handoff, question, onClose, onSent }) {
   }
 
   return (
-    <form onSubmit={send} aria-labelledby="help-h" className="mt-4 flex flex-col gap-3 rounded-xl border border-border-subtle p-4">
-      <h3 id="help-h" className="font-semibold">Ask a person</h3>
+    <form onSubmit={send} aria-labelledby={`${uid}-h`} className="mt-4 flex flex-col gap-3 rounded-xl border border-border-subtle p-4">
+      <H id={`${uid}-h`} className="font-semibold">Ask a person</H>
       {handoff.topic_owner && <p className="text-muted">Tip: {handoff.topic_owner}.</p>}
 
       <fieldset>
         <legend className="font-medium">How do you want to ask?</legend>
         <div className="mt-2 grid gap-2 sm:grid-cols-2">
           {[
-            ['direct', `Ask ${helper.name}${helper.role ? ` (${helper.role})` : ''}`, `${helper.name} sees your name and can reply here.`],
+            ['direct', `Ask ${helper.name}${helper.role ? ` (${helper.role})` : ''}`, `${helper.name[0].toUpperCase()}${helper.name.slice(1)} sees your name and can reply here.`],
             ['anon', 'Send anonymously to the team FAQ', 'Your team sees the question, never who asked.'],
           ].map(([value, label, hint]) => (
             <div key={value} className="flex gap-3 rounded-lg border border-border-subtle p-3 hover:border-accent has-[:checked]:border-accent has-[:checked]:bg-accent-soft">
               <input
                 type="radio"
-                id={`help-how-${value}`}
-                name="help-how"
+                id={`${uid}-how-${value}`}
+                name={`${uid}-how`}
                 value={value}
                 checked={how === value}
                 onChange={() => setHow(value)}
-                aria-describedby={`help-how-${value}-hint`}
+                aria-describedby={`${uid}-how-${value}-hint`}
                 className="mt-1 size-5 min-h-0 shrink-0"
               />
               <div>
-                <label htmlFor={`help-how-${value}`} className="block cursor-pointer font-medium">{label}</label>
-                <p id={`help-how-${value}-hint`} className="text-sm text-muted">{hint}</p>
+                <label htmlFor={`${uid}-how-${value}`} className="block cursor-pointer font-medium">{label}</label>
+                <p id={`${uid}-how-${value}-hint`} className="text-sm text-muted">{hint}</p>
               </div>
             </div>
           ))}
@@ -87,14 +89,14 @@ export default function HelpChat({ handoff, question, onClose, onSent }) {
 
       {how === 'direct' ? (
         <>
-          <label htmlFor="help-draft" className="font-medium">Your message (you can edit it)</label>
-          <textarea id="help-draft" value={draft} onChange={(e) => setDraft(e.target.value)} rows={6} required className="field" />
+          <label htmlFor={`${uid}-draft`} className="font-medium">Your message (you can edit it)</label>
+          <textarea id={`${uid}-draft`} value={draft} onChange={(e) => setDraft(e.target.value)} rows={6} required className="field" />
         </>
       ) : (
         <>
-          <label htmlFor="help-anon" className="font-medium">Your question (no names, please)</label>
-          <textarea id="help-anon" value={anonText} onChange={(e) => setAnonText(e.target.value)} rows={3} required aria-describedby="help-anon-hint" className="field" />
-          <p id="help-anon-hint" className="text-sm text-muted">We don&apos;t store who sent it. A code kept only in this browser lets you see the answer.</p>
+          <label htmlFor={`${uid}-anon`} className="font-medium">Your question (no names, please)</label>
+          <textarea id={`${uid}-anon`} value={anonText} onChange={(e) => setAnonText(e.target.value)} rows={3} required aria-describedby={`${uid}-anon-hint`} className="field" />
+          <p id={`${uid}-anon-hint`} className="text-sm text-muted">We don&apos;t store who sent it. A code kept only in this browser lets you see the answer.</p>
         </>
       )}
 
