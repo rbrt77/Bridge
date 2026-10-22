@@ -50,7 +50,7 @@ B ◄── C (componentele comune Checklist, Diagram; shape-urile JSON din mock
 3. **A2:** deploy de probă (Render pentru server, Vercel pentru client). Verifici `/api/health/sse` din browser: CORS, SSE, cold start.
 4. **A3:** `auth.js`, verificare JWT Supabase + org + rol.
 5. **A4:** ingestie PDF/DOCX/MD → `chunkMarkdown` → embed → `documents`. `ingestRepo` din GitHub + CODEOWNERS → `topic_owners`.
-6. **A5:** RPC `hybrid_search` (FTS + vector + RRF) și `rerank` (Cohere, cu fallback testat).
+6. **A5:** RPC `hybrid_search` (FTS + vector + RRF) și `rerank` (gpt-4.1-mini, cu fallback RRF testat).
 7. **A6 (M1):** `answerQuestion` în mod strict, cu streaming, citări validate, `enrich`, abstain → `handoff`.
 8. **A7:** F5 backend: threads/messages, `publish-faq` (FAQ-ul intră în RAG), `anon` fără `user_id`, ping Slack fără text.
 9. **A8:** glosar la ingestie + expansiunea acronimelor în query.
