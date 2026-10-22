@@ -27,6 +27,9 @@ export function guessDocType(name, fallback = 'handbook') {
   return fallback;
 }
 
+/** What gets embedded for a chunk: the title, section and context make short chunks findable. */
+export const embeddingText = (title, c) => [title, c.section_path, c.context, c.content].filter(Boolean).join('\n');
+
 const titleFrom = (markdown, fallback) => /^#\s+(.+)$/m.exec(markdown)?.[1].trim() ?? fallback;
 const stripExt = (name) => name.replace(/\.[^.]+$/, '');
 
@@ -56,7 +59,7 @@ export async function saveDocument({ orgId, title, sourceId, url = null, docType
   if (!chunks.length) throw badRequest(`"${title}" contains no readable text`);
   const ordered = chunks.map((c, i) => ({ ...c, chunk_index: i }));
   const withContext = await contextualizeChunks(text, ordered, { title });
-  const vectors = await embed(withContext.map((c) => [title, c.section_path, c.context, c.content].filter(Boolean).join('\n')));
+  const vectors = await embed(withContext.map((c) => embeddingText(title, c)));
 
   const { data: kb, error } = await db
     .from('kb_documents')

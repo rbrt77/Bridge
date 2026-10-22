@@ -1,0 +1,170 @@
+{
+  "at": "2026-10-22T15:57:34.645Z",
+  "results": [
+    {
+      "config": "vector",
+      "hit@1": 72,
+      "hit@5": 96,
+      "MRR": 0.815,
+      "abstain_acc": 20,
+      "false_abstain": 0,
+      "p50_ms": 288,
+      "scores": null,
+      "misses": [
+        "q5 rank >6 (top: ADR-007-hermes-for-invoice-delivery.md (docs/adr/ADR-007-hermes-for-invoice-delivery.md))",
+        "q6 rank 2 (top: known-issues.md (docs/known-issues.md))",
+        "q8 rank 3 (top: ADR-007-hermes-for-invoice-delivery.md (docs/adr/ADR-007-hermes-for-invoice-delivery.md))",
+        "q10 rank 3 (top: README.md)",
+        "q14 rank 5 (top: ADR-007-hermes-for-invoice-delivery.md (docs/adr/ADR-007-hermes-for-invoice-delivery.md))",
+        "q15 rank 2 (top: Brightline Software · Engineering Handbook)",
+        "q18 rank 2 (top: Brightline Software · Engineering Handbook)",
+        "o2 answered (top: CONTRIBUTING.md)",
+        "o3 answered (top: CONTRIBUTING.md)",
+        "o4 answered (top: Brightline Software · Workplace Adjustments Policy)",
+        "o5 answered (top: Brightline Software · Engineering Handbook)"
+      ]
+    },
+    {
+      "config": "hybrid",
+      "hit@1": 80,
+      "hit@5": 100,
+      "MRR": 0.87,
+      "abstain_acc": 40,
+      "false_abstain": 0,
+      "p50_ms": 273,
+      "scores": null,
+      "misses": [
+        "q5 rank 4 (top: hermes.md (docs/runbooks/hermes.md))",
+        "q8 rank 3 (top: ADR-007-hermes-for-invoice-delivery.md (docs/adr/ADR-007-hermes-for-invoice-delivery.md))",
+        "q11 rank 3 (top: Brightline Software · Engineering Handbook)",
+        "q13 rank 2 (top: ARCHITECTURE.md)",
+        "q14 rank 3 (top: ADR-007-hermes-for-invoice-delivery.md (docs/adr/ADR-007-hermes-for-invoice-delivery.md))",
+        "o2 answered (top: CONTRIBUTING.md)",
+        "o3 answered (top: CONTRIBUTING.md)",
+        "o5 answered (top: Brightline Software · Engineering Handbook)"
+      ]
+    },
+    {
+      "config": "hybrid+context",
+      "hit@1": 88,
+      "hit@5": 100,
+      "MRR": 0.93,
+      "abstain_acc": 20,
+      "false_abstain": 0,
+      "p50_ms": 284,
+      "scores": null,
+      "misses": [
+        "q5 rank 4 (top: hermes.md (docs/runbooks/hermes.md))",
+        "q8 rank 2 (top: ADR-007-hermes-for-invoice-delivery.md (docs/adr/ADR-007-hermes-for-invoice-delivery.md))",
+        "q11 rank 2 (top: Brightline Software · Security Training for Engineers)",
+        "o2 answered (top: CONTRIBUTING.md)",
+        "o3 answered (top: CONTRIBUTING.md)",
+        "o4 answered (top: Brightline Software · Workplace Adjustments Policy)",
+        "o5 answered (top: Brightline Software · Engineering Handbook)"
+      ]
+    },
+    {
+      "config": "hybrid+rerank",
+      "hit@1": 88,
+      "hit@5": 100,
+      "MRR": 0.94,
+      "abstain_acc": 60,
+      "false_abstain": 0,
+      "p50_ms": 1922,
+      "scores": {
+        "in_corpus": [
+          0.5,
+          0.9,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "out_of_corpus": [
+          "o1=0",
+          "o2=0.9",
+          "o3=0",
+          "o4=0.5",
+          "o5=0"
+        ]
+      },
+      "misses": [
+        "q5 rank 2 (top: ADR-007-hermes-for-invoice-delivery.md (docs/adr/ADR-007-hermes-for-invoice-delivery.md))",
+        "q8 rank 2 (top: README.md)",
+        "q18 rank 2 (top: Brightline Software · Engineering Handbook)",
+        "o2 answered (top: CONTRIBUTING.md)",
+        "o4 answered (top: Brightline Software · Workplace Adjustments Policy)"
+      ]
+    },
+    {
+      "config": "hybrid+rerank+context",
+      "hit@1": 88,
+      "hit@5": 100,
+      "MRR": 0.93,
+      "abstain_acc": 80,
+      "false_abstain": 0,
+      "p50_ms": 1921,
+      "scores": {
+        "in_corpus": [
+          0.6,
+          0.8,
+          0.8,
+          0.8,
+          0.9,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "out_of_corpus": [
+          "o1=0",
+          "o2=0.7",
+          "o3=0",
+          "o4=0",
+          "o5=0"
+        ]
+      },
+      "misses": [
+        "q5 rank 4 (top: ADR-007-hermes-for-invoice-delivery.md (docs/adr/ADR-007-hermes-for-invoice-delivery.md))",
+        "q18 rank 2 (top: Brightline Software · Engineering Handbook)",
+        "q23 rank 2 (top: Brightline Software · Engineering Handbook)",
+        "o2 answered (top: CONTRIBUTING.md)"
+      ]
+    }
+  ]
+}
