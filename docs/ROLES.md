@@ -60,7 +60,7 @@ npm run dev              # server :3001 + client :5173
 
 ## Track B: Frontend / accesibilitate
 
-**Fișierele tale:** `client/src/{App,main}.jsx`, `styles.css`, `a11y/*`, `lib/{api,sse,supabaseClient}.js`, `components/{Layout,WorkTabs,SourceList,AdaptiveAnswer,HelpChat,Diagram,GlossaryTerm,Checklist}.jsx`, `pages/{Ask,WorkStyle,Today,Glossary}.jsx`, `routes/profile.js` + `services/profile.js`.
+**Fișierele tale:** `client/src/{App,main}.jsx`, `styles.css`, `a11y/*`, `lib/{api,sse,supabaseClient}.js`, `components/{Layout,WorkTabs,SourceList,AdaptiveAnswer,HelpChat,Diagram,GlossaryTerm,Checklist}.jsx`, `pages/{Ask,WorkStyle,Today,Glossary,AboutAi,Insights,Company}.jsx` (AboutAi: pagina; textul îl scrie D), `routes/profile.js` + `services/profile.js`.
 
 | # | Task | Până la |
 |---|---|---|
@@ -105,7 +105,7 @@ npm run dev              # server :3001 + client :5173
 
 | # | Task | Până la |
 |---|---|---|
-| D1 | Repo GitHub public `invoicing-service`: ~20 de fișiere TS, README, ARCHITECTURE.md (cu PNG), ADR-007, CONTRIBUTING (`nit:`/`blocking:`), CODEOWNERS, `docs/setup.md` + `known-issues.md`, **golurile plantate** | 17:00 |
+| D1 | Repo GitHub public `invoicing-service`: ~20 de fișiere TS, README, ARCHITECTURE.md (cu PNG), ADR-007, CONTRIBUTING (`nit:`/`blocking:`), CODEOWNERS, `docs/setup.md` + `known-issues.md`, **golurile plantate** (pentru auditul F9, nu pentru abstain) | 17:00 |
 | D2 | Issue **#142** (ambiguu, cu screenshot) + 4–5 issue-uri + **PR #57** cu 6 comentarii de review | 18:00 |
 | D3 | Documentele firmei: Engineering Handbook, Workplace Adjustments Policy (**incompletă**), Security training. Folosește Hermes/Atlas recurent | 18:00 |
 | D4 | **golden.json** (25 + 5 întrebări) + catalogul de audit + `dev_adjustments.json` complet | **19:00 · M1** |

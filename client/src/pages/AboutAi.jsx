@@ -1,4 +1,4 @@
-// Owner: Track D (content). AI Act art. 50 transparency page.
+// Owner: Track B (page) + Track D (content). AI Act art. 50 transparency page.
 import Todo from '../components/Todo.jsx';
 export default function AboutAi() {
   return (
