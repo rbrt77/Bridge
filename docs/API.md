@@ -61,6 +61,8 @@ Realtime: client subscribes to `help_messages` inserts filtered by `thread_id`. 
 | POST | `/api/checklists` | `{ "title","source_url","items":[{text,minutes}] }` | `{ "checklist" }` |
 | GET | `/api/checklists` | – | `{ "checklists":[...] }` |
 | PATCH | `/api/checklists/:id/items/:itemId` | `{ "done": bool }` | `{ "ok":true }` |
+| DELETE | `/api/checklists/:id` | – | `204` |
+| GET | `/api/checklists/:id/ics` | `?start=ISO` (default: next full hour) | `text/calendar`: open steps as back-to-back blocks; items with `due` → all-day |
 
 ## Meetings (F3) — Track C
 | Method | Path | Body | Response |
