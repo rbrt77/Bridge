@@ -94,7 +94,7 @@ export default function Captions() {
         <fieldset className="inline-flex items-center gap-1">
           <legend className="sr-only">Caption size</legend>
           {Object.keys(SIZES).map((k) => (
-            <label key={k} className={`btn ${size === k ? 'border-accent' : ''}`}>
+            <label key={k} className={`btn has-[:focus-visible]:outline-3 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-focus has-[:focus-visible]:outline-solid ${size === k ? 'border-accent' : ''}`}>
               <input type="radio" name="caption-size" value={k} checked={size === k} onChange={() => setSize(k)} className="sr-only" />
               {k}
             </label>

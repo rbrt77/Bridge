@@ -1,0 +1,600 @@
+{
+ "date": "2026-10-22",
+ "commit_base": "4bcbd06",
+ "axe_version": "4.14.0",
+ "axe_tags": [
+  "wcag2a",
+  "wcag2aa",
+  "wcag21a",
+  "wcag21aa",
+  "wcag22aa",
+  "best-practice"
+ ],
+ "lighthouse_version": "12.8.2",
+ "axe": [
+  {
+   "page": "/login",
+   "user": "signed out",
+   "width": 1280,
+   "contrast": "normal",
+   "violations": 0,
+   "passes": 34,
+   "horizontal_scroll": false
+  },
+  {
+   "page": "/today",
+   "user": "member (Andrei)",
+   "width": 1280,
+   "contrast": "normal",
+   "violations": 0,
+   "passes": 40,
+   "horizontal_scroll": false
+  },
+  {
+   "page": "/ask",
+   "user": "member (Andrei)",
+   "width": 1280,
+   "contrast": "normal",
+   "violations": 0,
+   "passes": 44,
+   "horizontal_scroll": false
+  },
+  {
+   "page": "/ask/messages",
+   "user": "member (Andrei)",
+   "width": 1280,
+   "contrast": "normal",
+   "violations": 0,
+   "passes": 40,
+   "horizontal_scroll": false
+  },
+  {
+   "page": "/work/tickets",
+   "user": "member (Andrei)",
+   "width": 1280,
+   "contrast": "normal",
+   "violations": 0,
+   "passes": 43,
+   "horizontal_scroll": false
+  },
+  {
+   "page": "/work/reviews",
+   "user": "member (Andrei)",
+   "width": 1280,
+   "contrast": "normal",
+   "violations": 0,
+   "passes": 43,
+   "horizontal_scroll": false
+  },
+  {
+   "page": "/work/setup",
+   "user": "member (Andrei)",
+   "width": 1280,
+   "contrast": "normal",
+   "violations": 0,
+   "passes": 43,
+   "horizontal_scroll": false
+  },
+  {
+   "page": "/meetings",
+   "user": "member (Andrei)",
+   "width": 1280,
+   "contrast": "normal",
+   "violations": 0,
+   "passes": 44,
+   "horizontal_scroll": false
+  },
+  {
+   "page": "/support",
+   "user": "member (Andrei)",
+   "width": 1280,
+   "contrast": "normal",
+   "violations": 0,
+   "passes": 43,
+   "horizontal_scroll": false
+  },
+  {
+   "page": "/work-style",
+   "user": "member (Andrei)",
+   "width": 1280,
+   "contrast": "normal",
+   "violations": 0,
+   "passes": 44,
+   "horizontal_scroll": false
+  },
+  {
+   "page": "/glossary",
+   "user": "member (Andrei)",
+   "width": 1280,
+   "contrast": "normal",
+   "violations": 0,
+   "passes": 45,
+   "horizontal_scroll": false
+  },
+  {
+   "page": "/about-ai",
+   "user": "member (Andrei)",
+   "width": 1280,
+   "contrast": "normal",
+   "violations": 0,
+   "passes": 45,
+   "horizontal_scroll": false
+  },
+  {
+   "page": "/today",
+   "user": "member (Andrei)",
+   "width": 320,
+   "contrast": "high",
+   "violations": 0,
+   "passes": 40,
+   "horizontal_scroll": false
+  },
+  {
+   "page": "/ask",
+   "user": "member (Andrei)",
+   "width": 320,
+   "contrast": "high",
+   "violations": 0,
+   "passes": 44,
+   "horizontal_scroll": false
+  },
+  {
+   "page": "/ask/messages",
+   "user": "member (Andrei)",
+   "width": 320,
+   "contrast": "high",
+   "violations": 0,
+   "passes": 40,
+   "horizontal_scroll": false
+  },
+  {
+   "page": "/work/tickets",
+   "user": "member (Andrei)",
+   "width": 320,
+   "contrast": "high",
+   "violations": 0,
+   "passes": 43,
+   "horizontal_scroll": false
+  },
+  {
+   "page": "/work/reviews",
+   "user": "member (Andrei)",
+   "width": 320,
+   "contrast": "high",
+   "violations": 0,
+   "passes": 43,
+   "horizontal_scroll": false
+  },
+  {
+   "page": "/work/setup",
+   "user": "member (Andrei)",
+   "width": 320,
+   "contrast": "high",
+   "violations": 0,
+   "passes": 43,
+   "horizontal_scroll": false
+  },
+  {
+   "page": "/meetings",
+   "user": "member (Andrei)",
+   "width": 320,
+   "contrast": "high",
+   "violations": 0,
+   "passes": 42,
+   "horizontal_scroll": false
+  },
+  {
+   "page": "/support",
+   "user": "member (Andrei)",
+   "width": 320,
+   "contrast": "high",
+   "violations": 0,
+   "passes": 43,
+   "horizontal_scroll": false
+  },
+  {
+   "page": "/work-style",
+   "user": "member (Andrei)",
+   "width": 320,
+   "contrast": "high",
+   "violations": 0,
+   "passes": 44,
+   "horizontal_scroll": false
+  },
+  {
+   "page": "/glossary",
+   "user": "member (Andrei)",
+   "width": 320,
+   "contrast": "high",
+   "violations": 0,
+   "passes": 43,
+   "horizontal_scroll": false
+  },
+  {
+   "page": "/about-ai",
+   "user": "member (Andrei)",
+   "width": 320,
+   "contrast": "high",
+   "violations": 0,
+   "passes": 45,
+   "horizontal_scroll": false
+  },
+  {
+   "page": "/company",
+   "user": "admin",
+   "width": 1280,
+   "contrast": "normal",
+   "violations": 0,
+   "passes": 40,
+   "horizontal_scroll": false
+  },
+  {
+   "page": "/insights",
+   "user": "admin",
+   "width": 1280,
+   "contrast": "normal",
+   "violations": 0,
+   "passes": 40,
+   "horizontal_scroll": false
+  },
+  {
+   "page": "/company",
+   "user": "admin",
+   "width": 320,
+   "contrast": "normal",
+   "violations": 0,
+   "passes": 38,
+   "horizontal_scroll": false
+  },
+  {
+   "page": "/insights",
+   "user": "admin",
+   "width": 320,
+   "contrast": "normal",
+   "violations": 0,
+   "passes": 38,
+   "horizontal_scroll": false
+  }
+ ],
+ "axe_states": [
+  {
+   "state": "ticket+diagram",
+   "width": 1280,
+   "violations": 0
+  },
+  {
+   "state": "workstyle-wizard",
+   "width": 1280,
+   "violations": 0
+  },
+  {
+   "state": "menu-open-1100",
+   "width": 1100,
+   "violations": 0
+  },
+  {
+   "state": "ask-answer+sources+terms",
+   "width": 1280,
+   "violations": 0
+  },
+  {
+   "state": "glossary-popover-open",
+   "width": 1280,
+   "violations": 0
+  },
+  {
+   "state": "glossary-popover-open",
+   "width": 320,
+   "violations": 0
+  }
+ ],
+ "lighthouse": [
+  {
+   "page": "/login",
+   "user": "signed out",
+   "form_factor": "mobile",
+   "score": 100,
+   "failed": []
+  },
+  {
+   "page": "/login",
+   "user": "signed out",
+   "form_factor": "desktop",
+   "score": 100,
+   "failed": []
+  },
+  {
+   "page": "/today",
+   "user": "member (Andrei)",
+   "form_factor": "mobile",
+   "score": 100,
+   "failed": []
+  },
+  {
+   "page": "/ask",
+   "user": "member (Andrei)",
+   "form_factor": "mobile",
+   "score": 100,
+   "failed": []
+  },
+  {
+   "page": "/ask/messages",
+   "user": "member (Andrei)",
+   "form_factor": "mobile",
+   "score": 100,
+   "failed": []
+  },
+  {
+   "page": "/work/tickets",
+   "user": "member (Andrei)",
+   "form_factor": "mobile",
+   "score": 100,
+   "failed": []
+  },
+  {
+   "page": "/work/reviews",
+   "user": "member (Andrei)",
+   "form_factor": "mobile",
+   "score": 100,
+   "failed": []
+  },
+  {
+   "page": "/work/setup",
+   "user": "member (Andrei)",
+   "form_factor": "mobile",
+   "score": 100,
+   "failed": []
+  },
+  {
+   "page": "/meetings",
+   "user": "member (Andrei)",
+   "form_factor": "mobile",
+   "score": 100,
+   "failed": []
+  },
+  {
+   "page": "/support",
+   "user": "member (Andrei)",
+   "form_factor": "mobile",
+   "score": 100,
+   "failed": []
+  },
+  {
+   "page": "/work-style",
+   "user": "member (Andrei)",
+   "form_factor": "mobile",
+   "score": 100,
+   "failed": []
+  },
+  {
+   "page": "/glossary",
+   "user": "member (Andrei)",
+   "form_factor": "mobile",
+   "score": 100,
+   "failed": []
+  },
+  {
+   "page": "/about-ai",
+   "user": "member (Andrei)",
+   "form_factor": "mobile",
+   "score": 100,
+   "failed": []
+  },
+  {
+   "page": "/today",
+   "user": "member (Andrei)",
+   "form_factor": "desktop",
+   "score": 100,
+   "failed": []
+  },
+  {
+   "page": "/ask",
+   "user": "member (Andrei)",
+   "form_factor": "desktop",
+   "score": 100,
+   "failed": []
+  },
+  {
+   "page": "/work/tickets",
+   "user": "member (Andrei)",
+   "form_factor": "desktop",
+   "score": 100,
+   "failed": []
+  },
+  {
+   "page": "/work/reviews",
+   "user": "member (Andrei)",
+   "form_factor": "desktop",
+   "score": 100,
+   "failed": []
+  },
+  {
+   "page": "/work/setup",
+   "user": "member (Andrei)",
+   "form_factor": "desktop",
+   "score": 100,
+   "failed": []
+  },
+  {
+   "page": "/meetings",
+   "user": "member (Andrei)",
+   "form_factor": "desktop",
+   "score": 100,
+   "failed": []
+  },
+  {
+   "page": "/support",
+   "user": "member (Andrei)",
+   "form_factor": "desktop",
+   "score": 100,
+   "failed": []
+  },
+  {
+   "page": "/work-style",
+   "user": "member (Andrei)",
+   "form_factor": "desktop",
+   "score": 100,
+   "failed": []
+  },
+  {
+   "page": "/glossary",
+   "user": "member (Andrei)",
+   "form_factor": "desktop",
+   "score": 100,
+   "failed": []
+  },
+  {
+   "page": "/about-ai",
+   "user": "member (Andrei)",
+   "form_factor": "desktop",
+   "score": 100,
+   "failed": []
+  },
+  {
+   "page": "/company",
+   "user": "admin",
+   "form_factor": "mobile",
+   "score": 100,
+   "failed": []
+  },
+  {
+   "page": "/insights",
+   "user": "admin",
+   "form_factor": "mobile",
+   "score": 100,
+   "failed": []
+  },
+  {
+   "page": "/insights",
+   "user": "manager (Ana)",
+   "form_factor": "mobile",
+   "score": 100,
+   "failed": []
+  },
+  {
+   "page": "/ask/messages",
+   "user": "manager (Ana)",
+   "form_factor": "mobile",
+   "score": 100,
+   "failed": []
+  }
+ ],
+ "keyboard": {
+  "tab_walks": [
+   {
+    "page": "/today",
+    "first_stop": "a \"Skip to content\"",
+    "stops": 18,
+    "without_visible_focus": 0,
+    "hidden": 0,
+    "unnamed": 0
+   },
+   {
+    "page": "/ask",
+    "first_stop": "a \"Skip to content\"",
+    "stops": 19,
+    "without_visible_focus": 0,
+    "hidden": 0,
+    "unnamed": 0
+   },
+   {
+    "page": "/ask/messages",
+    "first_stop": "a \"Skip to content\"",
+    "stops": 14,
+    "without_visible_focus": 0,
+    "hidden": 0,
+    "unnamed": 0
+   },
+   {
+    "page": "/work/tickets",
+    "first_stop": "a \"Skip to content\"",
+    "stops": 18,
+    "without_visible_focus": 0,
+    "hidden": 0,
+    "unnamed": 0
+   },
+   {
+    "page": "/work/reviews",
+    "first_stop": "a \"Skip to content\"",
+    "stops": 16,
+    "without_visible_focus": 0,
+    "hidden": 0,
+    "unnamed": 0
+   },
+   {
+    "page": "/work/setup",
+    "first_stop": "a \"Skip to content\"",
+    "stops": 19,
+    "without_visible_focus": 0,
+    "hidden": 0,
+    "unnamed": 0
+   },
+   {
+    "page": "/meetings",
+    "first_stop": "a \"Skip to content\"",
+    "stops": 21,
+    "without_visible_focus": 0,
+    "hidden": 0,
+    "unnamed": 0
+   },
+   {
+    "page": "/support",
+    "first_stop": "a \"Skip to content\"",
+    "stops": 19,
+    "without_visible_focus": 0,
+    "hidden": 0,
+    "unnamed": 0
+   },
+   {
+    "page": "/work-style",
+    "first_stop": "a \"Skip to content\"",
+    "stops": 35,
+    "without_visible_focus": 0,
+    "hidden": 0,
+    "unnamed": 0
+   },
+   {
+    "page": "/glossary",
+    "first_stop": "a \"Skip to content\"",
+    "stops": 70,
+    "without_visible_focus": 0,
+    "hidden": 0,
+    "unnamed": 0
+   },
+   {
+    "page": "/about-ai",
+    "first_stop": "a \"Skip to content\"",
+    "stops": 12,
+    "without_visible_focus": 0,
+    "hidden": 0,
+    "unnamed": 0
+   }
+  ],
+  "flows": [
+   {
+    "flow": "Skip link is the first stop, visible on focus, Enter → main",
+    "pass": true
+   },
+   {
+    "flow": "Glossary term: Enter opens popover with focus inside, Esc closes, focus back on term",
+    "pass": true
+   },
+   {
+    "flow": "Menu (800px): Enter opens, Esc closes and keeps focus on Menu",
+    "pass": true
+   },
+   {
+    "flow": "Tickets: type, Enter decodes, Space ticks a checklist item",
+    "pass": true
+   },
+   {
+    "flow": "Diagram: Enter draws it, Download SVG reachable by Tab",
+    "pass": true
+   },
+   {
+    "flow": "Work style: Enter starts wizard, focus on step heading, options reachable",
+    "pass": true
+   }
+  ]
+ }
+}

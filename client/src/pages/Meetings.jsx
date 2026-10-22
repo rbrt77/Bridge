@@ -58,7 +58,7 @@ export default function Meetings() {
 
       <div className="mt-6"><Captions /></div>
 
-      <form onSubmit={submit} className="card mt-6 grid max-w-xl gap-4">
+      <form onSubmit={submit} className="card mt-6 grid max-w-xl grid-cols-1 gap-4">
         <div role="note" className="rounded-lg border border-accent bg-[var(--accent-soft)] p-3">
           <p className="font-semibold">Ask before you record</p>
           <p>Everyone in the meeting must agree to be recorded. The recording and the transcript are not saved: only your tasks, the decisions and the summary are kept.</p>
@@ -69,7 +69,7 @@ export default function Meetings() {
         </label>
         <label className="grid gap-1">
           Recording (mp3, m4a, wav)
-          <input type="file" accept="audio/*" onChange={(e) => setFile(e.target.files[0] ?? null)} className="field py-2" required />
+          <input type="file" accept="audio/*" onChange={(e) => setFile(e.target.files[0] ?? null)} className="field w-full min-w-0 py-2" required />
         </label>
         <label className="grid gap-1">
           Your first name, as people say it in the meeting

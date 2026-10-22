@@ -48,7 +48,8 @@ export default function GlossaryTerm({ term, children, variant = 'chip' }) {
         {children ?? term}
         {variant === 'inline' && <span className="sr-only"> (glossary term)</span>}
       </Button>
-      <Popover placement="bottom start" offset={6} className="w-[min(24rem,calc(100vw-2rem))] rounded-xl border border-border bg-surface p-4 text-fg shadow-lg">
+      {/* Rendered inside <main> (not at the end of <body>) so the popover and react-aria's hidden Dismiss button stay in a landmark. */}
+      <Popover placement="bottom start" offset={6} UNSTABLE_portalContainer={document.getElementById('main') ?? undefined} className="w-[min(24rem,calc(100vw-2rem))] rounded-xl border border-border bg-surface p-4 text-fg shadow-lg">
         <Dialog className="outline-none">
           <TermCard term={term} />
         </Dialog>

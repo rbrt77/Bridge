@@ -59,9 +59,11 @@
   }
   a { color: var(--link); text-decoration: underline; text-underline-offset: 0.2em; }
   img, svg, video, canvas { max-width: 100%; height: auto; }
-  pre { overflow-x: auto; }
+  pre { white-space: pre-wrap; overflow-wrap: anywhere; } /* reflow: long commands wrap instead of a scroll box keyboard users cannot reach */
   :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
   @media (forced-colors: active) { :focus-visible { outline-color: Highlight; } }
+  /* Date/time inputs move focus through inner fields and the calendar button, where :focus-visible stops matching. */
+  input[type="date"]:focus-within, input[type="time"]:focus-within, input[type="datetime-local"]:focus-within { outline: 3px solid var(--focus); outline-offset: 2px; }
   button, input, select, textarea { min-height: 44px; }
   button { cursor: pointer; font-weight: 500; }
   button:disabled { cursor: not-allowed; }
