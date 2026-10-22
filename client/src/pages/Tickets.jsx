@@ -7,6 +7,7 @@ import Todo from '../components/Todo.jsx';
 import WorkTabs from '../components/WorkTabs.jsx';
 import AudioButton from '../components/AudioButton.jsx';
 import VoiceInput from '../components/VoiceInput.jsx';
+import TicketResult from '../components/TicketResult.jsx';
 
 const DEMO_ISSUE = 'https://github.com/brightline-software/invoicing-service/issues/142';
 
@@ -72,7 +73,7 @@ export default function Tickets() {
         </div>
       )}
       <p role="status" className="mt-2">{status}</p>
-      {data && <pre className="mt-4 overflow-auto whitespace-pre-wrap text-sm">{JSON.stringify(data, null, 2)}</pre>}
+      {data && <TicketResult data={data} sourceUrl={text.trim() ? null : url} saved={saved} />}
     </>
   );
 }
