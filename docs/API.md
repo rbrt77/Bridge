@@ -67,7 +67,7 @@ Realtime: client subscribes to `help_messages` inserts filtered by `thread_id`. 
 ## Meetings (F3) — Track C
 | Method | Path | Body | Response |
 |---|---|---|---|
-| POST | `/api/meetings/transcribe` | multipart `audio` + `me` (name) | `MeetingResult` (see mocks/meeting.json). Transcript NOT stored |
+| POST | `/api/meetings/transcribe` | multipart `audio` + `me` (name) + `consent=true`; optional `speakers` (JSON `[{label,name}]`, manual fix) and `meeting_date` (YYYY-MM-DD) | `MeetingResult` (see mocks/meeting.json). Transcript NOT stored |
 | POST | `/api/meetings/catch-up` | `{ "last_minutes_text" }` | `{ "summary" }` |
 
 ## Support (F7) — Track C + D
