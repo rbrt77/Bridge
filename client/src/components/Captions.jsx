@@ -24,7 +24,9 @@ export default function Captions() {
   const active = useRef(false);
   const end = useRef(null);
 
-  useEffect(() => end.current?.scrollIntoView({ block: 'nearest' }), [segments, interim]);
+  useEffect(() => {
+    end.current?.scrollIntoView({ block: 'nearest' });
+  }, [segments, interim]);
   useEffect(() => () => stop(), []);
 
   const listen = () => {
