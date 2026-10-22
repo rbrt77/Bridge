@@ -138,7 +138,7 @@ function AnonQueue() {
       <h2 id="aq-h" tabIndex={-1} className="text-lg font-semibold outline-none">
         Anonymous questions for your team {list && <span className="font-normal text-muted">({list.length})</span>}
       </h2>
-      <p className="text-sm text-muted">Nobody knows who asked these, not even OnRamp. Your answer becomes a Team FAQ that everyone can find in Ask.</p>
+      <p className="text-sm text-muted">Nobody knows who asked these, not even Bridge. Your answer becomes a Team FAQ that everyone can find in Ask.</p>
       {error && <p role="alert" className="mt-2 text-danger">Could not load the questions: {error}</p>}
       {list === null && !error && <p className="mt-2 text-muted">Loading…</p>}
       {list?.length === 0 && <p className="mt-3">No open questions. Nice.</p>}

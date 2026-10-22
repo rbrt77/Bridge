@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { api } from '../lib/api.js';
 import { useAnnounce } from '../a11y/Announcer.jsx';
 
-const KEY = 'onramp.audit';
+const KEY = 'bridge.audit';
 const DEMO_REPO = 'brightline-software/invoicing-service';
 const DOC_TYPES = [['handbook', 'Handbook'], ['procedure', 'Procedure'], ['legal', 'Policy or legal'], ['faq', 'FAQ']];
 
@@ -218,7 +218,7 @@ export default function Company() {
   return (
     <>
       <h1 className="text-3xl font-bold">Company</h1>
-      <p className="mt-2 max-w-prose text-muted">How ready your team is for a junior developer, and the documents OnRamp answers from.</p>
+      <p className="mt-2 max-w-prose text-muted">How ready your team is for a junior developer, and the documents Bridge answers from.</p>
       <Audit />
       <Documents />
       <RepoSync />
