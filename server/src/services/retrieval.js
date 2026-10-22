@@ -11,6 +11,9 @@ export const ABSTAIN_SIMILARITY = 0.3;
 const TOP_N = 6;
 const CANDIDATES = 30;
 const CONTEXT_CHAR_BUDGET = 48_000; // ~12k tokens
+// code_map (F11) is searched only when asked for: in Ask it pushed docs down (eval hit@1 88% → 80%)
+// and gave "answers" from code to questions no doc covers.
+const DOC_TYPES = ['handbook', 'procedure', 'repo_doc', 'adr', 'faq', 'legal'];
 
 const REWRITE_SCHEMA = {
   type: 'object',
@@ -39,11 +42,37 @@ export async function rewriteQuery(question, history = []) {
   return query || question;
 }
 
-// Glossary is small and changes only on ingest; cache per org for a minute.
+// Retrieval cache (A17): a repeated question skips embed + search + rerank (~1.5 s), so the first token comes
+// after ~0.8 s. Any document change in the org bumps its version, which retires every cached entry.
+const CACHE_TTL_MS = 60 * 60_000;
+const CACHE_MAX = 300;
+const retrievalCache = new Map(); // key → { at, value }; Map order = LRU order
+const corpusVersion = new Map(); // orgId → n
+
+/** Call after anything that changes an org's documents or glossary (ingest, FAQ, repo sync). */
+export function invalidateRetrieval(orgId) {
+  corpusVersion.set(orgId, (corpusVersion.get(orgId) ?? 0) + 1);
+  glossaryCache.delete(orgId);
+}
+
+function cacheGet(key) {
+  const hit = retrievalCache.get(key);
+  if (!hit || hit.at < Date.now() - CACHE_TTL_MS) return null;
+  retrievalCache.delete(key);
+  retrievalCache.set(key, hit);
+  return hit.value;
+}
+
+function cacheSet(key, value) {
+  retrievalCache.set(key, { at: Date.now(), value });
+  if (retrievalCache.size > CACHE_MAX) retrievalCache.delete(retrievalCache.keys().next().value);
+}
+
+// Glossary is small and changes only on ingest (which calls invalidateRetrieval); cache per org for 10 min.
 const glossaryCache = new Map();
 async function glossaryFor(orgId) {
   const hit = glossaryCache.get(orgId);
-  if (hit && hit.at > Date.now() - 60_000) return hit.terms;
+  if (hit && hit.at > Date.now() - 10 * 60_000) return hit.terms;
   const { data } = await db.from('glossary_terms').select('term, definition').eq('org_id', orgId);
   glossaryCache.set(orgId, { terms: data ?? [], at: Date.now() });
   return data ?? [];
@@ -62,7 +91,7 @@ async function search({ query, orgId, docTypes, mode }) {
     query_text: query,
     query_embedding: await embedOne(query),
     p_org_id: orgId,
-    p_doc_types: docTypes?.length ? docTypes : null,
+    p_doc_types: docTypes?.length ? docTypes : DOC_TYPES,
     match_count: CANDIDATES,
     mode,
   });
@@ -111,15 +140,25 @@ const isWeak = (top) => {
  * @param {'hybrid'|'vector'|'fts'} [o.mode]       search mode (eval compares them)
  * @param {'llm'|'none'} [o.rerankWith]
  * @param {boolean} [o.neighbours]               attach chunk_index ± 1 (off for eval)
+ * @param {boolean} [o.fresh]                    skip the cache read (warm-up refresh); the result is still cached
  * @returns {Promise<{abstain:boolean, query:string, chunks:object[], sources:object[], candidates:object[]}>}
  */
-export async function retrieve({ question, history = [], orgId, docTypes, mode = 'hybrid', rerankWith = 'llm', neighbours = true }) {
+export async function retrieve({ question, history = [], orgId, docTypes, mode = 'hybrid', rerankWith = 'llm', neighbours = true, fresh = false }) {
   const standalone = await rewriteQuery(question, history);
+  const key = [orgId, corpusVersion.get(orgId) ?? 0, mode, rerankWith, neighbours, (docTypes ?? DOC_TYPES).join(','), standalone.trim().toLowerCase().replace(/\s+/g, ' ')].join('|');
+  const cached = !fresh && cacheGet(key);
+  if (cached) return cached;
+
   const query = await expandAcronyms(standalone, orgId);
   const candidates = await search({ query, orgId, docTypes, mode });
   const ranked = await rerank(standalone, candidates, TOP_N, { using: rerankWith });
+  // A rerank that timed out (RRF fallback) is not worth keeping: the next ask may get the real ranking.
+  const keep = (value) => {
+    if (rerankWith === 'none' || ranked[0]?.rerank_by === 'llm') cacheSet(key, value);
+    return value;
+  };
 
-  if (isWeak(ranked[0])) return { abstain: true, query, chunks: [], sources: [], candidates: ranked };
+  if (isWeak(ranked[0])) return keep({ abstain: true, query, chunks: [], sources: [], candidates: ranked });
 
   // Drop clearly irrelevant tail hits so the model is not tempted to cite them.
   const kept = ranked.filter((c, i) => i === 0 || c.rerank_score == null || c.rerank_score >= ABSTAIN_THRESHOLD / 2);
@@ -128,5 +167,5 @@ export async function retrieve({ question, history = [], orgId, docTypes, mode =
   let budget = CONTEXT_CHAR_BUDGET;
   chunks = chunks.filter((c) => (budget -= c.text.length) >= 0 || c === chunks[0]);
   chunks = chunks.map((c, i) => ({ ...c, label: `S${i + 1}` }));
-  return { abstain: false, query, chunks, sources: chunks.map((c) => toSource(c, c.label)), candidates: ranked };
+  return keep({ abstain: false, query, chunks, sources: chunks.map((c) => toSource(c, c.label)), candidates: ranked });
 }

@@ -21,6 +21,7 @@ import company from './routes/company.js';
 import standup from './routes/standup.js';
 import setup from './routes/setup.js';
 import codeWhere from './routes/code-where.js';
+import { startDemoWarmup } from './services/warmup.js';
 
 const app = express();
 app.use(cors({ origin: env.clientOrigin, credentials: true }));
@@ -48,4 +49,5 @@ app.use(errorHandler);
 
 app.listen(env.port, () => {
   console.log(`OnRamp server on :${env.port}${env.mock ? ' (MOCK mode)' : ''}`);
+  if (env.warmDemo && !env.mock) startDemoWarmup();
 });

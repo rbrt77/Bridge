@@ -11,6 +11,7 @@ export const env = {
   elevenlabsKey: process.env.ELEVENLABS_API_KEY,
   githubToken: process.env.GITHUB_TOKEN,
   demoRepo: process.env.DEMO_REPO ?? 'brightline-software/invoicing-service',
+  warmDemo: process.env.WARM_DEMO === '1', // pre-runs data/demo-questions.json retrieval at start (demo day)
   slackWebhookUrl: process.env.SLACK_WEBHOOK_URL,
   supabaseUrl: process.env.SUPABASE_URL,
   // New Supabase key names (publishable/secret); legacy anon/service_role still accepted.

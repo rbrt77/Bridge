@@ -50,6 +50,7 @@ export async function extractGlossary(documentText, { orgId, documentId, title }
     schema: SCHEMA,
     system: SYSTEM,
     input: `<document title="${clean(title).replace(/"/g, "'")}">\n${text}\n</document>`,
+    timeoutMs: 60_000, // SDK default is 10 min; a stuck call must not hold a whole repo sync
   });
 
   const seen = new Set();

@@ -1,0 +1,17 @@
+{
+  "_owner": "Track A (A17). Questions asked live in the pitch demo. With WARM_DEMO=1 the server runs their retrieval at start (and every 50 min), so on stage only the answer is generated: first token in < 1 s. Exact wording does not matter much (the cache key is lower-cased), but keep it close to what will be typed.",
+  "ask": [
+    "What is the Definition of Done?",
+    "Who approves DB migrations?",
+    "What is Hermes?",
+    "How do I replay a failed Hermes job?",
+    "I get Error: connect ECONNREFUSED 127.0.0.1:5432. How do I fix it?",
+    "What does nit: mean in a code review comment?",
+    "Do I have to turn my camera on in meetings?",
+    "How do I ask for a workplace adjustment?"
+  ],
+  "code_where": [
+    "Where is the code that sends invoice emails?",
+    "Which code runs the daily invoice cron?"
+  ]
+}
