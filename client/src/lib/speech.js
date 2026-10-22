@@ -33,15 +33,27 @@ export async function speakOnServer(text, { slow = false, onEnd } = {}) {
   return audio;
 }
 
-/** Returns a recognizer or null (Web Speech API is Chrome/Safari only → demo on Chrome). */
-export function createRecognizer({ continuous = false, onResult, onEnd } = {}) {
+/**
+ * Returns a recognizer or null (Web Speech API is Chrome/Safari only → demo on Chrome).
+ * onResult(allText, isFinal) for dictation; onFinal(segment) / onInterim(text) for live captions.
+ */
+export function createRecognizer({ continuous = false, onResult, onFinal, onInterim, onEnd, onError } = {}) {
   const SR = window.SpeechRecognition ?? window.webkitSpeechRecognition;
   if (!SR) return null;
   const r = new SR();
   r.lang = 'en-US';
   r.continuous = continuous;
   r.interimResults = true;
-  r.onresult = (e) => onResult?.(Array.from(e.results).map((x) => x[0].transcript).join(' '), e.results[e.results.length - 1].isFinal);
+  r.onresult = (e) => {
+    onResult?.(Array.from(e.results).map((x) => x[0].transcript).join(' '), e.results[e.results.length - 1].isFinal);
+    let interim = '';
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      if (e.results[i].isFinal) onFinal?.(e.results[i][0].transcript.trim());
+      else interim += e.results[i][0].transcript;
+    }
+    onInterim?.(interim.trim());
+  };
+  r.onerror = (e) => onError?.(e.error);
   r.onend = () => onEnd?.();
   return r;
 }

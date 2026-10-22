@@ -6,6 +6,7 @@ import { useSession } from '../auth/Session.jsx';
 import { useAnnounce } from '../a11y/Announcer.jsx';
 import GlossaryTerm from '../components/GlossaryTerm.jsx';
 import AudioButton from '../components/AudioButton.jsx';
+import Captions from '../components/Captions.jsx';
 
 const tasksText = (tasks) => tasks.map((t, i) => `${i + 1}. ${t.task}. ${t.due ? `Due ${t.due}.` : 'No deadline.'} Asked by ${t.who}.`).join('\n');
 
@@ -53,7 +54,9 @@ export default function Meetings() {
   return (
     <>
       <h1 className="text-3xl font-bold">Meetings</h1>
-      <p className="text-muted">Turn a meeting recording into your own task list.</p>
+      <p className="text-muted">Follow a meeting live with captions, or turn a recording into your own task list.</p>
+
+      <div className="mt-6"><Captions /></div>
 
       <form onSubmit={submit} className="card mt-6 grid max-w-xl gap-4">
         <div role="note" className="rounded-lg border border-accent bg-[var(--accent-soft)] p-3">
