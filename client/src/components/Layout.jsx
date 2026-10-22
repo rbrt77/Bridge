@@ -4,6 +4,7 @@ import { NavLink, Outlet, Link, useLocation } from 'react-router';
 import { useEffect, useRef, useState } from 'react';
 import { useShortcuts } from '../a11y/useShortcuts.js';
 import { useHasRole, useSession } from '../auth/Session.jsx';
+import Logo from './Logo.jsx';
 
 const NAV = [
   { to: '/today', label: 'Today' },
@@ -13,8 +14,9 @@ const NAV = [
   { to: '/support', label: 'Support' },
 ];
 
-const item = 'inline-flex min-h-11 items-center px-3 text-fg';
-const navClass = ({ isActive }) => `${item} underline-offset-4 ${isActive ? 'font-bold underline' : 'no-underline hover:underline'}`;
+const item = 'inline-flex min-h-11 items-center rounded-lg px-3 no-underline';
+// Active page: tinted pill + bold (not color alone); aria-current="page" comes from NavLink.
+const navClass = ({ isActive }) => `${item} ${isActive ? 'bg-accent-soft font-bold text-accent' : 'text-fg hover:bg-accent-soft'}`;
 
 export default function Layout() {
   useShortcuts();
@@ -26,7 +28,12 @@ export default function Layout() {
   const isManager = useHasRole('manager', 'admin');
   const isAdmin = useHasRole('admin');
 
-  useEffect(() => { setOpen(false); main.current?.focus(); }, [pathname]); // close menu, move focus on route change
+  // On route change: close menu, start at the top, move focus to the new page without scrolling past the header.
+  useEffect(() => {
+    setOpen(false);
+    window.scrollTo(0, 0);
+    main.current?.focus({ preventScroll: true });
+  }, [pathname]);
 
   useEffect(() => {
     if (!open) return;
@@ -40,15 +47,18 @@ export default function Layout() {
   }, [open]);
 
   return (
-    <>
-      <a href="#main" className="sr-only z-10 bg-bg focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:p-3">Skip to content</a>
-      <header className="border-b border-border">
-        <div className="flex flex-wrap items-center gap-2 p-2 sm:p-4">
-          <Link to="/today" className="inline-flex min-h-11 items-center px-2 text-xl font-bold text-fg no-underline">OnRamp</Link>
+    <div className="flex min-h-screen flex-col">
+      <a href="#main" className="sr-only z-10 rounded-lg bg-surface focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:p-3">Skip to content</a>
+      <header className="border-b border-border-subtle bg-surface">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-2 px-3 py-2 sm:px-6 sm:py-3">
+          <Link to="/today" className="mr-2 inline-flex min-h-11 items-center gap-2 px-1 text-xl font-bold text-fg no-underline">
+            <Logo />
+            OnRamp
+          </Link>
           <button
             ref={menuButton}
             type="button"
-            className="ml-auto rounded border border-border px-4 lg:hidden"
+            className="btn ml-auto lg:hidden"
             aria-expanded={open}
             aria-controls="site-menu"
             onClick={() => setOpen((o) => !o)}
@@ -63,31 +73,42 @@ export default function Layout() {
                 ))}
               </ul>
             </nav>
-            <ul className="flex flex-col border-t border-border pt-2 lg:flex-row lg:flex-wrap lg:border-0 lg:pt-0" aria-label="More">
+            <ul className="flex flex-col border-t border-border-subtle pt-2 lg:flex-row lg:flex-wrap lg:gap-1 lg:border-0 lg:pt-0" aria-label="More">
               <li><NavLink to="/glossary" className={navClass}>Glossary</NavLink></li>
               {isManager && <li><NavLink to="/insights" className={navClass}>Insights</NavLink></li>}
               {isAdmin && <li><NavLink to="/company" className={navClass}>Company</NavLink></li>}
             </ul>
-            <div className="flex flex-wrap items-center gap-2 border-t border-border pt-2 lg:ml-auto lg:border-0 lg:pt-0">
-              <NavLink to="/work-style" className={`${item} rounded border border-border no-underline`} aria-keyshortcuts="Alt+A Alt+Shift+A">
+            <div className="flex flex-wrap items-center gap-2 border-t border-border-subtle pt-2 lg:ml-auto lg:border-0 lg:pt-0">
+              <NavLink
+                to="/work-style"
+                className={({ isActive }) => `btn ${isActive ? 'border-accent bg-accent-soft text-accent' : ''}`}
+                aria-keyshortcuts="Alt+A Alt+Shift+A"
+              >
                 Work style <span className="sr-only">(Alt+A or Alt+Shift+A)</span>
               </NavLink>
               {mode === 'supabase' && (
                 <>
-                  <span className="px-2 text-muted">{member?.name}</span>
-                  <button type="button" onClick={signOut} className="rounded border border-border px-3">Sign out</button>
+                  <span className="flex items-center gap-2 px-1 text-muted">
+                    <span aria-hidden="true" className="grid size-8 place-items-center rounded-full bg-accent-soft font-bold text-accent uppercase">
+                      {member?.name?.[0]}
+                    </span>
+                    {member?.name}
+                  </span>
+                  <button type="button" onClick={signOut} className="btn">Sign out</button>
                 </>
               )}
             </div>
           </div>
         </div>
       </header>
-      <main id="main" ref={main} tabIndex={-1} className="mx-auto max-w-4xl p-4 outline-none">
+      <main id="main" ref={main} tabIndex={-1} className="mx-auto w-full max-w-4xl px-4 py-6 outline-none sm:px-6 sm:py-10">
         <Outlet />
       </main>
-      <footer className="border-t border-border p-4 text-muted">
-        <Link to="/about-ai">About the AI</Link> · Answers are AI-generated and cite team documents.
+      <footer className="mt-auto border-t border-border-subtle bg-surface">
+        <p className="mx-auto max-w-6xl px-4 py-4 text-sm text-muted sm:px-6">
+          <Link to="/about-ai">About the AI</Link> · Answers are AI-generated and cite team documents.
+        </p>
       </footer>
-    </>
+    </div>
   );
 }

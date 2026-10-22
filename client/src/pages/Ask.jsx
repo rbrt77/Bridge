@@ -40,12 +40,13 @@ export default function Ask() {
 
   return (
     <>
-      <h1 className="text-2xl font-bold">Ask the team docs</h1>
-      <form onSubmit={(e) => { e.preventDefault(); if (question.trim()) run(); }} className="mt-4 flex flex-wrap gap-2">
+      <h1 className="text-3xl font-bold">Ask the team docs</h1>
+      <p className="mt-2 text-muted">Answers come from your team&apos;s documents and show where they came from.</p>
+      <form onSubmit={(e) => { e.preventDefault(); if (question.trim()) run(); }} className="card mt-6 flex flex-wrap gap-2">
         <label htmlFor="q" className="sr-only">Your question</label>
-        <input id="q" value={question} onChange={(e) => setQuestion(e.target.value)} className="flex-1 border p-2" placeholder="e.g. What is our Definition of Done?" />
+        <input id="q" value={question} onChange={(e) => setQuestion(e.target.value)} className="field min-w-0 flex-1 basis-60" placeholder="e.g. What is our Definition of Done?" />
         <VoiceInput onText={setQuestion} />
-        <button type="submit" disabled={busy} className="rounded border px-3">Ask</button>
+        <button type="submit" disabled={busy} className="btn btn-primary">Ask</button>
       </form>
       {state.status && <p aria-hidden="true">{state.status}</p>}
       {state.handoff && (
