@@ -78,11 +78,12 @@ export async function startRecording() {
   };
 }
 
-/** Server STT (gpt-4o-mini-transcribe). */
-export async function transcribeOnServer(blob) {
+/** Server STT (gpt-4o-mini-transcribe). `prompt` = the text just before this clip, so words cut at the edge come out right. */
+export async function transcribeOnServer(blob, prompt) {
   const form = new FormData();
   const ext = blob.type.includes('mp4') ? 'mp4' : blob.type.includes('ogg') ? 'ogg' : 'webm';
   form.append('audio', blob, `speech.${ext}`);
+  if (prompt) form.append('prompt', prompt);
   const res = await fetch(`${API_URL}/api/voice/stt`, { method: 'POST', headers: await authHeaders(), body: form });
   const data = await res.json();
   if (!res.ok) throw new Error(data?.error?.message ?? 'Could not understand the recording');

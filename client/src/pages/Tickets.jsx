@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { api } from '../lib/api.js';
 import { downloadChecklistIcs } from '../lib/ics.js';
 import { useAnnounce } from '../a11y/Announcer.jsx';
-import Todo from '../components/Todo.jsx';
 import WorkTabs from '../components/WorkTabs.jsx';
 import AudioButton from '../components/AudioButton.jsx';
 import VoiceInput from '../components/VoiceInput.jsx';
@@ -68,7 +67,6 @@ export default function Tickets() {
   return (
     <>
       <WorkTabs /><h1 className="text-2xl font-bold">Ticket Decoder</h1>
-      <Todo owner="C">F2: summary, acceptance criteria checklist, steps, files, Unclear + 'Ask my manager', DoD, Show as diagram.</Todo>
 
       <form onSubmit={decode} className="card mt-6 grid max-w-2xl gap-3">
         <label className="grid gap-1">

@@ -4,27 +4,25 @@ import { Link } from 'react-router';
 import { api } from '../lib/api.js';
 import { supabase } from '../lib/supabaseClient.js';
 import { downloadChecklistIcs, downloadIcs } from '../lib/ics.js';
+import { decisionsText, saveTicks, withDone } from '../lib/meetingNotes.js';
 import { useSession } from '../auth/Session.jsx';
 import { useAnnounce } from '../a11y/Announcer.jsx';
 import Checklist from '../components/Checklist.jsx';
 import { GlossaryText } from '../components/GlossaryTerm.jsx';
+import AudioButton from '../components/AudioButton.jsx';
+import MeetingTaskList, { tasksText } from '../components/MeetingTaskList.jsx';
 
 const MEETING_DAYS = 14;
 const SHORTCUTS = [
   { to: '/ask', title: 'Ask the team docs', text: 'Get an answer with the sources it came from.' },
   { to: '/work', title: 'Work', text: 'Tickets, reviews and setup, explained step by step.' },
-  { to: '/meetings', title: 'Meetings', text: 'Turn a recording into your own task list.' },
+  { to: '/meetings', title: 'Meetings', text: 'Live captions, a summary and your tasks from any meeting.' },
   { to: '/work-style', title: 'Your work style', text: 'Change text, contrast and how answers are written.' },
 ];
 
 const greeting = () => {
   const h = new Date().getHours();
   return h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening';
-};
-const dueLabel = (iso) => {
-  const days = Math.round((new Date(`${iso}T00:00`) - new Date(new Date().toDateString())) / 86_400_000);
-  const date = new Date(`${iso}T00:00`).toLocaleDateString([], { weekday: 'short', day: 'numeric', month: 'short' });
-  return days < 0 ? `overdue since ${date}` : days === 0 ? 'due today' : days === 1 ? 'due tomorrow' : `due ${date}`;
 };
 
 function SavedChecklist({ list, onChange, onDelete }) {
@@ -95,40 +93,85 @@ function Checklists() {
   );
 }
 
+const byTodo = (a, b) => (a.done ? 1 : 0) - (b.done ? 1 : 0) || (a.due ?? '9999').localeCompare(b.due ?? '9999');
+const meetingTime = (n) => new Date(n.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
 function MeetingTasks() {
   const { mode, user } = useSession();
-  const [tasks, setTasks] = useState(null);
+  const announce = useAnnounce();
+  const [notes, setNotes] = useState(null);
   useEffect(() => {
-    if (mode !== 'supabase' || !user) return setTasks([]);
+    if (mode !== 'supabase' || !user) return setNotes([]);
     const since = new Date(Date.now() - MEETING_DAYS * 86_400_000).toISOString();
     // Owner-only RLS on meeting_notes: the browser reads its own rows directly (no transcript is ever stored).
-    supabase.from('meeting_notes').select('title, my_tasks, created_at').eq('user_id', user.id).gte('created_at', since).order('created_at', { ascending: false }).limit(5)
-      .then(({ data }) => setTasks((data ?? []).flatMap((n) => (n.my_tasks ?? []).map((t) => ({ ...t, meeting: n.title })))
-        .sort((a, b) => (a.due ?? '9999').localeCompare(b.due ?? '9999'))));
+    // A live meeting keeps updating its row, so a reload shows the latest summary and tasks.
+    supabase.from('meeting_notes').select('id, title, summary, decisions, my_tasks, created_at').eq('user_id', user.id).gte('created_at', since).order('created_at', { ascending: false }).limit(5)
+      .then(({ data }) => setNotes(data ?? []));
   }, [mode, user]);
 
-  if (!tasks) return null;
-  const withDue = tasks.filter((t) => t.due);
+  // Ticks live in the row's my_tasks; the server keeps them when the live meeting updates the row.
+  const toggle = async (t, done) => {
+    const note = notes.find((n) => n.id === t.noteId);
+    const myTasks = withDone(note.my_tasks, t.index, done);
+    setNotes((ns) => ns.map((n) => (n.id === note.id ? { ...n, my_tasks: myTasks } : n)));
+    try {
+      await saveTicks(note.id, myTasks);
+    } catch (e) {
+      setNotes((ns) => ns.map((n) => (n.id === note.id ? note : n)));
+      announce(`Could not save that tick: ${e.message}`, { urgent: true });
+    }
+  };
+
+  if (!notes) return null;
+  const tasks = notes.flatMap((n) => (n.my_tasks ?? []).map((t, index) => ({ ...t, noteId: n.id, index, key: `${n.id}-${index}`, meeting: n.title }))).sort(byTodo);
+  const open = tasks.filter((t) => !t.done);
+  const withDue = tasks.filter((t) => t.due && !t.done);
+  const recaps = notes.filter((n) => n.summary?.length);
   return (
     <section aria-labelledby="mt-h" className="mt-8">
       <h2 id="mt-h" className="text-xl font-semibold">From your meetings</h2>
-      {tasks.length === 0 ? (
-        <p className="card mt-3">No tasks from meetings in the last two weeks. Upload a recording in <Link to="/meetings">Meetings</Link> and your tasks show up here.</p>
+      {notes.length === 0 ? (
+        <p className="card mt-3">Nothing from meetings in the last two weeks. Turn on live captions or upload a recording in <Link to="/meetings">Meetings</Link>: your summary and tasks show up here.</p>
       ) : (
         <div className="card mt-3">
-          <ul className="flex flex-col gap-4">
-            {tasks.map((t) => (
-              <li key={`${t.meeting}-${t.minute}-${t.task}`} className="border-l-4 border-accent pl-3">
-                <p className="font-semibold"><GlossaryText text={t.task} /></p>
-                <p className="text-sm">{t.due ? dueLabel(t.due) : 'No deadline'}{t.ticket && ` · Ticket ${t.ticket}`}{t.meeting && ` · ${t.meeting}`}</p>
-                {t.quote && <p className="text-sm text-muted">{t.who}{t.minute && ` at ${t.minute}`}: <q>{t.quote}</q></p>}
-              </li>
-            ))}
-          </ul>
+          {tasks.length === 0 ? (
+            <p>No tasks for you from these meetings.</p>
+          ) : (
+            <>
+              <MeetingTaskList tasks={tasks} onToggle={toggle} showLegend />
+              {open.length > 0 && <div className="mt-2"><AudioButton text={tasksText(open)} label="Listen to my open tasks" /></div>}
+            </>
+          )}
           {withDue.length > 0 && (
             <button type="button" onClick={() => downloadIcs(withDue.map((t) => ({ date: t.due, what: t.task })), 'meeting-tasks.ics')} className="btn mt-4">
               Add deadlines to my calendar (.ics)
             </button>
+          )}
+          {recaps.length > 0 && (
+            <>
+              <h3 className="mt-6 text-lg font-semibold">Meeting notes</h3>
+              <ul className="mt-2 flex flex-col gap-2">
+                {recaps.map((n) => (
+                  <li key={n.id}>
+                    <details className="rounded-lg border border-border-subtle px-3">
+                      <summary className="flex min-h-11 cursor-pointer items-center font-medium">{n.title} · {meetingTime(n)}</summary>
+                      <ul className="list-disc pb-3 pl-5">{n.summary.map((line) => <li key={line}><GlossaryText text={line} /></li>)}</ul>
+                      {n.decisions?.length > 0 && (
+                        <>
+                          <p className="font-semibold">Decided</p>
+                          <ul className="list-disc pb-3 pl-5">
+                            {n.decisions.map((d) => <li key={d.text}>{d.text}{d.affects_me && <strong> (affects you)</strong>}</li>)}
+                          </ul>
+                        </>
+                      )}
+                      <div className="pb-3">
+                        <AudioButton text={[...n.summary, ...(n.decisions?.length ? ['Decided:', decisionsText(n.decisions)] : [])].join('\n')} label="Listen" />
+                      </div>
+                    </details>
+                  </li>
+                ))}
+              </ul>
+            </>
           )}
         </div>
       )}

@@ -69,7 +69,8 @@ Realtime: client subscribes to `help_messages` inserts filtered by `thread_id`. 
 ## Meetings (F3) — Track C
 | Method | Path | Body | Response |
 |---|---|---|---|
-| POST | `/api/meetings/transcribe` | multipart `audio` + `me` (name) + `consent=true`; optional `speakers` (JSON `[{label,name}]`, manual fix) and `meeting_date` (YYYY-MM-DD) | `MeetingResult` (see mocks/meeting.json). Transcript NOT stored |
+| POST | `/api/meetings/transcribe` | multipart `audio` (audio or video file: mp3, m4a, wav, mp4, mov, webm; ≤ 500 MB) + `me` (name) + `consent=true`; optional `speakers` (JSON `[{label,name}]`, manual fix), `meeting_date` (YYYY-MM-DD) and `note_id` (from `/live`, updates that row) | `MeetingResult` (see mocks/meeting.json) + `note_id`. Transcript NOT stored |
+| POST | `/api/meetings/live` | `{ "text" (captions so far, "[mm:ss] …" lines), "me", "meeting_date"?, "note_id"? }` | `MeetingResult` without `speakers`, plus `note_id`. Upserts one `meeting_notes` row per meeting (no captions stored); pass the `note_id` back on the next call and on `/transcribe` at the end |
 | POST | `/api/meetings/catch-up` | `{ "last_minutes_text" }` | `{ "summary" }` |
 
 ## Support (F7) — Track C + D
@@ -87,7 +88,7 @@ Realtime: client subscribes to `help_messages` inserts filtered by `thread_id`. 
 | POST | `/api/convert/describe-image` | `{ "image_url" }` | `{ "description" }` |
 | POST | `/api/convert/simplify` | `{ "text","mode":"shorter\|steps\|plain" }` | `{ "text" }` |
 | POST | `/api/voice/tts` | `{ "text","pace":"normal\|slow" }` | `audio/mpeg` |
-| POST | `/api/voice/stt` | multipart `audio` | `{ "text" }` |
+| POST | `/api/voice/stt` | multipart `audio`; optional `prompt` (text said just before, for live captions) | `{ "text" }` |
 
 ## Company (F9, F13, ingest) — Track A + D
 | Method | Path | Body | Response |

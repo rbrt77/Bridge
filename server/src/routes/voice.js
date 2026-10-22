@@ -13,6 +13,6 @@ r.post('/tts', async (req, res) => {
 });
 r.post('/stt', upload.single('audio'), async (req, res) => {
   if (env.mock) return res.json({ text: 'Who approves database migrations?' });
-  res.json({ text: await stt(req.file) });
+  res.json({ text: await stt(req.file, req.body.prompt) });
 });
 export default r;
