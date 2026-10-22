@@ -76,6 +76,8 @@ Realtime: client subscribes to `help_messages` inserts filtered by `thread_id`. 
 | GET | `/api/adjustments/needs` | – | `{ "needs":[{id,label}] }` |
 | POST | `/api/adjustments/advise` | `{ "need_ids":[...] }` | `{ "adjustments":[...], "letter":"…", "disclaimer":"…" }` |
 
+`Adjustment = { id, need_id, need_ids:[...], title, what, how_to_ask, cost, company_source|null, company_gap|null, sources:[string] }`. The response also has `to: { name, role } | null` (the manager). The letter never names a condition; nothing is stored. Send it with `POST /api/help/threads` only when the person clicks Send.
+
 ## Conversions (F8) — Track B (UI) + A (backend)
 | Method | Path | Body | Response |
 |---|---|---|---|
