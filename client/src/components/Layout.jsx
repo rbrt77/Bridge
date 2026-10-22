@@ -8,6 +8,7 @@ import { useHasRole, useSession } from '../auth/Session.jsx';
 import Logo from './Logo.jsx';
 import Wordmark from './Wordmark.jsx';
 import { LiveMeetingBar } from './LiveMeeting.jsx';
+import Assistant from './Assistant.jsx';
 
 const NAV = [
   { to: '/today', label: 'Today' },
@@ -113,6 +114,7 @@ export default function Layout() {
           <Link to="/about-ai">About the AI</Link> · Answers are AI-generated and cite team documents.
         </p>
       </footer>
+      <Assistant />
     </div>
   );
 }

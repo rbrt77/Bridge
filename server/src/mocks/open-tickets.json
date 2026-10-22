@@ -1,0 +1,74 @@
+{
+ "issues": [
+  {
+   "number": 147,
+   "title": "Support can't tell why an invoice email failed",
+   "labels": [
+    "enhancement",
+    "hermes",
+    "frontend"
+   ],
+   "url": "https://github.com/brightline-software/invoicing-service/issues/147"
+  },
+  {
+   "number": 146,
+   "title": "Setup guide: step 12 has no link to web-shell",
+   "labels": [
+    "good first issue",
+    "docs"
+   ],
+   "url": "https://github.com/brightline-software/invoicing-service/issues/146"
+  },
+  {
+   "number": 145,
+   "title": "Hermes worker logs every successful job at info level",
+   "labels": [
+    "good first issue",
+    "chore",
+    "hermes"
+   ],
+   "url": "https://github.com/brightline-software/invoicing-service/issues/145"
+  },
+  {
+   "number": 144,
+   "title": "Add Romanian subject lines to invoice emails",
+   "labels": [
+    "enhancement",
+    "good first issue",
+    "billing"
+   ],
+   "url": "https://github.com/brightline-software/invoicing-service/issues/144"
+  },
+  {
+   "number": 143,
+   "title": "Dunning reminders are sent on Saturdays",
+   "labels": [
+    "bug",
+    "hermes",
+    "billing"
+   ],
+   "url": "https://github.com/brightline-software/invoicing-service/issues/143"
+  },
+  {
+   "number": 142,
+   "title": "Export invoices as CSV",
+   "labels": [
+    "enhancement",
+    "billing",
+    "finance"
+   ],
+   "url": "https://github.com/brightline-software/invoicing-service/issues/142"
+  }
+ ],
+ "pulls": [
+  {
+   "number": 57,
+   "title": "Add CSV export of a customer's invoices",
+   "labels": [
+    "enhancement",
+    "billing"
+   ],
+   "url": "https://github.com/brightline-software/invoicing-service/pull/57"
+  }
+ ]
+}

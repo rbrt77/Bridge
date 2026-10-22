@@ -27,6 +27,12 @@ export const getPullReviews = ({ owner, repo, number }) => gh(`/repos/${owner}/$
 export const getTree = (fullRepo, ref = 'HEAD') => gh(`/repos/${fullRepo}/git/trees/${ref}?recursive=1`);
 export const getContent = (fullRepo, path) => gh(`/repos/${fullRepo}/contents/${path}`);
 export const listIssues = (fullRepo) => gh(`/repos/${fullRepo}/issues?state=all&per_page=30`);
+/** Open issues and PRs, newest first. Not cached: "which tickets are there" must see new ones. */
+export function listOpen(fullRepo) {
+  const path = `/repos/${fullRepo}/issues?state=open&per_page=50`;
+  cache.delete(path);
+  return gh(path);
+}
 export const getRepo = (fullRepo) => gh(`/repos/${fullRepo}`);
 
 /** Decoded text of a file (contents API returns base64). Not cached: sync must see fresh docs. */

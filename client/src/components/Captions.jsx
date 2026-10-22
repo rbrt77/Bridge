@@ -89,6 +89,7 @@ export default function Captions({ me, date }) {
           ))}
         </fieldset>
       </div>
+      {m.live && <p className="text-muted">Shortcut: press Alt+V twice to end the meeting and get your tasks (Option+V on a Mac).</p>}
       {m.micOff && <p className="text-muted">Your microphone is off, so only the others are captioned.</p>}
       {m.floating && <p className="text-muted">Captions are also in the floating window over your meeting.</p>}
 

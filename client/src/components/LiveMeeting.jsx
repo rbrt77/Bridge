@@ -7,7 +7,7 @@ import { Link, useLocation } from 'react-router';
 import { api } from '../lib/api.js';
 import { saveBlob } from '../lib/ics.js';
 import { decisionsText, saveTicks, withDone } from '../lib/meetingNotes.js';
-import { transcribeOnServer } from '../lib/speech.js';
+import { isOwnSpeech, transcribeOnServer } from '../lib/speech.js';
 import { extensionFor, startCapture } from '../lib/meetingCapture.js';
 import { useAnnounce } from '../a11y/Announcer.jsx';
 import AudioButton from './AudioButton.jsx';
@@ -132,6 +132,7 @@ export function LiveMeetingProvider({ children }) {
   const [error, setError] = useState('');
   const [floating, setFloating] = useState(null); // Document Picture-in-Picture window
   const [finished, setFinished] = useState(null); // { file, noteId } once the meeting ended for tasks, until Meetings takes it
+  const [result, setResult] = useState(null); // last processed meeting: { status: 'working' | 'done' | 'error', data?, error? }; Meetings sets it, the voice assistant reads it
   const capture = useRef(null);
   const floatWin = useRef(null); // end() can run from a stale closure (browser "Stop sharing"), so it reads the window from here
   const finishedRef = useRef(null);
@@ -156,7 +157,7 @@ export function LiveMeetingProvider({ children }) {
   const caption = async (clip, at) => {
     try {
       const text = await transcribeOnServer(clip, lastText.current);
-      if (!text) return;
+      if (!text || isOwnSpeech(text)) return; // Bridge's own voice (Talk to Bridge, Listen) picked up by the microphone
       lastText.current = text;
       setSegments((s) => [...s, { at, text }].sort((a, b) => a.at - b.at));
     } catch (e) {
@@ -211,6 +212,7 @@ export function LiveMeetingProvider({ children }) {
     return f;
   };
 
+  /** Resolves to '' once captions run, or to the problem in words (the voice assistant reads it out). */
   const start = async (source) => {
     setError('');
     setStarting(true);
@@ -231,6 +233,7 @@ export function LiveMeetingProvider({ children }) {
       setLive(true);
       setMicOff(!capture.current.hasMic);
       announce('Live captions on.');
+      return '';
     } catch (e) {
       floatWin.current?.close();
       const msg =
@@ -239,6 +242,7 @@ export function LiveMeetingProvider({ children }) {
           : e.message;
       setError(msg);
       announce(msg, { urgent: true });
+      return msg;
     } finally {
       setStarting(false);
     }
@@ -248,12 +252,17 @@ export function LiveMeetingProvider({ children }) {
     const since = Date.now() - minutes * 60_000;
     const text = segments.filter((s) => s.at >= since).map((s) => s.text).join('\n');
     setPanel('missed');
-    if (!text) return setMissed(`Nothing was said in the last ${minutes} minutes.`);
+    if (!text) {
+      const none = `Nothing was said in the last ${minutes} minutes.`;
+      setMissed(none);
+      return none;
+    }
     setBusy('missed');
     try {
       const { summary } = await api('/meetings/catch-up', { method: 'POST', body: { last_minutes_text: text } });
       setMissed(summary);
       announce(summary);
+      return summary;
     } catch (e) {
       setError(e.message);
     } finally {
@@ -273,16 +282,18 @@ export function LiveMeetingProvider({ children }) {
     }
   };
 
-  const tell = (which, n) =>
-    announce(
+  const tell = (which, n) => {
+    const text =
       which === 'summary'
         ? `Summary so far. ${n.summary.join(' ')}`
-        : n.my_tasks.length ? `${plural(n.my_tasks.length, 'task')} for you so far: ${n.my_tasks.map((t) => t.task).join('; ')}.` : 'No tasks for you yet.',
-    );
+        : n.my_tasks.length ? `${plural(n.my_tasks.length, 'task')} for you so far: ${n.my_tasks.map((t) => t.task).join('; ')}.` : 'No tasks for you yet.';
+    announce(text);
+    return text;
+  };
 
   const timed = () => segments.map((s) => `[${mmss(s.at - startedAt.current)}] ${s.text}`).join('\n');
 
-  // One call gives both the summary and my tasks; it is only repeated when new captions came in.
+  // One call gives both the summary and my tasks; it is only repeated when new captions came in. Returns the text it announced (voice assistant).
   const showNotes = async (which) => {
     setPanel(which);
     if (notes?.count === segments.length) return tell(which, notes);
@@ -293,7 +304,7 @@ export function LiveMeetingProvider({ children }) {
       noteId.current = res.note_id ?? noteId.current;
       const next = { ...res, count: segments.length };
       setNotes(next);
-      tell(which, next);
+      return tell(which, next);
     } catch (e) {
       setPanel(null);
       setError(e.message);
@@ -314,7 +325,7 @@ export function LiveMeetingProvider({ children }) {
   const shown = panel && !busy && (panel === 'missed' ? missed : notes);
   const value = {
     live, starting, micOff, segments, size, setSize, minutes, setMinutes, missed, notes, panel, busy, error, floating, finished, shown, noteId,
-    who, start, end, float, catchUp, showNotes, toggle, takeFinished, downloadCaptions,
+    who, start, end, float, catchUp, showNotes, toggle, takeFinished, downloadCaptions, result, setResult,
   };
 
   return (

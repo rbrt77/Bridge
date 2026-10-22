@@ -57,6 +57,7 @@ Realtime: client subscribes to `help_messages` inserts filtered by `thread_id`. 
 | Method | Path | Body | Response |
 |---|---|---|---|
 | POST | `/api/tickets/decode` | `{ "issue_url"? , "text"? }` | `TicketDecoded` (see mocks/ticket.json) |
+| GET | `/api/tickets/open` | – | `{ issues:[{number,title,labels,url}], pulls:[…same] }`: open issues and PRs of `DEMO_REPO`, not cached (see mocks/open-tickets.json) |
 | POST | `/api/reviews/explain` | `{ "pr_url" }` | `ReviewExplained` (see mocks/review.json) |
 | POST | `/api/setup/step` (SHOULD F10) | `{ "step_index", "error_text"? }` | `{ step:{index,total,title,text,command\|null,expect\|null,if_fails}, fix:null\|{found,issue\|null,why,fix,source:Source\|null} }`; steps come from docs/setup.md, fixes from docs/known-issues.md first (see mocks/setup.json) |
 | POST | `/api/code-where` (SHOULD F11, Track A) | `{ "question" }` | `{ found, path\|null, symbol\|null, flow, adr:"ADR-007"\|null, owners:[{login,name}], url\|null, sources:[Source] }`: path is always an indexed file, symbol is from that file; `found:false` → path null and `flow` says so. Index is built by `ingest-repo` |
@@ -104,3 +105,12 @@ Realtime: client subscribes to `help_messages` inserts filtered by `thread_id`. 
 ## Standup (F12, SHOULD) — Track C
 | POST | `/api/standup/draft` | `{ "voice_note_text"? }` | `{ "yesterday","today","blockers" }` |
 | POST | `/api/standup/post-slack` | `{ "text" }` or `{ "yesterday","today","blockers" }` (formatted server-side) | `{ "ok":true }`; `503 slack_not_configured` when `SLACK_WEBHOOK_URL` is empty |
+
+## Talk to Bridge (voice assistant) — Track C
+The server only proposes an action; the client runs it with the APIs above (`client/src/lib/assistantTasks.js`). `message_manager`, `reply_message`, `ask_anonymously`, `start_captions` and `end_meeting` are read back and run only after a yes, and so are the follow-ups the client offers itself (save a ticket/review as a checklist, post the standup). Settings changes and ticks apply at once and can be undone. Enforced in `client/src/components/Assistant.jsx`.
+
+| Method | Path | Body | Response |
+|---|---|---|---|
+| POST | `/api/assistant` | `{ "text", "history"?:[{role:"user"\|"assistant",text}], "page"?:{path,title,live}, "settings"?:{textSize,pace,audio,…} (flat Work style values), "pending"?:Action }` | `{ "say", "action":Action }` |
+
+`Action = { type, path, question, draft, person, item, done, term, number, step, which, parts, source, get_tasks, settings }` (unused fields `null`), `type` one of `none`, `navigate`, `describe_page`, `read_today`, `tick_step`, `read_messages`, `reply_message`, `ask`, `define_term`, `message_manager`, `ask_anonymously`, `change_settings`, `list_tickets`, `explain_ticket`, `explain_review`, `setup_step`, `standup`, `start_captions`, `meeting_notes`, `end_meeting`, `read_meeting` (`parts`: any of summary, decisions, tasks, speakers). `page.meeting` = state of the last processed meeting. The server adds `recipient` (manager name) on `message_manager` and `url` (GitHub issue/PR in `DEMO_REPO`) on `explain_ticket` / `explain_review`. `settings.textSize` may be `"smaller"`/`"bigger"` (the client moves one step).

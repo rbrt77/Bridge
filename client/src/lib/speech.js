@@ -1,9 +1,30 @@
 // Owner: Track C. Browser TTS/STT first (free); server fallback in /api/voice.
 import { API_URL, authHeaders } from './api.js';
 
-export function speak(text, { slow = false, onEnd } = {}) {
+// What Bridge read aloud in the last minute. Live captions use it to drop Bridge's own voice when the microphone picks it up.
+const ECHO_MS = 60_000;
+const said = [];
+const remember = (text) => {
+  said.push({ text, at: Date.now() });
+  while (said.length && Date.now() - said[0].at > ECHO_MS) said.shift();
+};
+const pairs = (text) => {
+  const w = text.toLowerCase().match(/[a-z0-9']+/g) ?? [];
+  return w.slice(1).map((x, i) => `${w[i]} ${x}`);
+};
+/** True when most of `text` (word pairs, so common words alone do not count) is something Bridge just said aloud. */
+export function isOwnSpeech(text) {
+  const heard = pairs(text);
+  if (heard.length < 2) return false;
+  const recent = new Set(said.filter((s) => Date.now() - s.at < ECHO_MS).flatMap((s) => pairs(s.text)));
+  return heard.filter((p) => recent.has(p)).length / heard.length >= 0.5;
+}
+
+/** `queue`: speak after what is already playing instead of cutting it off. */
+export function speak(text, { slow = false, onEnd, queue = false } = {}) {
   if (!('speechSynthesis' in window)) return false;
-  speechSynthesis.cancel();
+  remember(text);
+  if (!queue) speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
   u.lang = 'en-US';
   u.rate = slow ? 0.75 : 1;
@@ -16,6 +37,7 @@ export const stopSpeaking = () => window.speechSynthesis?.cancel();
 
 /** Server TTS (gpt-4o-mini-tts). Resolves to the playing Audio element, or null when the server has no audio (MOCK). */
 export async function speakOnServer(text, { slow = false, onEnd } = {}) {
+  remember(text);
   const res = await fetch(`${API_URL}/api/voice/tts`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...(await authHeaders()) },

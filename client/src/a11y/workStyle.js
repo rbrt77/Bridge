@@ -116,6 +116,7 @@ export const LABELS = {
   },
   output: {
     length: ['Answer length', { short: 'Short', normal: 'Normal', detailed: 'Detailed' }],
+    pace: ['Reading speed', { normal: 'Normal', slow: 'Slow' }],
     tldr: ['One-line summary first'],
     steps: ['Numbered steps'],
     audio: ['Read answers aloud'],

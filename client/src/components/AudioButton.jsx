@@ -1,10 +1,13 @@
-// Owner: Track C. Listen (normal/slow): browser speechSynthesis first, POST /api/voice/tts when it is missing or fails.
+// Owner: Track C. Listen (normal/slow; slow by default when Work style > Reading speed is Slow): browser speechSynthesis first, POST /api/voice/tts when it is missing or fails.
 import { useEffect, useRef, useState } from 'react';
 import { speak, stopSpeaking, speakOnServer } from '../lib/speech.js';
 import { useAnnounce } from '../a11y/Announcer.jsx';
+import { useProfile } from '../a11y/ProfileProvider.jsx';
 
-export default function AudioButton({ text, slow = false, label = 'Listen' }) {
+export default function AudioButton({ text, slow: slowProp = false, label = 'Listen' }) {
   const announce = useAnnounce();
+  const { prefs } = useProfile();
+  const slow = slowProp || prefs.output.pace === 'slow'; // Work style > Reading speed
   const [playing, setPlaying] = useState(false);
   const audio = useRef(null);
   const run = useRef(0); // cancel() ends the previous utterance late; only the latest run may clear `playing`

@@ -6,7 +6,7 @@ import { supabase } from '../lib/supabaseClient.js';
 export const DEFAULT_PREFS = {
   preset: [],
   display: { textSize: 'm', contrast: 'normal', font: 'default', spacing: 'normal', motion: 'full' },
-  output: { length: 'normal', steps: false, tldr: false, audio: false, literal: false, screenReader: false, diagrams: false },
+  output: { length: 'normal', pace: 'normal', steps: false, tldr: false, audio: false, literal: false, screenReader: false, diagrams: false },
   input: { voice: false },
 };
 const KEY = 'bridge.prefs';

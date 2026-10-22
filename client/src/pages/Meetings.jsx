@@ -30,7 +30,7 @@ export default function Meetings() {
   const [speakers, setSpeakers] = useState([]);
   const last = useRef(null); // { audio, agreed, noteId } of the last run, for "Run again with these names"
   const results = useRef(null);
-  const { finished, takeFinished } = useLiveMeeting();
+  const { finished, takeFinished, setResult } = useLiveMeeting();
 
   useEffect(() => {
     if (data) results.current?.scrollIntoView({ block: 'start' });
@@ -47,15 +47,18 @@ export default function Meetings() {
     if (fixedSpeakers) form.append('speakers', JSON.stringify(fixedSpeakers));
     setBusy(true);
     setError('');
+    setResult({ status: 'working' });
     announce('Listening to the recording. This takes about 20 seconds.');
     try {
       const res = await api('/meetings/transcribe', { method: 'POST', form });
       setData(res);
+      setResult({ status: 'done', data: res }); // kept above the page, so "read the decisions" works from anywhere
       setSpeakers(res.speakers);
       last.current.noteId = res.note_id ?? noteId;
       announce(`Done. You have ${res.my_tasks.length} task${res.my_tasks.length === 1 ? '' : 's'} from this meeting.`);
     } catch (e) {
       setError(e.message);
+      setResult({ status: 'error', error: e.message });
       announce(e.message, { urgent: true });
     } finally {
       setBusy(false);

@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { api } from '../lib/api.js';
+import { CHECKLISTS_CHANGED } from '../lib/assistantTasks.js';
 import { supabase } from '../lib/supabaseClient.js';
 import { downloadChecklistIcs, downloadIcs } from '../lib/ics.js';
 import { decisionsText, saveTicks, withDone } from '../lib/meetingNotes.js';
@@ -64,7 +65,10 @@ function Checklists() {
   const [lists, setLists] = useState(null);
   const [error, setError] = useState('');
   useEffect(() => {
-    api('/checklists').then((r) => setLists(r.checklists)).catch((e) => setError(e.message));
+    const load = () => api('/checklists').then((r) => setLists(r.checklists)).catch((e) => setError(e.message));
+    load();
+    window.addEventListener(CHECKLISTS_CHANGED, load); // ticked or saved by voice (Talk to Bridge)
+    return () => window.removeEventListener(CHECKLISTS_CHANGED, load);
   }, []);
   const update = (next) => setLists((ls) => ls.map((l) => (l.id === next.id ? next : l)));
   const remove = async (list) => {

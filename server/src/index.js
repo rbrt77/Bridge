@@ -21,6 +21,7 @@ import company from './routes/company.js';
 import standup from './routes/standup.js';
 import setup from './routes/setup.js';
 import codeWhere from './routes/code-where.js';
+import assistant from './routes/assistant.js';
 import { startDemoWarmup } from './services/warmup.js';
 
 const app = express();
@@ -45,6 +46,7 @@ app.use('/api/company', company);
 app.use('/api/standup', standup);
 app.use('/api/setup', setup);
 app.use('/api/code-where', codeWhere);
+app.use('/api/assistant', assistant);
 app.use(errorHandler);
 
 app.listen(env.port, () => {
