@@ -19,15 +19,21 @@ const REWRITE_SCHEMA = {
   additionalProperties: false,
 };
 
-/** Follow-ups ("and who approves it?") become standalone questions. No history → no LLM call. */
+// Docs are in English; a Romanian (or other) question matches them far worse (cosine ~0.3 vs ~0.6).
+const NON_ENGLISH = /[ăâîșțşţ]|\b(ce|cand|când|cum|unde|cine|este|sunt|pentru|trebuie|și|si|despre|care|cât|cat)\b/i;
+
+/**
+ * Follow-ups ("and who approves it?") become standalone questions; non-English questions are
+ * translated for search only (the answer stays in the user's language). Otherwise no LLM call.
+ */
 export async function rewriteQuery(question, history = []) {
   const recent = history.slice(-4);
-  if (!recent.length) return question;
+  if (!recent.length && !NON_ENGLISH.test(question)) return question;
   const { query } = await generateJson({
-    model: env.backgroundModel,
+    model: env.rerankModel, // fast non-reasoning model: this sits before the first token
     name: 'rewrite',
     schema: REWRITE_SCHEMA,
-    system: 'Rewrite the last user question as one standalone search query in English. Resolve pronouns from the conversation. Do not answer it.',
+    system: 'Rewrite the last user question as one standalone search query in English. Resolve pronouns from the conversation. Keep company names and code names as they are. Do not answer it.',
     input: `${recent.map((m) => `${m.role}: ${String(m.content).slice(0, 500)}`).join('\n')}\nuser: ${question}`,
   });
   return query || question;
