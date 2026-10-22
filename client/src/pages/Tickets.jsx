@@ -1,5 +1,5 @@
 // Owner: Track C. F2: issue URL / pasted text → summary, acceptance criteria checklist, micro-steps with minutes, files, Unclear + 'Ask my manager', DoD, Show as diagram, Listen, Save as checklist + .ics.
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { api } from '../lib/api.js';
 import { downloadChecklistIcs } from '../lib/ics.js';
 import { useAnnounce } from '../a11y/Announcer.jsx';
@@ -11,17 +11,30 @@ import TicketResult from '../components/TicketResult.jsx';
 
 const DEMO_ISSUE = 'https://github.com/brightline-software/invoicing-service/issues/142';
 
+// The last decoded ticket survives moving between pages (like Ask), and is gone when the tab closes.
+const KEY = 'onramp.ticket';
+const restore = () => {
+  try { return JSON.parse(sessionStorage.getItem(KEY)) ?? {}; } catch { return {}; }
+};
+const NO_TICKS = { criteria: [], steps: [] };
+
 const listenText = (d) => [d.summary, 'Steps:', ...d.steps.map((s, i) => `${i + 1}. ${s.text}, about ${s.minutes} minutes.`)].join('\n');
 
 export default function Tickets() {
   const announce = useAnnounce();
-  const [url, setUrl] = useState(DEMO_ISSUE);
-  const [text, setText] = useState('');
+  const [kept] = useState(restore);
+  const [url, setUrl] = useState(kept.url ?? DEMO_ISSUE);
+  const [text, setText] = useState(kept.text ?? '');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
-  const [data, setData] = useState(null);
-  const [saved, setSaved] = useState(null);
+  const [data, setData] = useState(kept.data ?? null);
+  const [saved, setSaved] = useState(kept.saved ?? null);
+  const [ticks, setTicks] = useState(kept.ticks ?? NO_TICKS);
   const [status, setStatus] = useState('');
+
+  useEffect(() => {
+    try { sessionStorage.setItem(KEY, JSON.stringify({ url, text, data, saved, ticks })); } catch { /* private mode */ }
+  }, [url, text, data, saved, ticks]);
 
   const decode = async (e) => {
     e.preventDefault();
@@ -32,6 +45,7 @@ export default function Tickets() {
     try {
       const res = await api('/tickets/decode', { method: 'POST', body: text.trim() ? { text } : { issue_url: url } });
       setData(res);
+      setTicks(NO_TICKS);
       announce(`Decoded. ${res.steps.length} steps, ${res.unclear.length} unclear points.`);
     } catch (err) {
       setError(err.message);
@@ -41,9 +55,14 @@ export default function Tickets() {
     }
   };
   const save = async () => {
-    const { checklist } = await api('/checklists', { method: 'POST', body: { title: data.title, source_url: text.trim() ? null : url, items: data.steps } });
-    setSaved(checklist);
-    setStatus(`Saved "${checklist.title}" with ${data.steps.length} steps. It is now in Today.`);
+    try {
+      const { checklist } = await api('/checklists', { method: 'POST', body: { title: data.title, source_url: text.trim() ? null : url, items: data.steps } });
+      setSaved(checklist);
+      setStatus(`Saved "${checklist.title}" with ${data.steps.length} steps. It is now in Today.`);
+    } catch (err) {
+      setStatus(`Could not save the checklist: ${err.message}`);
+      announce(`Could not save the checklist: ${err.message}`, { urgent: true });
+    }
   };
 
   return (
@@ -73,7 +92,7 @@ export default function Tickets() {
         </div>
       )}
       <p role="status" className="mt-2">{status}</p>
-      {data && <TicketResult data={data} sourceUrl={text.trim() ? null : url} saved={saved} />}
+      {data && <TicketResult data={data} sourceUrl={text.trim() ? null : url} saved={saved} ticks={ticks} onTicks={setTicks} />}
     </>
   );
 }

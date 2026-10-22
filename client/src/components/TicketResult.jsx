@@ -1,7 +1,7 @@
 // Owner: Track B (F2 UI). Renders a decoded ticket (docs/API.md TicketDecoded) instead of raw JSON:
 // summary → unclear points (Ask my manager) → acceptance criteria → steps → files → DoD → screenshots → sources, + Show as diagram.
-// Checkboxes are local until the ticket is saved as a checklist; then step ticks sync to Today.
-import { useEffect, useState } from 'react';
+// Ticks live in the parent (kept with the ticket in sessionStorage); once saved as a checklist, step ticks also sync to Today.
+import { useState } from 'react';
 import { api } from '../lib/api.js';
 import { useAnnounce } from '../a11y/Announcer.jsx';
 import Checklist from './Checklist.jsx';
@@ -73,26 +73,30 @@ function ShowDiagram({ data }) {
   );
 }
 
-export default function TicketResult({ data, sourceUrl, saved }) {
-  const [criteria, setCriteria] = useState([]);
-  const [steps, setSteps] = useState([]);
+/**
+ * @param {{ data: object, sourceUrl: string|null, saved: object|null,
+ *   ticks: { criteria: boolean[], steps: boolean[] }, onTicks: (fn: (t) => object) => void }} props
+ */
+export default function TicketResult({ data, sourceUrl, saved, ticks, onTicks }) {
   const announce = useAnnounce();
   const glossary = useGlossary();
-
-  useEffect(() => {
-    setCriteria(data.acceptance_criteria.map((c) => ({ text: c.text, note: c.inferred ? 'inferred' : null, done: false })));
-    setSteps(data.steps.map((s) => ({ ...s, done: false })));
-  }, [data]);
+  const criteria = data.acceptance_criteria.map((c, i) => ({ text: c.text, note: c.inferred ? 'inferred' : null, done: !!ticks.criteria[i] }));
+  const steps = data.steps.map((s, i) => ({ ...s, done: !!ticks.steps[i] }));
+  const setTick = (kind, i, done) => onTicks((t) => {
+    const list = [...t[kind]];
+    list[i] = done;
+    return { ...t, [kind]: list };
+  });
 
   // After "Save as checklist", the saved items (same order) carry ids: ticks are then stored and show in Today.
   const tickStep = async (_, done, i) => {
-    setSteps((list) => list.map((s, j) => (j === i ? { ...s, done } : s)));
+    setTick('steps', i, done);
     const item = saved?.items?.[i];
     if (!item) return;
     try {
       await api(`/checklists/${saved.id}/items/${item.id}`, { method: 'PATCH', body: { done } });
     } catch (e) {
-      setSteps((list) => list.map((s, j) => (j === i ? { ...s, done: !done } : s)));
+      setTick('steps', i, !done);
       announce(`Could not save that tick: ${e.message}`, { urgent: true });
     }
   };
@@ -111,7 +115,7 @@ export default function TicketResult({ data, sourceUrl, saved }) {
           title="Acceptance criteria"
           items={criteria}
           hint={inferred ? `${inferred} inferred: not written in the ticket, check them` : undefined}
-          onToggle={(_, done, i) => setCriteria((list) => list.map((c, j) => (j === i ? { ...c, done } : c)))}
+          onToggle={(_, done, i) => setTick('criteria', i, done)}
         />
         <Checklist
           title="Steps"
