@@ -24,12 +24,12 @@ event: error    data: {"code":"…","message":"…"}
 ## Profile (F1) — Track B
 | Method | Path | Body | Response |
 |---|---|---|---|
-| POST | `/api/profile/parse` | `{ "text": "free text" }` | `{ "prefs": Prefs }` (text is NOT stored) |
+| POST | `/api/profile/parse` | `{ "text": "free text" }` | `{ "prefs": Prefs }` with `null` = not mentioned (text is NOT stored) |
 | GET | `/api/profile` | – | `{ "prefs": Prefs \| null }` |
 | PUT | `/api/profile` | `{ "prefs": Prefs }` | `{ "ok": true }` |
 | DELETE | `/api/profile` | – | `{ "ok": true }` |
 
-`Prefs = { preset:[...], display:{ textSize:"m|l|xl", contrast:"normal|high", font:"default|readable", spacing:"normal|wide", motion:"full|reduced" }, output:{ length:"short|normal|detailed", steps:bool, tldr:bool, audio:bool, literal:bool, screenReader:bool } }`
+`Prefs = { preset:[...], display:{ textSize:"m|l|xl", contrast:"normal|high", font:"default|readable", spacing:"normal|wide", motion:"full|reduced" }, output:{ length:"short|normal|detailed", steps:bool, tldr:bool, audio:bool, literal:bool, screenReader:bool, diagrams:bool }, input:{ voice:bool } }`
 
 ## Ask + handoff (F5, F6) — Track A
 | Method | Path | Body | Response |

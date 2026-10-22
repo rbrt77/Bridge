@@ -1,24 +1,28 @@
 /* Owner: Track B. Profile (F1) is applied through data-* attributes on <html>. */
 @import "tailwindcss";
 
-/* Design tokens. Contrast on --bg (WCAG): normal ≥ 4.5:1 for text, high ≥ 7:1.
-   normal: fg 17.4, muted 8.9, accent/link/focus 6.4, danger 6.5, success 6.5, border 4.5, accent-fg on accent 6.4
-   high:   fg 21, accent/link/focus 14.7, danger 10.3, success 13.3, border 21, accent-fg on accent 14.7 */
+/* Design tokens. Contrast (WCAG), text on --bg/--surface ≥ 4.5:1, high ≥ 7:1; controls (--border) ≥ 3:1.
+   normal: fg 16.6, muted 7.4 (6.9 on accent-soft), accent/link/focus 7.0 (6.5 on accent-soft), accent-fg on accent 7.6,
+           danger 6.0, success 6.0, border 3.9. --border-subtle is decorative only (card edges), never a control boundary.
+   high:   fg 21, accent/link/focus 14.7 (10.6 on accent-soft), danger 10.3, success 13.3, border 21, accent-fg on accent 14.7 */
 :root {
-  --bg: #ffffff; --surface: #f3f4f6; --fg: #1a1a1a; --muted: #4a4a4a;
-  --accent: #0b57d0; --accent-fg: #ffffff; --link: #0b57d0; --focus: #0b57d0; --border: #767676;
+  --bg: #f5f6f8; --surface: #ffffff; --fg: #15171c; --muted: #4a5061;
+  --accent: #3046c0; --accent-hover: #24369e; --accent-fg: #ffffff; --accent-soft: #e9edfc;
+  --link: #3046c0; --focus: #3046c0; --border: #757b88; --border-subtle: #dde1e8;
   --danger: #b3261e; --success: #146c2e;
+  --shadow: 0 1px 2px rgb(16 24 40 / 0.05), 0 1px 3px rgb(16 24 40 / 0.06);
   --text-scale: 1; --line-height: 1.5; --letter-spacing: normal;
-  --font-body: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 :root[data-contrast="high"] {
-  --bg: #000000; --surface: #1a1a1a; --fg: #ffffff; --muted: #ffffff;
-  --accent: #ffd400; --accent-fg: #000000; --link: #ffd400; --focus: #ffd400; --border: #ffffff;
-  --danger: #ff9b8f; --success: #7ee2a8;
+  --bg: #000000; --surface: #000000; --fg: #ffffff; --muted: #ffffff;
+  --accent: #ffd400; --accent-hover: #ffe45c; --accent-fg: #000000; --accent-soft: #262626;
+  --link: #ffd400; --focus: #ffd400; --border: #ffffff; --border-subtle: #ffffff;
+  --danger: #ff9b8f; --success: #7ee2a8; --shadow: none;
 }
 /* OS-level "increase contrast" tightens the normal palette without overriding the user's choice. */
 @media (prefers-contrast: more) {
-  :root:not([data-contrast="high"]) { --muted: #1a1a1a; --border: #1a1a1a; }
+  :root:not([data-contrast="high"]) { --muted: #15171c; --border: #15171c; --border-subtle: #15171c; }
 }
 :root[data-text-size="l"] { --text-scale: 1.2; }
 :root[data-text-size="xl"] { --text-scale: 1.45; }
@@ -35,9 +39,12 @@
   --color-muted: var(--muted);
   --color-accent: var(--accent);
   --color-accent-fg: var(--accent-fg);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-soft: var(--accent-soft);
   --color-link: var(--link);
   --color-focus: var(--focus);
   --color-border: var(--border);
+  --color-border-subtle: var(--border-subtle);
   --color-danger: var(--danger);
   --color-success: var(--success);
 }
@@ -56,5 +63,34 @@
   :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
   @media (forced-colors: active) { :focus-visible { outline-color: Highlight; } }
   button, input, select, textarea { min-height: 44px; }
+  button { cursor: pointer; font-weight: 500; }
+  button:disabled { cursor: not-allowed; }
+  input[type="checkbox"], input[type="radio"] { accent-color: var(--accent); }
+  h1, h2, h3 { letter-spacing: -0.01em; }
+}
+
+/* Shared pieces. In the components layer so a utility on the element still wins. */
+@layer components {
+  .card {
+    background: var(--surface); border: 1px solid var(--border-subtle); border-radius: 1rem;
+    box-shadow: var(--shadow); padding: 1.25rem;
+  }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+    min-height: 44px; padding: 0 1rem; /* also on links styled as buttons */ border-radius: 0.625rem; border: 1px solid var(--border);
+    background: var(--surface); color: var(--fg); font-weight: 600; text-decoration: none;
+    transition: background-color 0.15s, border-color 0.15s;
+  }
+  .btn:hover:not(:disabled) { background: var(--accent-soft); border-color: var(--accent); }
+  .btn-primary { background: var(--accent); border-color: var(--accent); color: var(--accent-fg); }
+  .btn-primary:hover:not(:disabled) { background: var(--accent-hover); border-color: var(--accent-hover); }
+  .btn-danger { color: var(--danger); }
+  .btn-danger:hover:not(:disabled) { border-color: var(--danger); }
+  .btn:disabled { opacity: 0.6; } /* disabled controls are exempt from contrast (WCAG 1.4.3) */
+  .field {
+    border-radius: 0.625rem; border: 1px solid var(--border); background: var(--surface); color: var(--fg);
+    padding: 0 0.75rem;
+  }
+  textarea.field { padding: 0.5rem 0.75rem; }
 }
 /* .sr-only / .not-sr-only come from Tailwind, so focus:not-sr-only can reveal the skip link. */
