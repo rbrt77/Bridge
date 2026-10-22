@@ -29,25 +29,30 @@ function remember(entry) {
 }
 
 /**
- * Streams text through, removing [S#] labels that don't exist. Holds back a possibly
- * unfinished "[S1" at the end of a delta until the next one arrives.
+ * Streams text through, removing [S#] labels that don't exist and the NO_ANSWER marker.
+ * Holds back a possibly unfinished "[S1" or "NO_ANS" at the end of a delta until the next one arrives.
  */
 export function citationFilter(validLabels, emit) {
   let pending = '';
   const cited = new Set();
   const clean = (s) =>
-    s.replace(/\[(S\d+)\]/g, (m, label) => {
+    s.replaceAll(NO_ANSWER, '').replace(/\[(S\d+)\]/g, (m, label) => {
       if (!validLabels.has(label)) return '';
       cited.add(label);
       return m;
     });
+  const heldTail = (s) => {
+    const open = s.lastIndexOf('[');
+    if (open !== -1 && !s.includes(']', open) && s.length - open < 8) return s.length - open;
+    for (let n = Math.min(NO_ANSWER.length - 1, s.length); n > 0; n--) if (NO_ANSWER.startsWith(s.slice(-n))) return n;
+    return 0;
+  };
   return {
     push(delta) {
       pending += delta;
-      const open = pending.lastIndexOf('[');
-      const hold = open !== -1 && !pending.includes(']', open) && pending.length - open < 8 ? pending.slice(open) : '';
-      const out = clean(pending.slice(0, pending.length - hold.length));
-      pending = hold;
+      const hold = heldTail(pending);
+      const out = clean(pending.slice(0, pending.length - hold));
+      pending = pending.slice(pending.length - hold);
       if (out) emit(out);
     },
     flush() {
@@ -57,6 +62,23 @@ export function citationFilter(validLabels, emit) {
     },
     cited,
   };
+}
+
+const ownerName = (login) => {
+  const last = login.split('-').pop();
+  return last.charAt(0).toUpperCase() + last.slice(1);
+};
+
+/** Most specific CODEOWNERS pattern whose path segments appear in the question ("DB migrations" → /db/). */
+function topicOwnerFor(question, owners = []) {
+  const words = new Set(question.toLowerCase().match(/[a-z0-9-]{2,}/g) ?? []);
+  const byPattern = new Map();
+  for (const o of owners) {
+    if (!o.pattern.toLowerCase().split(/[/*.]+/).some((seg) => seg.length >= 2 && words.has(seg))) continue;
+    byPattern.set(o.pattern, [...(byPattern.get(o.pattern) ?? []), o.owner_login]);
+  }
+  const [pattern, logins] = [...byPattern].sort((a, b) => b[0].length - a[0].length)[0] ?? [];
+  return pattern ? `${logins.map((l) => `${ownerName(l)} (@${l})`).join(' and ')} own${logins.length > 1 ? '' : 's'} ${pattern}` : null;
 }
 
 async function handoff({ question, user, checked }) {
@@ -71,12 +93,11 @@ async function handoff({ question, user, checked }) {
     if (data) helper = { id: data.user_id, name: data.display_name, role: data.role === 'manager' ? 'Engineering Manager' : data.role };
   }
   const { data: owners } = await db.from('topic_owners').select('pattern, owner_login').eq('org_id', user.orgId);
-  const words = new Set(question.toLowerCase().match(/[a-z0-9-]{3,}/g) ?? []);
-  const owner = (owners ?? []).find((o) => o.pattern.toLowerCase().split(/[/*.]+/).some((seg) => seg.length > 2 && words.has(seg)));
   const titles = [...new Set(checked.map((c) => c.title))].slice(0, 3);
   const greeting = helper ? `Hi ${helper.name},` : 'Hi,';
-  const draft = `${greeting} ${question}\n\nWhat I already checked: ${titles.length ? titles.join(', ') : 'the team docs'}. I couldn't find a clear answer.`;
-  return { helper, topic_owner: owner ? `${owner.owner_login} owns ${owner.pattern}` : null, draft };
+  const asked = /^[A-Z][a-z]/.test(question) ? question[0].toLowerCase() + question.slice(1) : question; // "Hi Ana, who…"
+  const draft = `${greeting} ${asked}\n\nWhat I already checked: ${titles.length ? titles.join(', ') : 'the team docs'}. I couldn't find a clear answer.`;
+  return { helper, topic_owner: topicOwnerFor(question, owners ?? []), draft };
 }
 
 async function enrich(answer) {
@@ -108,30 +129,19 @@ export async function answerQuestion({ question, history = [], prefs, mode = 'no
   const valid = new Set(retrieval.chunks.map((c) => c.label));
   const filter = citationFilter(valid, (text) => send('token', { text }));
 
-  // Hold the first few characters back: the model may decide NO_ANSWER after reading the docs.
-  let head = '';
-  let streaming = false;
   const full = await streamText({
     system: [SYSTEM, ...rules].join('\n'),
     input: buildInput({ question, chunks: retrieval.chunks, history, previousAnswer: previous?.answer, mode }),
     verbosity: mode === 'shorter' ? 'low' : mode === 'more' ? 'high' : verbosity,
-    onDelta: (d) => {
-      if (streaming) return filter.push(d);
-      head += d;
-      if (head.length >= NO_ANSWER.length + 2 || !NO_ANSWER.startsWith(head.trim().slice(0, NO_ANSWER.length))) {
-        if (head.trim().startsWith(NO_ANSWER)) return;
-        streaming = true;
-        filter.push(head);
-      }
-    },
+    onDelta: (d) => filter.push(d),
   });
+  filter.flush();
 
-  if (full.trim().startsWith(NO_ANSWER)) {
+  // The model may also decide after writing a sentence ("The docs don't say X. NO_ANSWER"): still hand off.
+  if (full.includes(NO_ANSWER)) {
     send('handoff', await handoff({ question, user, checked: retrieval.chunks }));
     return send('done', { answer_id: null });
   }
-  if (!streaming) filter.push(head);
-  filter.flush();
 
   const cited = retrieval.sources.filter((s) => filter.cited.has(s.id));
   send('sources', { sources: cited.length ? cited : retrieval.sources });
