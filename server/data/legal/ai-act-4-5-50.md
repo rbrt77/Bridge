@@ -27,9 +27,9 @@ Among others, it is prohibited to place on the market or use AI systems that:
 AI systems used for recruitment, for decisions on promotion or termination, for allocating tasks based on personal traits,
 or for **monitoring and evaluating the performance and behaviour** of workers are **high-risk** and carry heavy obligations.
 
-## How OnRamp follows it
+## How Bridge follows it
 
 - The **About AI** page (`/about-ai`) and labels in the app say when an answer, summary or letter is AI-generated (Article 50).
-- OnRamp does **not** monitor or evaluate employees, recognise emotions or rank people. F3 and F12 extract only what concerns
+- Bridge does **not** monitor or evaluate employees, recognise emotions or rank people. F3 and F12 extract only what concerns
   the person who asks, at their request. F4 explains review conventions, not the reviewer's mood (Article 5(1)(f), Annex III).
 - Nothing is sent to the manager automatically.

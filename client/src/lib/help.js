@@ -161,7 +161,7 @@ export function useThreads({ userId, onNew } = {}) {
 }
 
 // Anonymous questions: the claim token is the only link to the asker and lives only in this browser.
-const ANON_KEY = 'onramp.anon';
+const ANON_KEY = 'bridge.anon';
 export function readAnon() {
   try { return JSON.parse(localStorage.getItem(ANON_KEY)) ?? []; } catch { return []; }
 }

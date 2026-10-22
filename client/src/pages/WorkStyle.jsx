@@ -51,10 +51,10 @@ export default function WorkStyle() {
 
   const exportJson = () => {
     const blob = new Blob([JSON.stringify({ prefs }, null, 2)], { type: 'application/json' });
-    const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: 'onramp-work-style.json' });
+    const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: 'bridge-work-style.json' });
     a.click();
     URL.revokeObjectURL(a.href);
-    announce('Work style downloaded as onramp-work-style.json.');
+    announce('Work style downloaded as bridge-work-style.json.');
   };
 
   const doDelete = async () => {
@@ -68,7 +68,7 @@ export default function WorkStyle() {
     <>
       <h1 className="text-3xl font-bold">Your work style</h1>
       <p className="mt-2 max-w-prose text-muted">
-        Tell OnRamp how you work best and it adapts the screen and every answer. Saved on this device only;
+        Tell Bridge how you work best and it adapts the screen and every answer. Saved on this device only;
         nothing here is shared with your manager.
       </p>
 

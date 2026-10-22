@@ -12,7 +12,7 @@ import TicketResult from '../components/TicketResult.jsx';
 const DEMO_ISSUE = 'https://github.com/brightline-software/invoicing-service/issues/142';
 
 // The last decoded ticket survives moving between pages (like Ask), and is gone when the tab closes.
-const KEY = 'onramp.ticket';
+const KEY = 'bridge.ticket';
 const restore = () => {
   try { return JSON.parse(sessionStorage.getItem(KEY)) ?? {}; } catch { return {}; }
 };

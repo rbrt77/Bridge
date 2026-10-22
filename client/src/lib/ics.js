@@ -1,10 +1,10 @@
 // Owner: Track C. Download deadlines as .ics (F2, F3).
 import { API_URL, authHeaders } from './api.js';
 
-export function downloadIcs(events, filename = 'onramp.ics') {
+export function downloadIcs(events, filename = 'bridge.ics') {
   const fmt = (d) => d.replaceAll('-', '');
-  const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//OnRamp//EN'];
-  for (const e of events) lines.push('BEGIN:VEVENT', `UID:${crypto.randomUUID()}@onramp`, `DTSTART;VALUE=DATE:${fmt(e.date)}`, `SUMMARY:${e.what}`, 'END:VEVENT');
+  const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Bridge//EN'];
+  for (const e of events) lines.push('BEGIN:VEVENT', `UID:${crypto.randomUUID()}@bridge`, `DTSTART;VALUE=DATE:${fmt(e.date)}`, `SUMMARY:${e.what}`, 'END:VEVENT');
   lines.push('END:VCALENDAR');
   saveBlob(new Blob([lines.join('\r\n')], { type: 'text/calendar' }), filename);
 }

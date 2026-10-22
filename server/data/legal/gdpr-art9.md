@@ -20,9 +20,9 @@
 - Health information should not be shared in public Slack channels or stored in tickets.
 - You can ask what is stored about you and who can see it (right of access, Article 15).
 
-## How OnRamp follows it
+## How Bridge follows it
 
-- OnRamp never stores a diagnosis. The profile stores display and output preferences only, and the free text you type is not saved.
+- Bridge never stores a diagnosis. The profile stores display and output preferences only, and the free text you type is not saved.
 - The F7 letter contains needs and proposed adjustments only.
 - Anonymous questions are stored without a user id.
 - F9 checks whether the company's adjustment policy has a confidentiality clause (Brightline's does not).

@@ -6,11 +6,11 @@ export function toIcs(events) {
       ? [`DTSTART:${utc(e.start)}`, `DTEND:${utc(new Date(e.start.getTime() + (e.minutes ?? 30) * 60_000))}`]
       : [`DTSTART;VALUE=DATE:${e.date.replaceAll('-', '')}`];
     return [
-      'BEGIN:VEVENT', `UID:${crypto.randomUUID()}@onramp`, `DTSTAMP:${utc(new Date())}`, ...when,
+      'BEGIN:VEVENT', `UID:${crypto.randomUUID()}@bridge`, `DTSTAMP:${utc(new Date())}`, ...when,
       `SUMMARY:${escape(e.what)}`, ...(e.description ? [`DESCRIPTION:${escape(e.description)}`] : []), 'END:VEVENT',
     ].join('\r\n');
   });
-  return ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//OnRamp//EN', ...body, 'END:VCALENDAR'].join('\r\n');
+  return ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Bridge//EN', ...body, 'END:VCALENDAR'].join('\r\n');
 }
 
 /** Open items of a checklist → back-to-back work blocks from `start`; items with a due date become all-day events. */

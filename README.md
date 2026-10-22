@@ -1,4 +1,4 @@
-# OnRamp
+# Bridge
 AI onboarding for junior software developers with disabilities: AccessABILITY Hackathon 2026.
 
 - Plan: [`PLAN.md`](PLAN.md) · Roles & tasks: [`docs/ROLES.md`](docs/ROLES.md) · API contract: [`docs/API.md`](docs/API.md)

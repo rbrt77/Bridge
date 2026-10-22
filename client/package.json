@@ -1,5 +1,5 @@
 {
-  "name": "@onramp/client",
+  "name": "@bridge/client",
   "private": true,
   "type": "module",
   "scripts": {

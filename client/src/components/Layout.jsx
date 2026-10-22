@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useShortcuts } from '../a11y/useShortcuts.js';
 import { useHasRole, useSession } from '../auth/Session.jsx';
 import Logo from './Logo.jsx';
+import Wordmark from './Wordmark.jsx';
 
 const NAV = [
   { to: '/today', label: 'Today' },
@@ -54,7 +55,7 @@ export default function Layout() {
         <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-2 px-3 py-2 sm:px-6 sm:py-3">
           <Link to="/today" className="mr-2 inline-flex min-h-11 items-center gap-2 px-1 text-xl font-bold text-fg no-underline">
             <Logo />
-            OnRamp
+            <Wordmark />
           </Link>
           <button
             ref={menuButton}

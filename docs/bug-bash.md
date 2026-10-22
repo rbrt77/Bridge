@@ -42,5 +42,5 @@ Real API (`MOCK=0`) + real Supabase, `main` at `f684892` + `[A14] [B4] [C5]`. Lo
 
 ## Track D · Onete Alexandru
 
-No open bugs. Done in D11: content for `/about-ai` (models as configured, what is kept / never kept, what OnRamp does not do, AI Act / GDPR).
+No open bugs. Done in D11: content for `/about-ai` (models as configured, what is kept / never kept, what Bridge does not do, AI Act / GDPR).
 Test data created during the bug bash (one help thread) was deleted.

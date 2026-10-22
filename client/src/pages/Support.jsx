@@ -141,7 +141,7 @@ export default function Support() {
             />
             <div className="mt-3 flex flex-wrap gap-2">
               <button type="button" onClick={send} className="btn btn-primary" disabled={!letter.trim() || status === 'sending' || status === 'sent'}>
-                {status === 'sent' ? `Sent to ${managerName}` : status === 'sending' ? 'Sending…' : `Send to ${managerName} in OnRamp`}
+                {status === 'sent' ? `Sent to ${managerName}` : status === 'sending' ? 'Sending…' : `Send to ${managerName} in Bridge`}
               </button>
               <button type="button" onClick={copy} className="btn">Copy letter</button>
             </div>

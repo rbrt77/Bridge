@@ -78,7 +78,7 @@ r.post('/threads', async (req, res) => {
 
   const names = await namesFor(req.user.orgId);
   // Never the question text: Slack is outside our privacy boundary.
-  postToSlack(`${req.user.name} sent a question to ${names.get(helperId) ?? 'their manager'}. Open OnRamp to reply.`)
+  postToSlack(`${req.user.name} sent a question to ${names.get(helperId) ?? 'their manager'}. Open Bridge to reply.`)
     .catch((err) => logger.warn('slack ping failed:', err.message));
   res.json({ thread: toThread(thread, names) });
 });

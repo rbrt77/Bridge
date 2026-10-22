@@ -10,7 +10,7 @@ import HelpChat from '../components/HelpChat.jsx';
 import VoiceInput from '../components/VoiceInput.jsx';
 import AskTabs from '../components/AskTabs.jsx';
 
-const KEY = 'onramp.ask';
+const KEY = 'bridge.ask';
 const HISTORY_TURNS = 3; // last 3 question/answer pairs are enough for follow-ups
 const SUGGESTIONS = [
   'What is our Definition of Done?',
@@ -152,7 +152,7 @@ export default function Ask() {
               </h2>
               <article aria-labelledby={`${t.key}-a`} className="card mt-3">
                 <p id={`${t.key}-a`} className="text-sm font-semibold text-muted">
-                  OnRamp <span className="font-normal">· AI-generated from team docs</span>
+                  Bridge <span className="font-normal">· AI-generated from team docs</span>
                 </p>
                 {t.handoff ? (
                   <>

@@ -22,6 +22,6 @@ where needed in a particular case, so that a person with a disability can exerci
 - You can ask for changes to how, when or with what tools you work, so you can do the same job as your colleagues.
 - You do not have to accept being left out of career steps (reviews, promotions, training) because of a disability.
 
-## How OnRamp uses it
+## How Bridge uses it
 
 F7 cites this article as the international basis for the adjustment letter. The letter describes needs and proposed changes only, never a diagnosis.

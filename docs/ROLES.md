@@ -1,4 +1,4 @@
-# Roluri și taskuri: OnRamp (4 oameni)
+# Roluri și taskuri: Bridge (4 oameni)
 
 > Fiecare om are **fișierele lui** (marcate cu `// Owner: Track X` în cod), ca să nu vă călcați pe picioare la merge.
 > Contractul dintre voi e în [`docs/API.md`](API.md), iar datele de test sunt în `server/src/mocks/*.json`.

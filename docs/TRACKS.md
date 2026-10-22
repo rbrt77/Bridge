@@ -1,4 +1,4 @@
-# Track-uri detaliate: OnRamp
+# Track-uri detaliate: Bridge
 
 Document complementar la [`ROLES.md`](ROLES.md). Aici e pentru fiecare track: ce construiește, fișierele exacte, endpoint-urile, cum testezi local și cum arată „gata".
 Contractul dintre track-uri e în [`API.md`](API.md). Datele de test sunt în `server/src/mocks/*.json`.

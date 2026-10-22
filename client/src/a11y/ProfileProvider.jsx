@@ -9,8 +9,8 @@ export const DEFAULT_PREFS = {
   output: { length: 'normal', steps: false, tldr: false, audio: false, literal: false, screenReader: false, diagrams: false },
   input: { voice: false },
 };
-const KEY = 'onramp.prefs';
-const SYNC_KEY = 'onramp.prefs.sync';
+const KEY = 'bridge.prefs';
+const SYNC_KEY = 'bridge.prefs.sync';
 const ProfileContext = createContext(null);
 
 /** Fills in keys missing from older saved profiles or from the server. */

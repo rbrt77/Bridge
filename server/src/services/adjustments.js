@@ -16,7 +16,7 @@ const LEGAL = {
 };
 // A letter that names a condition breaks the "needs only" rule: fall back to the template instead.
 const MEDICAL = /\b(diagnos\w*|disorder|condition|disabilit\w*|syndrome|medical|doctor|therap\w*|dyslexi\w*|adhd|autis\w*|deaf\w*|blind\w*|hearing loss|hard of hearing|chronic|illness|anxiety|depress\w*|impair\w*|neurodivergen\w*)\b/i;
-const DISCLAIMER = 'Informational, not legal advice. OnRamp does not store your choices or this letter.';
+const DISCLAIMER = 'Informational, not legal advice. Bridge does not store your choices or this letter.';
 
 export async function advise(needIds, catalog, user = {}) {
   const needs = catalog.needs.filter((n) => needIds.includes(n.id));

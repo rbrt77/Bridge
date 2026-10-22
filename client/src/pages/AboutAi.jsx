@@ -18,7 +18,7 @@ const KEPT = [
 ];
 
 const NEVER = [
-  'A diagnosis or any health information. OnRamp never asks for it.',
+  'A diagnosis or any health information. Bridge never asks for it.',
   'The free text you type to set up your work style: it is turned into settings and thrown away.',
   'Meeting recordings and transcripts. Only your tasks, the decisions and the summary are kept.',
   'Your choices and letter on the Support page, unless you send the letter yourself.',
@@ -26,8 +26,8 @@ const NEVER = [
 ];
 
 const LIMITS = [
-  'OnRamp answers only from your team’s documents. Every answer shows its sources, so you can check them.',
-  'When the documents do not say something, OnRamp says so and offers to ask a person. It does not guess.',
+  'Bridge answers only from your team’s documents. Every answer shows its sources, so you can check them.',
+  'When the documents do not say something, Bridge says so and offers to ask a person. It does not guess.',
   'AI can still be wrong. If an answer matters, open the source or ask your manager.',
   'Nothing is sent to your manager or your team unless you press Send.',
 ];
@@ -54,7 +54,7 @@ export default function AboutAi() {
     <>
       <h1 className="text-3xl font-bold">About the AI</h1>
       <p className="mt-2 max-w-prose text-muted">
-        OnRamp uses AI to explain your team’s documents, tickets, reviews and meetings. Everything marked “AI-generated” on a page was
+        Bridge uses AI to explain your team’s documents, tickets, reviews and meetings. Everything marked “AI-generated” on a page was
         written by an AI system. This page says which systems we use, what we keep and what we never keep.
       </p>
 
@@ -101,7 +101,7 @@ export default function AboutAi() {
       </div>
 
       <section aria-labelledby="not-h" className="card mt-6">
-        <h2 id="not-h" className="text-xl font-semibold">What OnRamp does not do</h2>
+        <h2 id="not-h" className="text-xl font-semibold">What Bridge does not do</h2>
         <List items={NOT_DONE} />
       </section>
 
@@ -109,7 +109,7 @@ export default function AboutAi() {
         <h2 id="law-h" className="text-xl font-semibold">Why we tell you this</h2>
         <p className="mt-2 max-w-prose">
           The EU AI Act asks that people know when they are dealing with an AI system and when content is AI-generated (Article 50). It also
-          forbids emotion recognition at work (Article 5). Health information is a special category under the GDPR (Article 9), so OnRamp
+          forbids emotion recognition at work (Article 5). Health information is a special category under the GDPR (Article 9), so Bridge
           is built to work without it.
         </p>
         <p className="mt-2 max-w-prose">

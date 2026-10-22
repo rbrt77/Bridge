@@ -1,4 +1,4 @@
-# OnRamp: instrucțiuni pentru Claude Code
+# Bridge: instrucțiuni pentru Claude Code
 
 Planul e în [PLAN.md](PLAN.md), împărțirea pe track-uri în [docs/TRACKS.md](docs/TRACKS.md), contractul API în [docs/API.md](docs/API.md).
 

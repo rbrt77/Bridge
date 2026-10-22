@@ -6,7 +6,7 @@ import { useAnnounce } from '../a11y/Announcer.jsx';
 import AudioButton from '../components/AudioButton.jsx';
 import WorkTabs from '../components/WorkTabs.jsx';
 
-const STORE_KEY = 'onramp.setup.step';
+const STORE_KEY = 'bridge.setup.step';
 const readStep = () => {
   try {
     return Number(localStorage.getItem(STORE_KEY)) || 0;

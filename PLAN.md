@@ -1,4 +1,4 @@
-# Plan v2: **OnRamp**, AI de onboarding pentru *Junior Software Developers* cu dizabilități
+# Plan v2: **Bridge**, AI de onboarding pentru *Junior Software Developers* cu dizabilități
 *AccessABILITY Hackathon 2026 · 22–23 oct · stop coding 23 oct 12:00 · v2 actualizat 22 oct 14:00*
 
 ---

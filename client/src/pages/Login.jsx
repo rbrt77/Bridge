@@ -5,6 +5,7 @@ import { supabase } from '../lib/supabaseClient.js';
 import { useSession } from '../auth/Session.jsx';
 import { useAnnounce } from '../a11y/Announcer.jsx';
 import Logo from '../components/Logo.jsx';
+import Wordmark from '../components/Wordmark.jsx';
 
 export default function Login() {
   const { status, mode } = useSession();
@@ -44,10 +45,10 @@ export default function Login() {
     <main id="main" className="mx-auto max-w-md px-4 py-10 sm:py-16">
       <p className="flex items-center gap-2 text-xl font-bold">
         <Logo />
-        OnRamp
+        <Wordmark />
       </p>
       <div className="card mt-6 sm:p-8">
-        <h1 ref={heading} tabIndex={-1} className="text-2xl font-bold outline-none">Sign in to OnRamp</h1>
+        <h1 ref={heading} tabIndex={-1} className="text-2xl font-bold outline-none">Sign in to Bridge</h1>
 
         {mode === 'demo' ? (
           <div className="mt-4 rounded-xl bg-accent-soft p-4">

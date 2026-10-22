@@ -48,6 +48,6 @@ app.use('/api/code-where', codeWhere);
 app.use(errorHandler);
 
 app.listen(env.port, () => {
-  console.log(`OnRamp server on :${env.port}${env.mock ? ' (MOCK mode)' : ''}`);
+  console.log(`Bridge server on :${env.port}${env.mock ? ' (MOCK mode)' : ''}`);
   if (env.warmDemo && !env.mock) startDemoWarmup();
 });
