@@ -1,0 +1,26 @@
+{
+  "step": {
+    "title": "Start Postgres and Redis",
+    "text": "Redis is the storage behind Hermes, the invoicing queue.",
+    "command": "docker compose up -d",
+    "expect": "`docker compose ps` shows `postgres` and `redis` as `running`.",
+    "if_fails": "Paste the error text below to find a fix.",
+    "index": 4,
+    "total": 12
+  },
+  "fix": {
+    "found": true,
+    "issue": "Error: connect ECONNREFUSED 127.0.0.1:5432",
+    "why": "Postgres is not running, or another Postgres already uses port 5432.",
+    "fix": "run `docker compose up -d` and check `docker compose ps`. If port 5432 is taken by a local Postgres, stop it (`brew services stop postgresql` or `sudo systemctl stop postgresql`) or change the port in `docker-compose.yml` and `DATABASE_URL`.",
+    "source": {
+      "id": "S1",
+      "title": "known-issues.md",
+      "section_path": "Error: connect ECONNREFUSED 127.0.0.1:5432",
+      "page": null,
+      "url": "https://github.com/brightline-software/invoicing-service/blob/main/docs/known-issues.md",
+      "doc_type": "repo_doc",
+      "approved_by": null
+    }
+  }
+}
