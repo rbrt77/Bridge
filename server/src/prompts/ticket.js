@@ -26,7 +26,7 @@ export const SCHEMA = {
     },
     steps: {
       type: 'array',
-      items: { type: 'object', additionalProperties: false, required: ['text', 'minutes'], properties: { text: { type: 'string' }, minutes: { type: 'integer' } } },
+      items: { type: 'object', additionalProperties: false, required: ['text', 'minutes'], properties: { text: { type: 'string' }, minutes: { type: 'integer', minimum: 5, maximum: 60 } } },
     },
     files: {
       type: 'array',
