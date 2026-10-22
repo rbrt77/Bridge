@@ -10,6 +10,7 @@ import { useAnnounce } from '../a11y/Announcer.jsx';
 import GlossaryTerm from '../components/GlossaryTerm.jsx';
 import AudioButton from '../components/AudioButton.jsx';
 import Captions from '../components/Captions.jsx';
+import { useLiveMeeting } from '../components/LiveMeeting.jsx';
 import MeetingTaskList, { tasksText } from '../components/MeetingTaskList.jsx';
 
 const MAX_MB = 500; // same as the server's upload limit
@@ -29,6 +30,7 @@ export default function Meetings() {
   const [speakers, setSpeakers] = useState([]);
   const last = useRef(null); // { audio, agreed, noteId } of the last run, for "Run again with these names"
   const results = useRef(null);
+  const { finished, takeFinished } = useLiveMeeting();
 
   useEffect(() => {
     if (data) results.current?.scrollIntoView({ block: 'start' });
@@ -60,6 +62,12 @@ export default function Meetings() {
     }
   };
 
+  // A live meeting ended for tasks (here, or from the browser's "Stop sharing" while on another page): send its recording.
+  useEffect(() => {
+    const f = finished && takeFinished();
+    if (f) run({ audio: f.file, agreed: true, noteId: f.noteId });
+  }, [finished]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const submit = (e) => {
     e.preventDefault();
     run({ audio: file, agreed: consent });
@@ -83,7 +91,7 @@ export default function Meetings() {
       <h1 className="text-3xl font-bold">Meetings</h1>
       <p className="text-muted">Follow a meeting live with captions, or turn a recording into your own task list.</p>
 
-      <div className="mt-6"><Captions me={me} date={date} onFinish={(recording, noteId) => run({ audio: recording, agreed: true, noteId })} /></div>
+      <div className="mt-6"><Captions me={me} date={date} /></div>
       {busy && <p className="card mt-6">Turning the meeting into your tasks…</p>}
 
       <form onSubmit={submit} aria-labelledby="upload-h" className="card mt-6 grid gap-4">

@@ -4,6 +4,7 @@ import { ProfileProvider } from './a11y/ProfileProvider.jsx';
 import { AnnouncerProvider } from './a11y/Announcer.jsx';
 import { SessionProvider, SessionGuard } from './auth/Session.jsx';
 import Layout from './components/Layout.jsx';
+import { LiveMeetingProvider } from './components/LiveMeeting.jsx';
 import Login from './pages/Login.jsx';
 import Today from './pages/Today.jsx';
 import Ask from './pages/Ask.jsx';
@@ -27,7 +28,7 @@ export default function App() {
           <Routes>
             <Route path="login" element={<Login />} />
             <Route element={<SessionGuard />}>
-              <Route element={<Layout />}>
+              <Route element={<LiveMeetingProvider><Layout /></LiveMeetingProvider>}>
                 <Route index element={<Navigate to="/today" replace />} />
                 <Route path="today" element={<Today />} />
                 <Route path="ask" element={<Ask />} />

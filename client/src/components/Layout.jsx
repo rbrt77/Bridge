@@ -7,6 +7,7 @@ import { useShortcuts } from '../a11y/useShortcuts.js';
 import { useHasRole, useSession } from '../auth/Session.jsx';
 import Logo from './Logo.jsx';
 import Wordmark from './Wordmark.jsx';
+import { LiveMeetingBar } from './LiveMeeting.jsx';
 
 const NAV = [
   { to: '/today', label: 'Today' },
@@ -103,6 +104,7 @@ export default function Layout() {
           </div>
         </div>
       </header>
+      <LiveMeetingBar />
       <main id="main" ref={main} tabIndex={-1} className="mx-auto w-full max-w-4xl px-4 py-6 outline-none sm:px-6 sm:py-10">
         <Outlet />
       </main>

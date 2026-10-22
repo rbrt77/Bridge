@@ -16,7 +16,7 @@ export async function downloadChecklistIcs(checklistId, filename = 'checklist.ic
   saveBlob(await res.blob(), filename);
 }
 
-function saveBlob(blob, filename) {
+export function saveBlob(blob, filename) {
   const url = URL.createObjectURL(blob);
   Object.assign(document.createElement('a'), { href: url, download: filename }).click();
   URL.revokeObjectURL(url);
