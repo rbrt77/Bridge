@@ -91,6 +91,9 @@ Realtime: client subscribes to `help_messages` inserts filtered by `thread_id`. 
 | POST | `/api/company/ingest` | multipart `files[]` | `{ "documents":[{id,title,chunks}] }` |
 | POST | `/api/company/ingest-repo` | `{ "repo":"owner/name" }` | `{ "synced":n, "glossary_terms":n, "topic_owners":n }` |
 | POST | `/api/company/audit` | `{ "repo" }` | `AuditResult` (see mocks/audit.json) |
+
+`AuditResult = { repo, score:0-100, run_id?, findings:[Finding] (status partial|missing, sorted by priority desc), passed:[{id,title,evidence}], quick_wins:[string] }`
+`Finding = { id, title, status:"partial|missing", mandatory, impact, effort, layer:"repo|docs", evidence, first_step, priority }`. `evidence` is a file/check result for `repo`, or `Doc > Section, p.N: "exact quote" · gap` for `docs`.
 | GET | `/api/company/insights` (SHOULD F13) | – | `{ "themes":[{topic,count}], "gaps":[...], "k":5 }` |
 
 ## Standup (F12, SHOULD) — Track C
