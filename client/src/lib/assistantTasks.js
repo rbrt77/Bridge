@@ -207,8 +207,6 @@ export async function standupDraft() {
   return { say: `Here is your standup. Yesterday: ${d.yesterday} Today: ${d.today} Blockers: ${d.blockers}`, draft: d };
 }
 
-export const postStandup = (draft) => api('/standup/post-slack', { method: 'POST', body: draft });
-
 /**
  * Flat settings from the model (textSize, pace, audio…) → { patch, limit }. textSize "smaller"/"bigger" moves one step from now;
  * at the end of the scale it is left out and `limit` says so.

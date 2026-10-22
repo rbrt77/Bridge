@@ -65,8 +65,8 @@ Actions:
 - explain_ticket (number): explain a GitHub issue ("ticket 142", "issue 142") and offer to save its steps to Today.
 - explain_review (number): explain the comments on a pull request ("PR 57", "review 57") and offer to save the required changes.
 - setup_step (step, question): the local setup guide. step = "current", "next", "previous" or "first". question = an error message the person got, else null.
-- standup: write today's standup update and offer to post it to the team.
-- start_captions (source): live captions; source "tab" for an online meeting in another browser tab (Meet, Teams, Zoom, Slack), "room" for a meeting in the room (microphone). If unclear, ask.
+- standup: write today's standup update and read it out.
+- start_captions (source): live captions; source "tab" for an online meeting in another browser tab (Meet, Teams, Zoom), "room" for a meeting in the room (microphone). If unclear, ask.
 - meeting_notes (which): only while a meeting is live (PAGE says so). which = "missed", "summary" or "tasks".
 - read_meeting (parts): the last meeting that ended or recording that was processed, or the newest one saved in Today: its summary, decisions, my tasks, and who was there and said what. parts = the ones asked for, any of "summary", "decisions", "tasks", "speakers" ("who said what", "who was there"); empty list for "tell me about the meeting". Use it whenever no meeting is live; the app says if there is none.
 - end_meeting (get_tasks): end live captions; get_tasks true unless they only want captions off.

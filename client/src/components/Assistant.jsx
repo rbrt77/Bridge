@@ -10,7 +10,7 @@ import { askAnonymously } from '../lib/help.js';
 import { canCaptureTab } from '../lib/meetingCapture.js';
 import { createRecognizer, speak, startRecording, stopSpeaking, transcribeOnServer } from '../lib/speech.js';
 import {
-  describePage, findThread, flatSettings, latestSavedMeeting, meetingText, messagesText, ticketsText, postStandup, reviewText, saveChecklist, sendReply, settingsPatch, setupText,
+  describePage, findThread, flatSettings, latestSavedMeeting, meetingText, messagesText, ticketsText, reviewText, saveChecklist, sendReply, settingsPatch, setupText,
   spoken, standupDraft, termText, ticketText, tickStep, todayText,
 } from '../lib/assistantTasks.js';
 import { diffPrefs, mergePrefs } from '../a11y/workStyle.js';
@@ -33,7 +33,6 @@ const CONFIRM = {
   message_manager: { ask: (a) => `Send this to ${a.recipient}: "${a.draft}". Say yes to send it, no to cancel, or tell me what to change.`, yes: 'Yes, send it' },
   reply_message: { ask: (a) => `Reply to ${a.recipient}: "${a.draft}". Send it?`, yes: 'Yes, send it' },
   ask_anonymously: { ask: (a) => `Ask the team without your name: "${a.question}". Yes or no?`, yes: 'Yes, send it' },
-  post_standup: { ask: () => 'Post it to the team?', yes: 'Yes, post it' },
   save_checklist: { ask: (a) => (a.items.length === 1 ? 'Save this step to Today?' : `Save these ${a.items.length} steps to Today?`), yes: 'Yes, save' },
   start_captions: {
     ask: (a) => `Start live captions for ${a.source === 'tab' ? 'the meeting in another tab' : 'the meeting in this room'}? Say yes only if everyone in the meeting agreed to be recorded.`,
@@ -141,7 +140,7 @@ export default function Assistant() {
     say(`${limit} Changed: ${changes.map((c) => `${c.label} to ${c.to}`).join(', ')}. Say undo to go back.`.trim(), { pace: next.output.pace === 'slow' });
   };
 
-  /** Offers a follow-up that needs a yes (save to Today, post the standup) right after reading something out. */
+  /** Offers a follow-up that needs a yes (save to Today) right after reading something out. */
   const offer = (a, text) => {
     setPending(a);
     say(`${text} ${CONFIRM[a.type].ask(a)}`, { queue: true });
@@ -203,16 +202,11 @@ export default function Assistant() {
         }
         case 'setup_step':
           return say(await setupText({ step: a.step, question: a.question }), { queue: true });
-        case 'standup': {
-          const r = await standupDraft();
-          return offer({ type: 'post_standup', draft: r.draft }, r.say);
-        }
+        case 'standup':
+          return say((await standupDraft()).say, { queue: true });
         case 'save_checklist':
           await saveChecklist(a);
           return say('Saved in Today. Say "what is on today" to hear the next step.');
-        case 'post_standup':
-          await postStandup(a.draft);
-          return say('Posted to the team.');
         case 'message_manager':
           await api('/help/threads', { method: 'POST', body: { question: a.question || a.draft, draft: a.draft } });
           return say(`Sent to ${a.recipient}. The reply will show in Messages.`);

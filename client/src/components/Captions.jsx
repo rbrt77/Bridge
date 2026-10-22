@@ -1,4 +1,4 @@
-// Owner: Track C (F3 live). Large live captions for a meeting in another tab (Meet, Teams, Slack, Zoom on the web) or in the room,
+// Owner: Track C (F3 live). Large live captions for a meeting in another tab (Meet, Teams, Zoom on the web) or in the room,
 // a floating caption window over the meeting, "What did I miss?", "Summary so far", "My tasks so far", "Download captions"
 // and "End meeting → my tasks". This is only the view: the meeting itself lives in LiveMeetingProvider, so it keeps going on other pages.
 import { useEffect, useState } from 'react';
@@ -7,7 +7,7 @@ import { canCaptureRoom, canCaptureTab } from '../lib/meetingCapture.js';
 import { Actions, Lines, Panel, SIZES, canFloat, useLiveMeeting } from './LiveMeeting.jsx';
 
 const SOURCES = {
-  tab: { label: 'Online meeting in another tab', hint: 'Meet, Teams, Slack or Zoom open in Chrome or Edge. Pick the meeting tab and turn on "Also share tab audio".' },
+  tab: { label: 'Online meeting in another tab', hint: 'Meet, Teams or Zoom open in Chrome or Edge. Pick the meeting tab and turn on "Also share tab audio".' },
   room: { label: 'Meeting in this room', hint: 'Uses your microphone.' },
 };
 

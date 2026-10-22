@@ -31,7 +31,7 @@
 - **Frontend:** React+Vite din Internal_ai, refăcut accesibil.
 - **Limba:** UI și conținut doar în engleză.
 - **Eroul demo-ului:** angajatul (personas Andrei și Maria).
-- **Integrări:** GitHub și Slack.
+- **Integrări:** GitHub; ședințele online (Meet, Teams) se ascultă din tab-ul browserului.
 
 **Codul RAG refolosit** e în `~/Documents/GitHub/Internal_ai` (§3). Repo-ul `Accesibility` conține doar planul, `suggestions/`, `.gitignore` și fișiere de test.
 
@@ -44,7 +44,7 @@
 - **Barierele sunt documentate:**
   - **Developerii nevăzători** găsesc greu codul în codebase-uri mari, pentru că screen reader-ul le parcurge linear. Debugging-ul e cel mai raportat obstacol. Diagramele și tool-urile de task-management sunt adesea inaccesibile. Pair programming-ul e greu, pentru că tehnologia lor asistivă nu e pe calculatorul colegului.
   - **Developerii autiști** au probleme cu review-uri nestructurate sau ambigue și cu interpretarea tonului din feedback. Preferă comunicarea scrisă.
-- **Toată munca e scrisă** (tickete, PR-uri, docs, CODEOWNERS). RAG-ul are material bogat, iar integrările sunt reale (GitHub API, Slack). Asta punctează la *Meaningful AI*.
+- **Toată munca e scrisă** (tickete, PR-uri, docs, CODEOWNERS). RAG-ul are material bogat, iar integrările sunt reale (GitHub API, audio din tab-ul ședinței). Asta punctează la *Meaningful AI*.
 
 ---
 
@@ -201,7 +201,7 @@ A făcut un singur lucru, clar: povestea pacientului → AI structurează → ag
   - Utilizatorul editează și apasă **Send**. Nu se trimite nimic automat.
   - Dacă CODEOWNERS indică un owner al subiectului, apare și sugestia „Ana owns billing”.
 - **Managerul:**
-  - primește notificare live (Supabase Realtime; opțional un ping pe Slack, *fără conținutul întrebării*);
+  - primește notificare live (Supabase Realtime);
   - răspunde în chat;
   - apasă **Save to team docs**. Răspunsul devine un FAQ aprobat, intră în RAG, iar data viitoare vine cu citarea „Team FAQ, answered by Ana”. **Bucla de cunoaștere se închide.**
 - **Mod anonim:** textul din UI spune onest *„Your team sees the question, never who asked.”*. La abstain, utilizatorul alege:
@@ -299,10 +299,10 @@ A făcut un singur lucru, clar: povestea pacientului → AI structurează → ag
    - Index de cod: arborele repo + rezumate scurte (`gpt-5-nano`) pentru ~150 de fișiere-cheie, în același index hibrid (`doc_type='code_map'`).
    - Răspunsul conține: cale, funcție, flux în 3 propoziții, ADR.
    - Arhitectura e explicată pe 3 niveluri, plus *Draw it* (F8).
-2. **F12 · Standup draft + async pe Slack.**
+2. **F12 · Standup draft.**
    - Pornește de la progresul pe checklist (F2), sarcinile din ședințe (F3) și o notă vocală.
    - Produce *Yesterday / Today / Blockers* în cel mult 3 rânduri, în formatul echipei.
-   - Opțiuni: citit, TTS sau postat pe Slack (incoming webhook). Plus *Phrase my blocker*.
+   - Opțiuni: citit, TTS sau copiat. Plus *Phrase my blocker*.
 3. **F10 · Setup local pas cu pas.**
    - Un pas pe ecran: comandă (copy + audio), ce trebuie să vezi, ce faci dacă nu merge.
    - Lipești eroarea → căutare hibridă în known issues → fix cu sursă.
@@ -361,7 +361,7 @@ server: Express 5 (refolosit)
    │          convert (diagram/describe-image) · voice · glossary · profile · company (ingest, ingest-repo, audit, insights)
    │          SHOULD: code-where · standup · setup
    ├─ services: retrieval · rerank · adapt · llm · embeddings · contextualize · glossary · diagrams · privacy · ics
-   ├─ integrations: github.js (issues, PR-uri, review-uri, tree, contents, CODEOWNERS) · slack.js (webhook) · elevenlabs.js (Scribe)
+   ├─ integrations: github.js (issues, PR-uri, review-uri, tree, contents, CODEOWNERS) · elevenlabs.js (Scribe)
    └─ prompts/* · data/(audit_criteria.dev.json, dev_adjustments.json, legal/*.md) · eval/(golden.json, run.js)
 Supabase (Frankfurt): Postgres + pgvector(HNSW) + FTS('english') + RLS + Auth + Storage + Realtime
 ```
@@ -376,11 +376,10 @@ Supabase (Frankfurt): Postgres + pgvector(HNSW) + FTS('english') + RLS + Auth + 
 | Live captions / întrebări vocale | **Web Speech API** (Chrome); fallback `gpt-4o-mini-transcribe`. În producție: Scribe v2 Realtime | gratuit / $0.003/min / $0.39/oră |
 | TTS | `speechSynthesis` din browser + **`gpt-4o-mini-tts`** cu `instructions` (ritm lent) | gratuit / ~$0.015/min |
 | GitHub | REST API cu token fine-grained read-only (contents, issues, pull requests) | gratuit (5.000 req/h) |
-| Slack | Incoming webhook (un canal) | gratuit |
 
 **Unit economics:** ~$0.6 / utilizator activ / lună pentru Q&A + rerank, plus $0.22 / oră de ședință transcrisă. Lasă loc pentru un preț B2B de **€5–10 / angajat / lună** (ipoteză).
 
-**Chei necesare:** `OPENAI_API_KEY`, `ELEVENLABS_API_KEY`, `GITHUB_TOKEN`, `SLACK_WEBHOOK_URL`, Supabase (URL, anon, service).
+**Chei necesare:** `OPENAI_API_KEY`, `ELEVENLABS_API_KEY`, `GITHUB_TOKEN`, Supabase (URL, anon, service).
 
 ---
 
@@ -434,7 +433,6 @@ Supabase (Frankfurt): Postgres + pgvector(HNSW) + FTS('english') + RLS + Auth + 
 - Pe `documents` nu se citește direct prin PostgREST; accesul trece doar prin RPC sau server.
 - Insights expune numai RPC-uri cu k ≥ 5.
 - Nu se loghează IP-ul pe `/api/anon`.
-- Ping-ul pe Slack nu conține textul întrebării.
 - Profilul și nevoile nu ajung **niciodată automat** la manager. Orice mesaj trece prin edit + Send făcute de utilizator.
 - Banner de consimțământ la ședințe; fără emoții și fără scoruri.
 - Etichetă „AI-generated” pe output (AI Act art. 50); pagina `/about-ai`.
@@ -614,7 +612,7 @@ Supabase (Frankfurt): Postgres + pgvector(HNSW) + FTS('english') + RLS + Auth + 
 2. Limba pitch-ului: recomand engleză (ca UI-ul și brief-ul) + un slide cu roadmap-ul RO. Verificați cu organizatorii.
 3. Ștergem `test1.txt` și `status.txt` la bootstrap?
 4. Cine are Windows pentru NVDA?
-5. Organizația GitHub pentru repo-ul demo și workspace-ul Slack pentru webhook.
+5. Organizația GitHub pentru repo-ul demo.
 
 ---
 
