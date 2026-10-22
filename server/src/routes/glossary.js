@@ -2,18 +2,21 @@
 import { Router } from 'express';
 import { env } from '../env.js';
 import { mock } from '../utils/mock.js';
-import { notImplemented } from '../middleware/errors.js';
+import { listGlossary } from '../services/glossary.js';
+
+const notFound = (res) => res.status(404).json({ error: { code: 'not_found', message: 'Unknown term' } });
 
 const r = Router();
-r.get('/', (req, res) => {
+r.get('/', async (req, res) => {
   if (env.mock) return res.json(mock('glossary'));
-  throw notImplemented('glossary');
+  res.json({ terms: await listGlossary(req.user.orgId) });
 });
-r.get('/:term', (req, res) => {
+r.get('/:term', async (req, res) => {
   if (env.mock) {
     const t = mock('glossary').terms.find((x) => x.term.toLowerCase() === req.params.term.toLowerCase());
-    return t ? res.json(t) : res.status(404).json({ error: { code: 'not_found', message: 'Unknown term' } });
+    return t ? res.json(t) : notFound(res);
   }
-  throw notImplemented('glossary term');
+  const [t] = await listGlossary(req.user.orgId, { term: req.params.term });
+  return t ? res.json(t) : notFound(res);
 });
 export default r;
