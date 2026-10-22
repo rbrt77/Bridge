@@ -57,9 +57,10 @@ function extractImages(markdown) {
 
 async function loadContext(ticket, orgId) {
   try {
-    const { chunks, sources } = await retrieve({ question: ticket.body.slice(0, 2000), history: [], orgId, docTypes: DOC_TYPES });
+    const question = `${ticket.body.split('\n')[0].slice(0, 200)}. Definition of Done, contributing rules, architecture`;
+    const { chunks, sources } = await retrieve({ question, history: [], orgId, docTypes: DOC_TYPES });
     if (!chunks?.length) return FALLBACK_CONTEXT;
-    return chunks.map((c, i) => ({ source: sources[i] ?? { id: `S${i + 1}` }, content: c.content }));
+    return chunks.map((c, i) => ({ source: sources[i] ?? { id: `S${i + 1}` }, content: c.text ?? c.content }));
   } catch (err) {
     if (err.code !== 'not_implemented') console.warn('ticket context: retrieve failed, using fallback', err.message);
     return FALLBACK_CONTEXT;
