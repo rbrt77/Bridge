@@ -7,6 +7,6 @@ import { decodeTicket } from '../services/tickets.js';
 const r = Router();
 r.post('/decode', async (req, res) => {
   if (env.mock) return res.json(mock('ticket'));
-  res.json(await decodeTicket(req.body));
+  res.json(await decodeTicket({ ...req.body, orgId: req.user.orgId }));
 });
 export default r;
