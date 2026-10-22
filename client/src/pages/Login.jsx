@@ -83,8 +83,8 @@ export default function Login() {
                 aria-describedby={error ? 'login-error' : undefined}
                 className="field flex-1"
               />
-              <button type="button" onClick={() => setShowPassword((v) => !v)} aria-pressed={showPassword} className="btn">
-                {showPassword ? 'Hide' : 'Show'}
+              <button type="button" onClick={() => setShowPassword((v) => !v)} className="btn">
+                {showPassword ? 'Hide' : 'Show'}<span className="sr-only"> password</span>
               </button>
             </div>
             {error && <p id="login-error" role="alert" className="text-danger">{error}</p>}
