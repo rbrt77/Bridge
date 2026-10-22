@@ -1,1 +1,25 @@
-{ "k": 5, "seeded": true, "themes": [ { "topic": "Deployments & migrations", "count": 7 }, { "topic": "Local setup errors", "count": 5 } ], "gaps": ["No doc answers who approves DB migrations"] }
+{
+  "k": 5,
+  "seeded": true,
+  "period": {
+    "from": "2026-10-05",
+    "to": "2026-10-19"
+  },
+  "total_questions": 12,
+  "themes": [
+    {
+      "topic": "code review",
+      "count": 5,
+      "unanswered": 2
+    },
+    {
+      "topic": "meetings",
+      "count": 5,
+      "unanswered": 0
+    }
+  ],
+  "hidden_topics": 1,
+  "gaps": [
+    "Clarify approval requirements for merges when designated reviewers are unavailable (e.g., on holiday) and any exception/override process."
+  ]
+}

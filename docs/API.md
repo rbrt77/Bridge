@@ -96,7 +96,7 @@ Realtime: client subscribes to `help_messages` inserts filtered by `thread_id`. 
 
 `AuditResult = { repo, score:0-100, run_id?, findings:[Finding] (status partial|missing, sorted by priority desc), passed:[{id,title,evidence}], quick_wins:[string] }`
 `Finding = { id, title, status:"partial|missing", mandatory, impact, effort, layer:"repo|docs", evidence, first_step, priority }`. `evidence` is a file/check result for `repo`, or `Doc > Section, p.N: "exact quote" · gap` for `docs`.
-| GET | `/api/company/insights` (SHOULD F13) | – | `{ "themes":[{topic,count}], "gaps":[...], "k":5 }` |
+| GET | `/api/company/insights` (SHOULD F13) | – | `{ "k":5, "seeded":bool, "period":{from,to}\|null, "total_questions":n, "themes":[{topic,count,unanswered}], "hidden_topics":n, "gaps":[string] }`: only topics with ≥ k questions; hidden topics are counted, never named; gaps never quote a question |
 
 ## Standup (F12, SHOULD) — Track C
 | POST | `/api/standup/draft` | `{ "voice_note_text"? }` | `{ "yesterday","today","blockers" }` |
