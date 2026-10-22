@@ -10,6 +10,6 @@ const r = Router();
 r.get('/needs', (req, res) => res.json({ needs: catalog.needs.map(({ id, label }) => ({ id, label })) }));
 r.post('/advise', async (req, res) => {
   if (env.mock) return res.json(mock('adjustments'));
-  res.json(await advise(req.body.need_ids ?? [], catalog));
+  res.json(await advise(req.body?.need_ids ?? [], catalog, req.user));
 });
 export default r;

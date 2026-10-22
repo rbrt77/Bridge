@@ -7,6 +7,6 @@ import { explainReview } from '../services/reviews.js';
 const r = Router();
 r.post('/explain', async (req, res) => {
   if (env.mock) return res.json(mock('review'));
-  res.json(await explainReview(req.body));
+  res.json(await explainReview({ ...req.body, orgId: req.user.orgId }));
 });
 export default r;

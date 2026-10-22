@@ -1,11 +1,116 @@
 {
   "repo": "brightline-software/invoicing-service",
   "score": 58,
+  "run_id": "00000000-0000-0000-0000-0000000000a1",
   "findings": [
-    { "id": "issue-templates", "title": "No issue templates with acceptance criteria", "status": "missing", "mandatory": false, "impact": 3, "effort": 1, "evidence": "No files in .github/ISSUE_TEMPLATE/", "first_step": "Add a feature template with an 'Acceptance criteria' section." },
-    { "id": "pr-how-to-test", "title": "PR template has no 'How to test'", "status": "partial", "mandatory": false, "impact": 2, "effort": 1, "evidence": ".github/pull_request_template.md has only 'Summary'", "first_step": "Add a 'How to test' section." },
-    { "id": "adjustments-process", "title": "Adjustments policy has no timelines or confidentiality", "status": "partial", "mandatory": true, "impact": 3, "effort": 2, "evidence": "Workplace Adjustments Policy, p.1: no response time is given", "first_step": "Add a 10 working day response time and a confidentiality clause." },
-    { "id": "alt-text", "title": "3 images without alt text", "status": "missing", "mandatory": true, "impact": 2, "effort": 1, "evidence": "ARCHITECTURE.md, docs/setup.md", "first_step": "Add alt text to the 3 images." }
+    {
+      "id": "health-data-privacy",
+      "title": "Health data confidentiality (GDPR art. 9)",
+      "status": "missing",
+      "mandatory": true,
+      "impact": 3,
+      "effort": 1,
+      "layer": "docs",
+      "evidence": "No document states that health information shared for adjustments is confidential or specifies who may see it.",
+      "first_step": "Add a confidentiality clause: only the People team sees health details; the manager sees only the agreed adjustments.",
+      "priority": 4.5
+    },
+    {
+      "id": "issue-templates",
+      "title": "Issue templates with acceptance criteria",
+      "status": "missing",
+      "mandatory": false,
+      "impact": 3,
+      "effort": 1,
+      "layer": "repo",
+      "evidence": "No files in .github/ISSUE_TEMPLATE/.",
+      "first_step": "Add a feature template with an 'Acceptance criteria' checklist.",
+      "priority": 3
+    },
+    {
+      "id": "alt-text",
+      "title": "Markdown images have alt text",
+      "status": "missing",
+      "mandatory": true,
+      "impact": 2,
+      "effort": 1,
+      "layer": "repo",
+      "evidence": "3 image(s) without alt text: ARCHITECTURE.md (1), docs/setup.md (2).",
+      "first_step": "Add alt text that says what each image shows.",
+      "priority": 3
+    },
+    {
+      "id": "captions",
+      "title": "Captions/transcripts for ceremonies",
+      "status": "partial",
+      "mandatory": true,
+      "impact": 3,
+      "effort": 1,
+      "layer": "docs",
+      "evidence": "Brightline Software · Engineering Handbook > 4. Communication > 4.3 Meetings and cameras: \"Pulse (the all-hands) is recorded and has captions. Team ceremonies (planning, refinement, retro) are not recorded.\" · Documents state all-hands has captions but explicitly say team ceremonies are not recorded; they do not provide captions or transcripts for those ceremonies, nor for trainings.",
+      "first_step": "Turn on captions for planning, refinement and retro, and share notes afterwards.",
+      "priority": 2.25
+    },
+    {
+      "id": "adjustments-process",
+      "title": "Adjustments process incl. assistive tech",
+      "status": "partial",
+      "mandatory": true,
+      "impact": 3,
+      "effort": 2,
+      "layer": "docs",
+      "evidence": "Brightline Software · Workplace Adjustments Policy > 4. How to ask: \"Talk to your manager, or write to the People team at people@brightline.example if you prefer not to talk to your manager first.\" · The documents describe how to ask and examples including equipment but do not specify a response time; assistive technology is not explicitly named (only generic equipment like keyboards/mice/monitor).",
+      "first_step": "Add a response time (e.g. 10 working days) and assistive technology (screen readers, captioning) to the policy.",
+      "priority": 1.13
+    },
+    {
+      "id": "pr-how-to-test",
+      "title": "PR template has How to test",
+      "status": "partial",
+      "mandatory": false,
+      "impact": 2,
+      "effort": 1,
+      "layer": "repo",
+      "evidence": ".github/pull_request_template.md has only \"Summary\", \"Related issue\"; no \"How to test\".",
+      "first_step": "Add a 'How to test' section to the PR template.",
+      "priority": 1
+    }
   ],
-  "quick_wins": ["Add alt text to 3 images", "Add 'How to test' to PR template"]
+  "passed": [
+    {
+      "id": "readme-getting-started",
+      "title": "README has Getting started",
+      "evidence": "README.md → \"## Getting started\""
+    },
+    {
+      "id": "setup-guide",
+      "title": "Setup guide + known issues",
+      "evidence": "docs/setup.md, docs/known-issues.md"
+    },
+    {
+      "id": "contributing-review",
+      "title": "CONTRIBUTING with review conventions",
+      "evidence": "CONTRIBUTING.md → \"| `blocking:` | A real problem: bug, security, data loss, performance | Yes, before merge |\""
+    },
+    {
+      "id": "dod",
+      "title": "Written Definition of Done",
+      "evidence": "Brightline Software · Engineering Handbook > 3. How we plan and build > 3.3 Definition of Done (DoD): \"A ticket is **done** only when all of these are true:\""
+    },
+    {
+      "id": "buddy",
+      "title": "Buddy for juniors",
+      "evidence": "Brightline Software · Engineering Handbook > 2. Your first weeks > 2.1 Buddy: \"Every new engineer gets a **buddy** for the first three months.\""
+    },
+    {
+      "id": "async-standup",
+      "title": "Async standup allowed",
+      "evidence": "Brightline Software · Engineering Handbook > 3. How we plan and build > 3.2 Standup format: \"Async standup is allowed.\""
+    }
+  ],
+  "quick_wins": [
+    "Add a confidentiality clause: only the People team sees health details; the manager sees only the agreed adjustments.",
+    "Add a feature template with an 'Acceptance criteria' checklist.",
+    "Add alt text that says what each image shows."
+  ]
 }
