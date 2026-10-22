@@ -32,11 +32,18 @@ export default function Layout() {
   const isManager = useHasRole('manager', 'admin');
   const isAdmin = useHasRole('admin');
 
-  // On route change: close menu, start at the top, move focus to the new page without scrolling past the header.
+  // On route change: close menu, start at the top, name the tab after the page and move focus to its h1,
+  // so a screen reader says "Today, heading level 1" instead of reading the whole page. No h1 yet: focus <main>.
   useEffect(() => {
     setOpen(false);
     window.scrollTo(0, 0);
-    main.current?.focus({ preventScroll: true });
+    const frame = requestAnimationFrame(() => {
+      const h1 = main.current?.querySelector('h1');
+      document.title = h1 ? `${h1.textContent.trim()} · Bridge` : 'Bridge';
+      if (h1 && !h1.hasAttribute('tabindex')) h1.setAttribute('tabindex', '-1');
+      (h1 ?? main.current)?.focus({ preventScroll: true });
+    });
+    return () => cancelAnimationFrame(frame);
   }, [pathname]);
 
   useEffect(() => {
@@ -109,7 +116,8 @@ export default function Layout() {
       <main id="main" ref={main} tabIndex={-1} className="mx-auto w-full max-w-4xl px-4 py-6 outline-none sm:px-6 sm:py-10">
         <Outlet />
       </main>
-      <footer className="mt-auto border-t border-border-subtle bg-surface">
+      {/* pb-16: room below the footer so its link can scroll clear of the floating "Talk to Bridge" button */}
+      <footer className="mt-auto border-t border-border-subtle bg-surface pb-16">
         <p className="mx-auto max-w-7xl px-4 py-4 text-sm text-muted sm:px-6">
           <Link to="/about-ai">About the AI</Link> · Answers are AI-generated and cite team documents.
         </p>

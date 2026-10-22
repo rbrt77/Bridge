@@ -37,12 +37,23 @@ Keyboard flows checked:
 - **Lighthouse**: Lighthouse with puppeteer on Chrome headless shell 156, Accessibility category, run once with mobile emulation and once with desktop, keeping the signed-in session (`disableStorageReset`).
 - **Keyboard**: puppeteer sends real key events. Each Tab walk starts at the top of the page and checks every focused element for a visible outline of at least 2 px (or a shadow), a non-empty accessible name and a non-zero size.
 
-## Not covered here (B9)
+## Pass 2, automated part (B9) · 23 Oct 2026
 
-These are left for B9:
-- a screen reader run with NVDA and VoiceOver;
-- zoom at 200 %;
-- `prefers-reduced-motion`;
-- a full demo using only the screen reader.
+Checked on 14 screens, Company, Insights and Login included. The checks used the browser's accessibility tree.
+
+| Check | Result |
+|---|---|
+| Page title per screen (WCAG 2.4.2) | **Fixed.** It was "Bridge" everywhere. It now follows the h1: "Today · Bridge", "Sign in · Bridge" |
+| Focus after changing page | **Changed.** Focus now moves to the page's h1, not `<main>`, so a screen reader says "Today, heading level 1" instead of reading the whole page. The skip link still goes to `<main>` |
+| Focus not hidden by the floating "Talk to Bridge" button (WCAG 2.4.11) | **Fixed.** At 320 px it covered focused elements (one link fully). `scroll-padding-bottom` and room under the footer now keep focus in view |
+| One h1 per screen, no skipped heading levels, landmarks, control names | Pass |
+| Zoom 200 % (640 × 450 CSS px), also with text size XL | No sideways scroll, nothing clipped |
+| Text spacing (WCAG 1.4.12) at 1280 and 320 px | **Fixed on Login.** The password row overflowed at 320 px. Everything else passes |
+| `prefers-reduced-motion: reduce` | Nothing animates or transitions |
+| axe with the Talk to Bridge panel open | 0 violations. Closing the panel returns focus to its button |
+
+## Still to do by hand
+
+The full demo with a screen reader only (VoiceOver on Mac, or NVDA on Windows). The live meeting (top bar, floating caption window) and Talk to Bridge by voice need a person: picking a tab to share and speaking cannot be automated.
 
 Glossary has about 70 Tab stops, because each term has Listen and a source link. That is correct, but long; the search box at the top is the quick way in.

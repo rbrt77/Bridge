@@ -51,7 +51,8 @@
 
 /* In the base layer so Tailwind utilities (text-fg, no-underline, outline-none...) can override them. */
 @layer base {
-  html { font-size: calc(100% * var(--text-scale)); }
+  /* scroll-padding-bottom: a focused element is scrolled clear of the floating "Talk to Bridge" button (WCAG 2.4.11). */
+  html { font-size: calc(100% * var(--text-scale)); scroll-padding-bottom: 5rem; }
   body {
     background: var(--bg); color: var(--fg); font-family: var(--font-body);
     line-height: var(--line-height); letter-spacing: var(--letter-spacing);

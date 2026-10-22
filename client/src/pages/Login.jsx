@@ -20,7 +20,10 @@ export default function Login() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
 
-  useEffect(() => { heading.current?.focus(); }, []);
+  useEffect(() => {
+    document.title = 'Sign in · Bridge';
+    heading.current?.focus();
+  }, []);
 
   if (mode === 'supabase' && status === 'signedIn') return <Navigate to={from} replace />;
 
@@ -81,7 +84,7 @@ export default function Login() {
                 onChange={(e) => setPassword(e.target.value)}
                 aria-invalid={error ? true : undefined}
                 aria-describedby={error ? 'login-error' : undefined}
-                className="field flex-1"
+                className="field min-w-0 flex-1"
               />
               <button type="button" onClick={() => setShowPassword((v) => !v)} className="btn">
                 {showPassword ? 'Hide' : 'Show'}<span className="sr-only"> password</span>
