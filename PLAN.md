@@ -371,7 +371,7 @@ Supabase (Frankfurt): Postgres + pgvector(HNSW) + FTS('english') + RLS + Auth + 
 | Generare, adaptare, extragere, vision | **`gpt-5-mini`** (Responses API, `reasoning.effort:'minimal'`, `text.verbosity` = scurt/normal/detaliat). Fallback: `CHAT_MODEL=gpt-4.1-mini` dacă TTFT e prea mare | $0.25 in / $2.00 out per 1M |
 | Taskuri de fundal (context pe chunk, glosar, query rewrite, enrich, rezumate de cod, teme) | **`gpt-5-nano`** | $0.05 / $0.40 per 1M (input din cache $0.005) |
 | Embeddings | **`text-embedding-3-small`** | $0.02 per 1M |
-| Rerank | **Cohere Rerank 4 Fast** (cheie trial) + fallback `gpt-5-nano` | trial gratuit, apoi ~$0.002/căutare |
+| Rerank | **`gpt-4.1-mini`** (top 15, timeout 4 s; `RERANK_MODEL`) + fallback ordinea RRF | ~$0.0002/căutare |
 | Ședințe înregistrate | **ElevenLabs Scribe v2** (diarizare, până la 32 de vorbitori) | $0.22/oră |
 | Live captions / întrebări vocale | **Web Speech API** (Chrome); fallback `gpt-4o-mini-transcribe`. În producție: Scribe v2 Realtime | gratuit / $0.003/min / $0.39/oră |
 | TTS | `speechSynthesis` din browser + **`gpt-4o-mini-tts`** cu `instructions` (ritm lent) | gratuit / ~$0.015/min |
@@ -380,7 +380,7 @@ Supabase (Frankfurt): Postgres + pgvector(HNSW) + FTS('english') + RLS + Auth + 
 
 **Unit economics:** ~$0.6 / utilizator activ / lună pentru Q&A + rerank, plus $0.22 / oră de ședință transcrisă. Lasă loc pentru un preț B2B de **€5–10 / angajat / lună** (ipoteză).
 
-**Chei necesare:** `OPENAI_API_KEY`, `ELEVENLABS_API_KEY`, `COHERE_API_KEY`, `GITHUB_TOKEN`, `SLACK_WEBHOOK_URL`, Supabase (URL, anon, service).
+**Chei necesare:** `OPENAI_API_KEY`, `ELEVENLABS_API_KEY`, `GITHUB_TOKEN`, `SLACK_WEBHOOK_URL`, Supabase (URL, anon, service).
 
 ---
 
@@ -397,7 +397,7 @@ Supabase (Frankfurt): Postgres + pgvector(HNSW) + FTS('english') + RLS + Auth + 
 **Retrieval** (`services/retrieval.js`):
 1. **Query rewrite** pe baza istoricului (înlocuiește `chat.js:142-159`) + expansiune de acronime.
 2. **RPC `hybrid_search`:** FTS top 40 + vector top 40 → **RRF (k=60)** → top 30. Filtre: org, `access_group`, `doc_type`.
-3. **Rerank** → top 6. Fallback: LLM, apoi ordinea RRF.
+3. **Rerank** cu `gpt-4.1-mini`: top 15 → top 6. Fallback: ordinea RRF (eroare sau timeout 4 s).
 4. **Abstain** dacă scorul maxim < τ (calibrat pe eval, start 0.25). Atunci serverul trimite evenimentul SSE `handoff`: `{helper:{id,name,role}, topic_owner?, draft}`, cu draft-ul pre-scris pentru F5.
 5. **Context:** vecini (`chunk_index ± 1`), dedup, buget de ~12k tokeni, etichete `[S1..S6]`.
 
@@ -598,7 +598,7 @@ Supabase (Frankfurt): Postgres + pgvector(HNSW) + FTS('english') + RLS + Auth + 
 
 | Risc | Măsură |
 |---|---|
-| Limita cheii trial Cohere | Fallback LLM testat înainte de M1; cache pentru întrebările din demo |
+| Rerank-ul LLM e lent sau pică | Timeout 4 s → ordinea RRF; cache pentru întrebările din demo |
 | Web Speech API merge doar în Chrome/Safari | Demo-ul se face pe Chrome; înregistrările trec prin Scribe |
 | Limita GitHub API (60/h fără token) | Token (5.000/h); cache pentru issue/PR |
 | Realtime nu merge | Fallback polling la 2 s |

@@ -103,11 +103,11 @@ const isWeak = (top) => {
 /**
  * @param {object} o
  * @param {'hybrid'|'vector'|'fts'} [o.mode]       search mode (eval compares them)
- * @param {'auto'|'cohere'|'llm'|'none'} [o.rerankWith]
+ * @param {'llm'|'none'} [o.rerankWith]
  * @param {boolean} [o.neighbours]               attach chunk_index ± 1 (off for eval)
  * @returns {Promise<{abstain:boolean, query:string, chunks:object[], sources:object[], candidates:object[]}>}
  */
-export async function retrieve({ question, history = [], orgId, docTypes, mode = 'hybrid', rerankWith = 'auto', neighbours = true }) {
+export async function retrieve({ question, history = [], orgId, docTypes, mode = 'hybrid', rerankWith = 'llm', neighbours = true }) {
   const standalone = await rewriteQuery(question, history);
   const query = await expandAcronyms(standalone, orgId);
   const candidates = await search({ query, orgId, docTypes, mode });

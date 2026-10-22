@@ -42,7 +42,7 @@ npm run dev              # server :3001 + client :5173
 | A2 | **Deploy de probă:** server pe Render + client pe Vercel; verifică `/api/health/sse` din browser (CORS, SSE, cold start) | 16:30 |
 | A3 | `auth.js`: verificare JWT Supabase + org + rol (portat din Internal_ai) | 17:00 |
 | A4 | Ingestie: PDF/DOCX/MD → `chunkMarkdown` → embed → `documents`; `ingestRepo` din GitHub + CODEOWNERS → `topic_owners` | 18:00 |
-| A5 | RPC `hybrid_search` (FTS + vector + RRF) + `rerank` (Cohere + fallback **testat**) | 18:30 |
+| A5 | RPC `hybrid_search` (FTS + vector + RRF) + `rerank` (gpt-4.1-mini + fallback RRF **testat**) | 18:30 |
 | A6 | `answerQuestion`: mod strict, streaming, citări validate, `enrich`, **abstain → `handoff`** | **19:00 · M1** |
 | A7 | F5 backend: `help` threads/messages + `publish-faq` (FAQ intră în RAG) + `anon` (fără user_id) + ping Slack fără text | 21:00 |
 | A8 | F6 glosar la ingestie + expansiunea acronimelor în query | 22:00 |
