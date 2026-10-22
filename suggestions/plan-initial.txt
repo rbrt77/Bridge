@@ -21,6 +21,9 @@ Format intrare:
 
 --- Ce trebuie schimbat ---
 
+[Robert] [2026-10-22] [§1.6, §4.3, §7]
+- Sa avem grija ca functiile de accesibilitate sa nu fie prea similare (ca mod si configurare) cu ce e pe site-ul RDCC.
+  Sa le adaptam la cerintele temei si la optiunile de confidentialitate stabilite, ca sa nu fie invazive.
 [Claude] [2026-10-22] [§3, §10]
 - Scope prea mare: sunt ~9 functii MUST (1, 2, 3, 6, 9, C1, C2, N1 + wizard) in ~22h, cu 4 oameni.
   Propunere: MUST real = Ask adaptat + citari, Procedura -> checklist, Meeting -> My tasks, Adjustments + scrisoare.
