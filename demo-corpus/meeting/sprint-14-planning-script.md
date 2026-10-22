@@ -15,6 +15,15 @@ Read it out loud and record it (2:30–3:00). The recording goes to Track C for 
 
 Four voices, so diarization has four speakers. Maria's lines are spoken by Ana as "Maria writes: …".
 
+## Generated recording (ready now)
+
+`sprint-14-planning.m4a` (2:54) was generated with ElevenLabs Text to Dialogue (`eleven_v3`) so Track C can test F3 today.
+Voices: Ana = Sarah, Radu = George, Ioana = Alice, Andrei = Liam (ElevenLabs default voices).
+Checked with Scribe v2 (`diarize=true`): 4 speakers, every line attributed to the right person:
+`speaker_0` = Ana (also reads Maria's chat messages), `speaker_1` = Radu, `speaker_2` = Andrei, `speaker_3` = Ioana.
+
+A recording played by the team (below) sounds more authentic for the pitch; if you make one, save it under the same name.
+
 ## Recording tips
 
 - One laptop in a quiet room, everyone within 1 m of the mic. Phone voice memo works too.
