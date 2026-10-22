@@ -27,11 +27,6 @@ export async function draftStandup({ voice_note_text, user }) {
   });
 }
 
-/** Slack message in the handbook's three-question format. */
-export function formatForSlack({ yesterday, today, blockers }, name) {
-  return [`*Standup${name ? ` · ${name}` : ''}*`, `*Yesterday:* ${yesterday}`, `*Today:* ${today}`, `*Blockers:* ${blockers}`].join('\n');
-}
-
 const list = (lines) => (lines.length ? lines.map((l) => `- ${l}`).join('\n') : '(none)');
 
 async function meetingTasks(userId) {

@@ -104,10 +104,9 @@ Realtime: client subscribes to `help_messages` inserts filtered by `thread_id`. 
 
 ## Standup (F12, SHOULD) — Track C
 | POST | `/api/standup/draft` | `{ "voice_note_text"? }` | `{ "yesterday","today","blockers" }` |
-| POST | `/api/standup/post-slack` | `{ "text" }` or `{ "yesterday","today","blockers" }` (formatted server-side) | `{ "ok":true }`; `503 slack_not_configured` when `SLACK_WEBHOOK_URL` is empty |
 
 ## Talk to Bridge (voice assistant) — Track C
-The server only proposes an action; the client runs it with the APIs above (`client/src/lib/assistantTasks.js`). `message_manager`, `reply_message`, `ask_anonymously`, `start_captions` and `end_meeting` are read back and run only after a yes, and so are the follow-ups the client offers itself (save a ticket/review as a checklist, post the standup). Settings changes and ticks apply at once and can be undone. Enforced in `client/src/components/Assistant.jsx`.
+The server only proposes an action; the client runs it with the APIs above (`client/src/lib/assistantTasks.js`). `message_manager`, `reply_message`, `ask_anonymously`, `start_captions` and `end_meeting` are read back and run only after a yes, and so are the follow-ups the client offers itself (save a ticket/review as a checklist). Settings changes and ticks apply at once and can be undone. Enforced in `client/src/components/Assistant.jsx`.
 
 | Method | Path | Body | Response |
 |---|---|---|---|
