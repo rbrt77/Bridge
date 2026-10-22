@@ -48,6 +48,8 @@ event: error    data: {"code":"…","message":"…"}
 | POST | `/api/help/threads/:id/publish-faq` | `{ "question","answer" }` | `{ "faq_id" }` (manager only) |
 | POST | `/api/anon` | `{ "question" }` | `{ "claim_token" }` (keep in browser only) |
 | GET | `/api/anon/:claim_token` | – | `{ "status":"open\|answered", "answer"?, "faq_id"? }` |
+| GET | `/api/anon/queue` | – | `{ "questions":[{ "id","question","topic","week" }] }` (manager/admin; open, non-seed) |
+| POST | `/api/anon/:id/answer` | `{ "answer", "question"? }` | `{ "faq_id" }` (manager/admin; becomes a Team FAQ, re-answer replaces it) |
 
 Realtime: client subscribes to `help_messages` inserts filtered by `thread_id`. Fallback: poll every 2 s.
 
