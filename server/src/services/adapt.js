@@ -64,7 +64,8 @@ export function citationFilter(validLabels, emit) {
   };
 }
 
-const ownerName = (login) => {
+/** "brightline-ana" → "Ana" (used until members have github_login set). */
+export const ownerName = (login) => {
   const last = login.split('-').pop();
   return last.charAt(0).toUpperCase() + last.slice(1);
 };

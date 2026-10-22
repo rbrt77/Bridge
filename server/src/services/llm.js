@@ -20,6 +20,18 @@ export async function generateJson({ system, input, schema, name, model = env.ch
   return JSON.parse(res.output_text);
 }
 
+/** Short plain text, not streamed (background jobs). */
+export async function generateText({ system, input, model = env.backgroundModel, timeoutMs, cacheKey }) {
+  const res = await openai().responses.create({
+    model,
+    ...reasoningFor(model),
+    instructions: system,
+    input,
+    ...(cacheKey ? { prompt_cache_key: cacheKey } : {}),
+  }, timeoutMs ? { timeout: timeoutMs, maxRetries: 1 } : undefined);
+  return res.output_text.trim();
+}
+
 /** Streamed text; calls onDelta(text) for each chunk. Returns the full text. */
 export async function streamText({ system, input, verbosity = 'medium', model = env.chatModel, onDelta }) {
   const stream = await openai().responses.create({

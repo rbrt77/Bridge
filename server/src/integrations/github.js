@@ -36,10 +36,23 @@ export async function getText(fullRepo, path) {
   return Buffer.from(file.content, file.encoding).toString('utf8');
 }
 
+/** Raw file from a public repo: raw.githubusercontent.com does not count against the 60/h API limit. */
+export async function getRaw(fullRepo, branch, path) {
+  const res = await fetch(`https://raw.githubusercontent.com/${fullRepo}/${branch}/${path.split('/').map(encodeURIComponent).join('/')}`, {
+    headers: env.githubToken ? { Authorization: `Bearer ${env.githubToken}` } : {},
+  });
+  if (!res.ok) throw Object.assign(new Error(`GitHub raw ${res.status} on ${path}`), { status: 502, expose: true });
+  return res.text();
+}
+
 const DOC_PATH = /^(?:[^/]+\.md|docs\/.+\.md|\.github\/.+\.md)$/i;
 const CODEOWNERS_PATHS = ['CODEOWNERS', '.github/CODEOWNERS', 'docs/CODEOWNERS'];
 
-/** Markdown docs in root, docs/ and .github/ + the CODEOWNERS path (if any). */
+const CODE_EXT = /\.(ts|tsx|js|jsx|mjs|cjs|py|go|rb|java|kt|cs|php|rs|sql|ya?ml|sh)$/i;
+const NOT_CODE = /(^|\/)(node_modules|dist|build|coverage|vendor|\.next)\/|\.(d\.ts|min\.js)$|lock\.(json|ya?ml)$|-lock\.json$/i;
+const isCodeFile = (path, size = 0) => CODE_EXT.test(path) && !NOT_CODE.test(path) && size < 60_000;
+
+/** Markdown docs in root, docs/ and .github/, code files (for code_map) + the CODEOWNERS path (if any). */
 export async function listRepoDocs(fullRepo) {
   const { default_branch: branch } = await getRepo(fullRepo);
   cache.delete(`/repos/${fullRepo}/git/trees/${branch}?recursive=1`);
@@ -48,6 +61,7 @@ export async function listRepoDocs(fullRepo) {
   return {
     branch,
     docs: blobs.filter((t) => DOC_PATH.test(t.path)).map((t) => ({ path: t.path, sha: t.sha })),
+    code: blobs.filter((t) => isCodeFile(t.path, t.size)).map((t) => ({ path: t.path, size: t.size })),
     codeownersPath: CODEOWNERS_PATHS.find((p) => blobs.some((t) => t.path === p)) ?? null,
   };
 }

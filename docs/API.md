@@ -48,6 +48,8 @@ event: error    data: {"code":"…","message":"…"}
 | POST | `/api/help/threads/:id/publish-faq` | `{ "question","answer" }` | `{ "faq_id" }` (manager only) |
 | POST | `/api/anon` | `{ "question" }` | `{ "claim_token" }` (keep in browser only) |
 | GET | `/api/anon/:claim_token` | – | `{ "status":"open\|answered", "answer"?, "faq_id"? }` |
+| GET | `/api/anon/queue` | – | `{ "questions":[{ "id","question","topic","week" }] }` (manager/admin; open, non-seed) |
+| POST | `/api/anon/:id/answer` | `{ "answer", "question"? }` | `{ "faq_id" }` (manager/admin; becomes a Team FAQ, re-answer replaces it) |
 
 Realtime: client subscribes to `help_messages` inserts filtered by `thread_id`. Fallback: poll every 2 s.
 
@@ -57,7 +59,7 @@ Realtime: client subscribes to `help_messages` inserts filtered by `thread_id`. 
 | POST | `/api/tickets/decode` | `{ "issue_url"? , "text"? }` | `TicketDecoded` (see mocks/ticket.json) |
 | POST | `/api/reviews/explain` | `{ "pr_url" }` | `ReviewExplained` (see mocks/review.json) |
 | POST | `/api/setup/step` (SHOULD F10) | `{ "step_index", "error_text"? }` | `{ step:{index,total,title,text,command\|null,expect\|null,if_fails}, fix:null\|{found,issue\|null,why,fix,source:Source\|null} }`; steps come from docs/setup.md, fixes from docs/known-issues.md first (see mocks/setup.json) |
-| POST | `/api/code-where` (SHOULD F11) | `{ "question" }` | `{ path, symbol, flow, adr? , sources }` |
+| POST | `/api/code-where` (SHOULD F11, Track A) | `{ "question" }` | `{ found, path\|null, symbol\|null, flow, adr:"ADR-007"\|null, owners:[{login,name}], url\|null, sources:[Source] }`: path is always an indexed file, symbol is from that file; `found:false` → path null and `flow` says so. Index is built by `ingest-repo` |
 | POST | `/api/checklists` | `{ "title","source_url","items":[{text,minutes}] }` | `{ "checklist" }` |
 | GET | `/api/checklists` | – | `{ "checklists":[...] }` |
 | PATCH | `/api/checklists/:id/items/:itemId` | `{ "done": bool }` | `{ "ok":true }` |
@@ -91,7 +93,7 @@ Realtime: client subscribes to `help_messages` inserts filtered by `thread_id`. 
 | Method | Path | Body | Response |
 |---|---|---|---|
 | POST | `/api/company/ingest` | multipart `files[]` | `{ "documents":[{id,title,chunks}] }` |
-| POST | `/api/company/ingest-repo` | `{ "repo":"owner/name" }` | `{ "synced":n, "glossary_terms":n, "topic_owners":n }` |
+| POST | `/api/company/ingest-repo` | `{ "repo":"owner/name" }` | `{ "synced":n, "glossary_terms":n, "topic_owners":n, "code_files":n }` (docs + CODEOWNERS + code map for F11) |
 | POST | `/api/company/audit` | `{ "repo" }` | `AuditResult` (see mocks/audit.json) |
 
 `AuditResult = { repo, score:0-100, run_id?, findings:[Finding] (status partial|missing, sorted by priority desc), passed:[{id,title,evidence}], quick_wins:[string] }`

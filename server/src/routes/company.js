@@ -18,7 +18,7 @@ r.post('/ingest', admin, upload.array('files'), async (req, res) => {
   res.json(await ingestFiles(req.files, req.user, { docType }));
 });
 r.post('/ingest-repo', admin, async (req, res) => {
-  if (env.mock) return res.json({ synced: 18, glossary_terms: 17, topic_owners: 4 });
+  if (env.mock) return res.json({ synced: 18, glossary_terms: 17, topic_owners: 4, code_files: 32 });
   res.json(await ingestRepo(req.body.repo ?? env.demoRepo, req.user));
 });
 r.post('/audit', admin, async (req, res) => {

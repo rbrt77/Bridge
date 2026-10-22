@@ -7,6 +7,8 @@ import { chunkMarkdown } from './chunker.js';
 import { contextualizeChunks } from './contextualize.js';
 import { embed } from './embeddings.js';
 import { extractGlossary } from './glossary.js';
+import { indexCode } from './codemap.js';
+import { invalidateRetrieval } from './retrieval.js';
 import { listRepoDocs, getText, parseCodeowners } from '../integrations/github.js';
 
 const INSERT_BATCH = 200;
@@ -26,6 +28,9 @@ export function guessDocType(name, fallback = 'handbook') {
   if (/handbook/.test(n)) return 'handbook';
   return fallback;
 }
+
+/** What gets embedded for a chunk: the title, section and context make short chunks findable. */
+export const embeddingText = (title, c) => [title, c.section_path, c.context, c.content].filter(Boolean).join('\n');
 
 const titleFrom = (markdown, fallback) => /^#\s+(.+)$/m.exec(markdown)?.[1].trim() ?? fallback;
 const stripExt = (name) => name.replace(/\.[^.]+$/, '');
@@ -52,11 +57,11 @@ async function parseFile(file) {
  * Store one document and its chunks. Inserts the new version first and deletes the old one
  * (same org + source_id) only after everything succeeded, so search never sees an empty doc.
  */
-export async function saveDocument({ orgId, title, sourceId, url = null, docType, text, chunks, approvedBy = null }) {
+export async function saveDocument({ orgId, title, sourceId, url = null, docType, text, chunks, approvedBy = null, glossary = true }) {
   if (!chunks.length) throw badRequest(`"${title}" contains no readable text`);
   const ordered = chunks.map((c, i) => ({ ...c, chunk_index: i }));
   const withContext = await contextualizeChunks(text, ordered, { title });
-  const vectors = await embed(withContext.map((c) => [title, c.section_path, c.context, c.content].filter(Boolean).join('\n')));
+  const vectors = await embed(withContext.map((c) => embeddingText(title, c)));
 
   const { data: kb, error } = await db
     .from('kb_documents')
@@ -89,11 +94,14 @@ export async function saveDocument({ orgId, title, sourceId, url = null, docType
   if (sourceId) await db.from('kb_documents').delete().eq('org_id', orgId).eq('source_id', sourceId).neq('id', kb.id);
 
   let glossaryTerms = 0;
-  try {
-    glossaryTerms = (await extractGlossary(text, { orgId, documentId: kb.id, title })).length;
-  } catch (err) {
-    logger.warn('glossary extraction failed for', title, err.message);
+  if (glossary) {
+    try {
+      glossaryTerms = (await extractGlossary(text, { orgId, documentId: kb.id, title })).length;
+    } catch (err) {
+      logger.warn('glossary extraction failed for', title, err.message);
+    }
   }
+  invalidateRetrieval(orgId); // cached answers may now miss this document (or cite its old version)
   return { id: kb.id, title, chunks: ordered.length, glossaryTerms };
 }
 
@@ -117,7 +125,7 @@ export async function ingestFiles(files = [], user, { docType } = {}) {
 
 export async function ingestRepo(repo, user) {
   if (!/^[\w.-]+\/[\w.-]+$/.test(repo ?? '')) throw badRequest('repo must look like "owner/name"');
-  const { branch, docs, codeownersPath } = await listRepoDocs(repo);
+  const { branch, docs, code, codeownersPath } = await listRepoDocs(repo);
   const sourcePrefix = `github:${repo}:`;
 
   let synced = 0;
@@ -144,6 +152,10 @@ export async function ingestRepo(repo, user) {
   const { data: existing } = await db.from('kb_documents').select('id, source_id').eq('org_id', user.orgId).like('source_id', `${sourcePrefix}%`);
   const stale = (existing ?? []).filter((d) => !keep.has(d.source_id)).map((d) => d.id);
   if (stale.length) await db.from('kb_documents').delete().in('id', stale);
+  invalidateRetrieval(user.orgId);
+
+  // F11: code_map documents for "where is the code that…?" (docs above stay the source for "why").
+  const codeFiles = await indexCode({ repo, branch, files: code, orgId: user.orgId });
 
   let topicOwners = 0;
   if (codeownersPath) {
@@ -157,5 +169,5 @@ export async function ingestRepo(repo, user) {
     topicOwners = rows.length;
   }
 
-  return { synced, glossary_terms: glossaryTerms, topic_owners: topicOwners };
+  return { synced, glossary_terms: glossaryTerms, topic_owners: topicOwners, code_files: codeFiles };
 }
