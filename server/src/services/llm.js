@@ -5,15 +5,18 @@ import { env } from '../env.js';
 let client;
 const openai = () => (client ??= new OpenAI({ apiKey: env.openaiKey }));
 
+// Only reasoning models (gpt-5*, o*) accept `reasoning`; gpt-4.1* rejects it.
+const reasoningFor = (model) => (/^(gpt-5|o\d)/.test(model) ? { reasoning: { effort: 'minimal' } } : {});
+
 /** Strict JSON output (Structured Outputs). `schema` is a JSON Schema object. */
-export async function generateJson({ system, input, schema, name, model = env.chatModel }) {
+export async function generateJson({ system, input, schema, name, model = env.chatModel, timeoutMs }) {
   const res = await openai().responses.create({
     model,
-    reasoning: { effort: 'minimal' },
+    ...reasoningFor(model),
     instructions: system,
     input,
     text: { format: { type: 'json_schema', name, schema, strict: true } },
-  });
+  }, timeoutMs ? { timeout: timeoutMs, maxRetries: 0 } : undefined);
   return JSON.parse(res.output_text);
 }
 
@@ -21,7 +24,7 @@ export async function generateJson({ system, input, schema, name, model = env.ch
 export async function streamText({ system, input, verbosity = 'medium', model = env.chatModel, onDelta }) {
   const stream = await openai().responses.create({
     model,
-    reasoning: { effort: 'minimal' },
+    ...reasoningFor(model),
     text: { verbosity },
     instructions: system,
     input,

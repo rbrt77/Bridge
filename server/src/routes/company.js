@@ -14,7 +14,8 @@ const admin = env.mock ? (req, res, next) => next() : requireRole('admin', 'mana
 
 r.post('/ingest', admin, upload.array('files'), async (req, res) => {
   if (env.mock) return res.json({ documents: [{ id: 'doc-1', title: 'Engineering Handbook', chunks: 42 }] });
-  res.json(await ingestFiles(req.files, req.user));
+  const docType = ['handbook', 'procedure', 'legal', 'faq'].includes(req.body?.doc_type) ? req.body.doc_type : undefined;
+  res.json(await ingestFiles(req.files, req.user, { docType }));
 });
 r.post('/ingest-repo', admin, async (req, res) => {
   if (env.mock) return res.json({ synced: 18, glossary_terms: 17, topic_owners: 4 });
