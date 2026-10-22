@@ -8,6 +8,7 @@ import { useAnnounce } from '../a11y/Announcer.jsx';
 import AdaptiveAnswer from '../components/AdaptiveAnswer.jsx';
 import HelpChat from '../components/HelpChat.jsx';
 import VoiceInput from '../components/VoiceInput.jsx';
+import AskTabs from '../components/AskTabs.jsx';
 
 const KEY = 'onramp.ask';
 const HISTORY_TURNS = 3; // last 3 question/answer pairs are enough for follow-ups
@@ -133,6 +134,7 @@ export default function Ask() {
 
   return (
     <>
+      <AskTabs />
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-3xl font-bold">Ask the team docs</h1>
@@ -155,8 +157,15 @@ export default function Ask() {
                 {t.handoff ? (
                   <>
                     <p className="mt-2">I couldn&apos;t find this in the team&apos;s documents, so I won&apos;t guess.</p>
-                    {!t.helpClosed && (
-                      <HelpChat handoff={t.handoff} question={t.question} onClose={() => patch(t.key, { helpClosed: true })} />
+                    {t.helpClosed ? (
+                      <button type="button" onClick={() => patch(t.key, { helpClosed: false })} className="btn mt-3">Ask a person</button>
+                    ) : (
+                      <HelpChat
+                        handoff={t.handoff}
+                        question={t.question}
+                        onClose={() => patch(t.key, { helpClosed: true })}
+                        onSent={(sent) => patch(t.key, (cur) => ({ handoff: { ...cur.handoff, sent } }))}
+                      />
                     )}
                   </>
                 ) : (

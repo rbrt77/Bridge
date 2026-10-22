@@ -7,6 +7,7 @@ import Layout from './components/Layout.jsx';
 import Login from './pages/Login.jsx';
 import Today from './pages/Today.jsx';
 import Ask from './pages/Ask.jsx';
+import Messages from './pages/Messages.jsx';
 import Tickets from './pages/Tickets.jsx';
 import Reviews from './pages/Reviews.jsx';
 import Setup from './pages/Setup.jsx';
@@ -30,6 +31,7 @@ export default function App() {
                 <Route index element={<Navigate to="/today" replace />} />
                 <Route path="today" element={<Today />} />
                 <Route path="ask" element={<Ask />} />
+                <Route path="ask/messages" element={<Messages />} />
                 <Route path="work" element={<Navigate to="/work/tickets" replace />} />
                 <Route path="work/tickets" element={<Tickets />} />
                 <Route path="work/reviews" element={<Reviews />} />
