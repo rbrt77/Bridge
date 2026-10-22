@@ -1,14 +1,37 @@
 // Owner: Track C. Browser TTS/STT first (free); server fallback in /api/voice.
-export function speak(text, { slow = false } = {}) {
+import { API_URL, authHeaders } from './api.js';
+
+export function speak(text, { slow = false, onEnd } = {}) {
   if (!('speechSynthesis' in window)) return false;
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
   u.lang = 'en-US';
   u.rate = slow ? 0.75 : 1;
+  u.onend = () => onEnd?.();
+  u.onerror = () => onEnd?.();
   speechSynthesis.speak(u);
   return true;
 }
 export const stopSpeaking = () => window.speechSynthesis?.cancel();
+
+/** Server TTS (gpt-4o-mini-tts). Resolves to the playing Audio element, or null when the server has no audio (MOCK). */
+export async function speakOnServer(text, { slow = false, onEnd } = {}) {
+  const res = await fetch(`${API_URL}/api/voice/tts`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...(await authHeaders()) },
+    body: JSON.stringify({ text, pace: slow ? 'slow' : 'normal' }),
+  });
+  if (!res.ok) throw new Error('Could not read this out loud');
+  if (res.status === 204) return null;
+  const url = URL.createObjectURL(await res.blob());
+  const audio = new Audio(url);
+  audio.onended = () => {
+    URL.revokeObjectURL(url);
+    onEnd?.();
+  };
+  await audio.play();
+  return audio;
+}
 
 /** Returns a recognizer or null (Web Speech API is Chrome/Safari only → demo on Chrome). */
 export function createRecognizer({ continuous = false, onResult, onEnd } = {}) {
@@ -21,4 +44,35 @@ export function createRecognizer({ continuous = false, onResult, onEnd } = {}) {
   r.onresult = (e) => onResult?.(Array.from(e.results).map((x) => x[0].transcript).join(' '), e.results[e.results.length - 1].isFinal);
   r.onend = () => onEnd?.();
   return r;
+}
+
+/** Microphone recording for the server STT fallback. stop() resolves to the recorded Blob. */
+export async function startRecording() {
+  if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) throw new Error('This browser cannot record audio');
+  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  const recorder = new MediaRecorder(stream);
+  const chunks = [];
+  recorder.ondataavailable = (e) => e.data.size && chunks.push(e.data);
+  recorder.start();
+  return {
+    stop: () =>
+      new Promise((resolve) => {
+        recorder.onstop = () => {
+          stream.getTracks().forEach((t) => t.stop());
+          resolve(new Blob(chunks, { type: recorder.mimeType || 'audio/webm' }));
+        };
+        recorder.stop();
+      }),
+  };
+}
+
+/** Server STT (gpt-4o-mini-transcribe). */
+export async function transcribeOnServer(blob) {
+  const form = new FormData();
+  const ext = blob.type.includes('mp4') ? 'mp4' : blob.type.includes('ogg') ? 'ogg' : 'webm';
+  form.append('audio', blob, `speech.${ext}`);
+  const res = await fetch(`${API_URL}/api/voice/stt`, { method: 'POST', headers: await authHeaders(), body: form });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data?.error?.message ?? 'Could not understand the recording');
+  return data.text;
 }
