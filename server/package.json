@@ -1,0 +1,17 @@
+{
+  "name": "@onramp/server",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch --env-file-if-exists=../.env src/index.js",
+    "start": "node --env-file-if-exists=../.env src/index.js",
+    "eval": "node --env-file-if-exists=../.env eval/run.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.49.4",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "multer": "^2.0.0",
+    "openai": "^5.0.0"
+  }
+}

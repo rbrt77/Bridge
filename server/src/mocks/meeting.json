@@ -1,0 +1,7 @@
+{
+  "summary": ["Sprint 14 planning.", "CSV export is the top priority.", "Hermes retries move to next sprint.", "Atlas rate limits stay as they are.", "Demo on Friday."],
+  "my_tasks": [ { "task": "Implement CSV export for invoices", "quote": "Maria, can you take the CSV export?", "who": "Ana", "minute": "01:12", "ticket": "#142", "due": "2026-10-30" } ],
+  "decisions": [ { "text": "Dates in exports use ISO format", "affects_me": true } ],
+  "glossary_terms": ["Hermes", "Atlas"],
+  "speakers": [ { "label": "speaker_0", "name": "Ana" }, { "label": "speaker_1", "name": "Maria" }, { "label": "speaker_2", "name": "Andrei" } ]
+}

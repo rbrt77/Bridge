@@ -1,0 +1,13 @@
+{
+  "_owner": "Track D writes the catalog; Track C consumes it. Needs only, never diagnoses.",
+  "needs": [
+    { "id": "fast-standups", "label": "Standups are spoken too fast", "adjustments": ["async-written-standup", "captions-transcript", "agenda-in-advance"] },
+    { "id": "screen-reader", "label": "I use a screen reader", "adjustments": ["vscode-nvda", "live-share-pairing", "diagram-text"] },
+    { "id": "notifications", "label": "Notifications overwhelm me", "adjustments": ["focus-blocks", "single-buddy"] },
+    { "id": "typing-fatigue", "label": "Typing tires me", "adjustments": ["voice-coding", "ergonomic-hardware"] },
+    { "id": "unclear-tickets", "label": "Tickets are unclear", "adjustments": ["written-acceptance-criteria", "extended-review-turnaround"] }
+  ],
+  "adjustments": {
+    "async-written-standup": { "title": "Written async standup", "cost": "$0", "how_to_ask": "TODO(D)", "legal": ["dir-2000-78-art5"] }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "threads": [ { "id": "thread-1", "question": "Who approves DB migrations?", "requester": "Andrei", "helper": { "id": "manager-ana", "name": "Ana" }, "status": "open", "created_at": "2026-10-22T18:00:00Z" } ],
+  "messages": [
+    { "id": "m1", "thread_id": "thread-1", "author": "Andrei", "body": "Hi Ana, who approves DB migrations for invoicing-service?", "created_at": "2026-10-22T18:00:00Z" },
+    { "id": "m2", "thread_id": "thread-1", "author": "Ana", "body": "Any CODEOWNER of /db plus me for prod. Add the migration label.", "created_at": "2026-10-22T18:02:00Z" }
+  ]
+}

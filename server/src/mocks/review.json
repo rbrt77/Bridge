@@ -1,0 +1,11 @@
+{
+  "pr": "#57 Add invoice CSV export",
+  "summary": { "required": 2, "optional": 3, "questions": 1 },
+  "files": [
+    { "path": "src/services/billing/csv.ts", "comments": [
+      { "id": 1, "author": "radu", "original": "blocking: this loads all invoices in memory", "kind": "required", "what_to_change": "Stream rows instead of building the whole CSV in memory.", "why": "Large orgs have 100k+ invoices.", "source": "CONTRIBUTING.md > Performance", "suggested_reply": "Good catch, I'll switch to a stream." },
+      { "id": 2, "author": "radu", "original": "nit: rename x to row", "kind": "optional", "what_to_change": "Rename variable x to row.", "why": "Team naming convention.", "source": "CONTRIBUTING.md > Review conventions", "suggested_reply": "Done." },
+      { "id": 3, "author": "ioana", "original": "why?", "kind": "question", "what_to_change": "Nothing yet: explain why you added the date conversion.", "why": "Reviewer asks for the reason; it is not a request to change code.", "source": "CONTRIBUTING.md > Review conventions", "suggested_reply": "Finance asked for ISO dates (see #142)." }
+    ] }
+  ]
+}

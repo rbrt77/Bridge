@@ -1,0 +1,8 @@
+{
+  "adjustments": [
+    { "need_id": "fast-standups", "title": "Written async standup", "how_to_ask": "Ask your manager if you can post your standup in Slack before the call.", "cost": "$0", "sources": ["Brightline Engineering Handbook > Standups", "Directive 2000/78 art. 5"] },
+    { "need_id": "unclear-tickets", "title": "Written acceptance criteria on every ticket", "how_to_ask": "Ask that tickets assigned to you include acceptance criteria.", "cost": "$0", "sources": ["Law 448/2006"] }
+  ],
+  "letter": "Hi Ana,\n\nTo work at my best I'd like to propose two changes:\n1. Posting my standup in writing before the call.\n2. Written acceptance criteria on my tickets.\n\nBoth are free to set up. Happy to talk about it.\n\nAndrei",
+  "disclaimer": "Informational, not legal advice."
+}

@@ -1,0 +1,9 @@
+{
+  "answer": "Definition of Done at Brightline means: code reviewed by one CODEOWNER [S1], tests pass in CI [S1], and the ticket has acceptance criteria checked off [S2]. Hermes (the invoicing queue) changes also need a note in the runbook [S2].",
+  "sources": [
+    { "id": "S1", "title": "Engineering Handbook", "section_path": "Process > Definition of Done", "page": 3, "url": null, "doc_type": "handbook", "approved_by": null },
+    { "id": "S2", "title": "CONTRIBUTING.md", "section_path": "Before you merge", "page": null, "url": "https://github.com/brightline-software/invoicing-service/blob/main/CONTRIBUTING.md", "doc_type": "repo_doc", "approved_by": null }
+  ],
+  "enrich": { "tldr": "Reviewed + CI green + acceptance criteria checked.", "steps": ["Get a CODEOWNER review", "Make CI pass", "Tick acceptance criteria", "Update runbook if Hermes changed"], "deadlines": [], "glossary_terms_used": ["DoD", "Hermes", "CODEOWNER"] },
+  "handoff": { "helper": { "id": "manager-ana", "name": "Ana", "role": "Engineering Manager" }, "topic_owner": "Ana owns billing", "draft": "Hi Ana, who approves DB migrations for invoicing-service?\n\nWhat I already checked: Engineering Handbook, CONTRIBUTING.md — no answer.\nTicket: #142" }
+}

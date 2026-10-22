@@ -1,0 +1,23 @@
+{
+  "title": "#142 Export invoices as CSV",
+  "summary": "Add a button on the Invoices page that downloads the visible invoices as a CSV file. Only finance users should see it.",
+  "acceptance_criteria": [
+    { "text": "Export button visible only for the finance role", "inferred": false },
+    { "text": "CSV contains id, customer, amount, status, date", "inferred": true },
+    { "text": "Export respects the current filters", "inferred": true }
+  ],
+  "steps": [
+    { "text": "Read OrderExport.ts to see how orders are exported today", "minutes": 15 },
+    { "text": "Add exportInvoicesCsv() in services/billing/", "minutes": 45 },
+    { "text": "Add the Export button with role check", "minutes": 30 },
+    { "text": "Write unit tests for the CSV format", "minutes": 30 }
+  ],
+  "files": [
+    { "path": "src/services/billing/OrderExport.ts", "why": "Existing export logic to reuse" },
+    { "path": "src/services/billing/invoice.cron.ts", "why": "Defines the invoice fields" }
+  ],
+  "unclear": [ { "issue": "Date format is not specified", "question": "Should dates in the CSV be ISO (2026-10-22) or local (22.10.2026)?" } ],
+  "definition_of_done": ["CODEOWNER review", "CI green", "Acceptance criteria checked"],
+  "images": [ { "alt": "Screenshot of the Invoices table with an Export button drawn in red in the top-right corner." } ],
+  "sources": [ { "id": "S1", "title": "Engineering Handbook", "section_path": "Process > Definition of Done", "page": 3, "url": null, "doc_type": "handbook", "approved_by": null } ]
+}

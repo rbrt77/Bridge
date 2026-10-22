@@ -1,0 +1,11 @@
+{
+  "repo": "brightline-software/invoicing-service",
+  "score": 58,
+  "findings": [
+    { "id": "issue-templates", "title": "No issue templates with acceptance criteria", "status": "missing", "mandatory": false, "impact": 3, "effort": 1, "evidence": "No files in .github/ISSUE_TEMPLATE/", "first_step": "Add a feature template with an 'Acceptance criteria' section." },
+    { "id": "pr-how-to-test", "title": "PR template has no 'How to test'", "status": "partial", "mandatory": false, "impact": 2, "effort": 1, "evidence": ".github/pull_request_template.md has only 'Summary'", "first_step": "Add a 'How to test' section." },
+    { "id": "adjustments-process", "title": "Adjustments policy has no timelines or confidentiality", "status": "partial", "mandatory": true, "impact": 3, "effort": 2, "evidence": "Workplace Adjustments Policy, p.1: no response time is given", "first_step": "Add a 10 working day response time and a confidentiality clause." },
+    { "id": "alt-text", "title": "3 images without alt text", "status": "missing", "mandatory": true, "impact": 2, "effort": 1, "evidence": "ARCHITECTURE.md, docs/setup.md", "first_step": "Add alt text to the 3 images." }
+  ],
+  "quick_wins": ["Add alt text to 3 images", "Add 'How to test' to PR template"]
+}

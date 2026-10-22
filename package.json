@@ -1,0 +1,16 @@
+{
+  "name": "onramp",
+  "private": true,
+  "version": "0.1.0",
+  "description": "OnRamp: AI onboarding for junior software developers with disabilities (AccessABILITY Hackathon 2026)",
+  "workspaces": ["client", "server"],
+  "scripts": {
+    "dev": "concurrently -n server,client -c blue,green \"npm run dev -w server\" \"npm run dev -w client\"",
+    "build": "npm run build -w client",
+    "lint": "npm run lint -w client",
+    "eval": "npm run eval -w server"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

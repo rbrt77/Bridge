@@ -1,0 +1,19 @@
+{
+  "_owner": "Track D writes criteria; Track A implements checks. v1 = 6 repo checks + 6 process criteria.",
+  "repo_checks": [
+    { "id": "readme-getting-started", "title": "README has Getting started", "impact": 3, "effort": 1, "mandatory": false },
+    { "id": "setup-guide", "title": "Setup guide + known issues", "impact": 3, "effort": 2, "mandatory": false },
+    { "id": "contributing-review", "title": "CONTRIBUTING with review conventions", "impact": 3, "effort": 1, "mandatory": false },
+    { "id": "pr-how-to-test", "title": "PR template has How to test", "impact": 2, "effort": 1, "mandatory": false },
+    { "id": "issue-templates", "title": "Issue templates with acceptance criteria", "impact": 3, "effort": 1, "mandatory": false },
+    { "id": "alt-text", "title": "Markdown images have alt text", "impact": 2, "effort": 1, "mandatory": true }
+  ],
+  "process_criteria": [
+    { "id": "dod", "title": "Written Definition of Done", "impact": 3, "effort": 1, "mandatory": false },
+    { "id": "buddy", "title": "Buddy for juniors", "impact": 3, "effort": 1, "mandatory": false },
+    { "id": "async-standup", "title": "Async standup allowed", "impact": 2, "effort": 1, "mandatory": false },
+    { "id": "captions", "title": "Captions/transcripts for ceremonies", "impact": 3, "effort": 1, "mandatory": true },
+    { "id": "adjustments-process", "title": "Adjustments process incl. assistive tech", "impact": 3, "effort": 2, "mandatory": true },
+    { "id": "health-data-privacy", "title": "Health data confidentiality (GDPR art. 9)", "impact": 3, "effort": 1, "mandatory": true }
+  ]
+}

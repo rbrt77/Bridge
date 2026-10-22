@@ -1,0 +1,5 @@
+{ "prefs": {
+  "preset": ["step-by-step", "listen-first"],
+  "display": { "textSize": "l", "contrast": "normal", "font": "readable", "spacing": "wide", "motion": "reduced" },
+  "output": { "length": "short", "steps": true, "tldr": true, "audio": true, "literal": true, "screenReader": false }
+} }

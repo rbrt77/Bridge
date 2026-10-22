@@ -1,0 +1,4 @@
+{ "checklists": [ { "id": "cl-1", "title": "#142 Export invoices as CSV", "source_url": "https://github.com/brightline-software/invoicing-service/issues/142", "items": [
+  { "id": "i1", "text": "Read OrderExport.ts", "minutes": 15, "done": true },
+  { "id": "i2", "text": "Add exportInvoicesCsv()", "minutes": 45, "done": false }
+] } ] }

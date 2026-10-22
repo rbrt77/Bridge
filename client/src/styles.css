@@ -1,0 +1,21 @@
+/* Owner: Track B. Profile (F1) is applied through data-* attributes on <html>. */
+@import "tailwindcss";
+
+:root {
+  --bg: #ffffff; --fg: #1a1a1a; --muted: #4a4a4a; --accent: #0b57d0; --focus: #0b57d0; --border: #767676;
+  --text-scale: 1; --line-height: 1.5; --letter-spacing: normal;
+  --font-body: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+:root[data-contrast="high"] { --bg: #000; --fg: #fff; --muted: #fff; --accent: #ffd400; --focus: #ffd400; --border: #fff; }
+:root[data-text-size="l"] { --text-scale: 1.2; }
+:root[data-text-size="xl"] { --text-scale: 1.45; }
+:root[data-font="readable"] { --font-body: "Atkinson Hyperlegible", Verdana, sans-serif; }
+:root[data-spacing="wide"] { --line-height: 1.8; --letter-spacing: 0.05em; }
+:root[data-motion="reduced"] *, :root[data-motion="reduced"] *::before { animation: none !important; transition: none !important; }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+
+html { font-size: calc(100% * var(--text-scale)); }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); line-height: var(--line-height); letter-spacing: var(--letter-spacing); }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+button, a, input, select, textarea { min-height: 44px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

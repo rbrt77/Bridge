@@ -1,0 +1,6 @@
+{
+  "title": "How an invoice is sent",
+  "summary": "The cron job finds due invoices, queues them in Hermes, and notify.ts emails the customer.",
+  "mermaid": "flowchart TD\n  A[invoice.cron.ts finds due invoices] --> B[Hermes queue]\n  B --> C[notify.ts sends email]\n  C --> D[Invoice marked as sent]",
+  "outline": ["1. invoice.cron.ts finds due invoices", "2. They are put in the Hermes queue", "3. notify.ts emails the customer", "4. The invoice is marked as sent"]
+}

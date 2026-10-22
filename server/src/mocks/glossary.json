@@ -1,0 +1,5 @@
+{ "terms": [
+  { "term": "Hermes", "definition": "The invoicing queue. Jobs that send invoices go through it.", "source": { "id": "S1", "title": "ARCHITECTURE.md", "section_path": "Components", "page": null, "url": null, "doc_type": "repo_doc", "approved_by": null } },
+  { "term": "Atlas", "definition": "The API gateway. Every external request enters through Atlas.", "source": { "id": "S1", "title": "ARCHITECTURE.md", "section_path": "Components", "page": null, "url": null, "doc_type": "repo_doc", "approved_by": null } },
+  { "term": "DoD", "definition": "Definition of Done: the checklist a ticket must pass before it counts as finished.", "source": { "id": "S1", "title": "Engineering Handbook", "section_path": "Process", "page": 3, "url": null, "doc_type": "handbook", "approved_by": null } }
+] }
