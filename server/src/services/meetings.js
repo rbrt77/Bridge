@@ -23,7 +23,7 @@ export async function processMeeting({ audio, me, consent, speakers, meeting_dat
 
   const stt = await transcribe(audio);
   const turns = toTurns(stt.words ?? []);
-  const lines = turns.map((t) => `[${mmss(t.start)}] ${t.speaker}: ${t.text}`);
+  const lines = toTurns(stt.words ?? [], { bySentence: true }).map((t) => `[${mmss(t.start)}] ${t.speaker}: ${t.text}`);
   if (!lines.length) throw badRequest('No speech found in the recording');
   const [people, terms] = await Promise.all([knownPeople(user?.orgId), knownTerms(user?.orgId)]);
   const knownSpeakers = manualSpeakers ?? (await mapSpeakers(turns, people));
@@ -56,13 +56,14 @@ export async function catchUp(lastMinutesText) {
   return generateJson({ system: CATCH_UP_SYSTEM, schema: CATCH_UP_SCHEMA, name: 'catch_up', input: lastMinutesText.slice(-8000) });
 }
 
-/** Scribe words → speaker turns { speaker, start, text }. */
-function toTurns(words) {
+/** Scribe words → speaker turns { speaker, start, text }; bySentence also splits a turn at . ? ! so each line has its own time. */
+function toTurns(words, { bySentence = false } = {}) {
   const turns = [];
   for (const w of words) {
     if (w.type === 'audio_event') continue;
     const last = turns.at(-1);
-    if (last && last.speaker === w.speaker_id) last.text += w.text;
+    const sentenceEnded = bySentence && /[.?!]["”]?$/.test(last?.text.trimEnd() ?? '');
+    if (last && last.speaker === w.speaker_id && !(sentenceEnded && w.type === 'word')) last.text += w.text;
     else if (w.type === 'word') turns.push({ speaker: w.speaker_id ?? 'speaker_0', start: w.start ?? 0, text: w.text });
   }
   return turns.map((t) => ({ ...t, text: t.text.trim() }));
