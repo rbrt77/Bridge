@@ -5,6 +5,9 @@ import { downloadIcs } from '../lib/ics.js';
 import { useSession } from '../auth/Session.jsx';
 import { useAnnounce } from '../a11y/Announcer.jsx';
 import GlossaryTerm from '../components/GlossaryTerm.jsx';
+import AudioButton from '../components/AudioButton.jsx';
+
+const tasksText = (tasks) => tasks.map((t, i) => `${i + 1}. ${t.task}. ${t.due ? `Due ${t.due}.` : 'No deadline.'} Asked by ${t.who}.`).join('\n');
 
 export default function Meetings() {
   const { member } = useSession();
@@ -82,7 +85,10 @@ export default function Meetings() {
       {data && (
         <div className="mt-8 grid gap-6">
           <section aria-labelledby="tasks-h" className="card">
-            <h2 id="tasks-h" className="text-xl font-semibold">My tasks</h2>
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <h2 id="tasks-h" className="text-xl font-semibold">My tasks</h2>
+              {data.my_tasks.length > 0 && <AudioButton text={tasksText(data.my_tasks)} label="Listen to my tasks" />}
+            </div>
             {data.my_tasks.length === 0 && <p>No tasks for {me} in this meeting.</p>}
             <ul className="mt-3 grid gap-4">
               {data.my_tasks.map((t) => (
@@ -116,7 +122,10 @@ export default function Meetings() {
           </section>
 
           <section aria-labelledby="sum-h" className="card">
-            <h2 id="sum-h" className="text-xl font-semibold">Summary</h2>
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <h2 id="sum-h" className="text-xl font-semibold">Summary</h2>
+              <AudioButton text={data.summary.join('\n')} label="Listen to summary" />
+            </div>
             <ul className="mt-3 list-disc pl-5">
               {data.summary.map((line) => <li key={line}>{line}</li>)}
             </ul>
