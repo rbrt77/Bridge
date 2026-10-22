@@ -56,7 +56,7 @@ Realtime: client subscribes to `help_messages` inserts filtered by `thread_id`. 
 |---|---|---|---|
 | POST | `/api/tickets/decode` | `{ "issue_url"? , "text"? }` | `TicketDecoded` (see mocks/ticket.json) |
 | POST | `/api/reviews/explain` | `{ "pr_url" }` | `ReviewExplained` (see mocks/review.json) |
-| POST | `/api/setup/step` (SHOULD F10) | `{ "step_index", "error_text"? }` | `{ step, fix? }` |
+| POST | `/api/setup/step` (SHOULD F10) | `{ "step_index", "error_text"? }` | `{ step:{index,total,title,text,command\|null,expect\|null,if_fails}, fix:null\|{found,issue\|null,why,fix,source:Source\|null} }`; steps come from docs/setup.md, fixes from docs/known-issues.md first (see mocks/setup.json) |
 | POST | `/api/code-where` (SHOULD F11) | `{ "question" }` | `{ path, symbol, flow, adr? , sources }` |
 | POST | `/api/checklists` | `{ "title","source_url","items":[{text,minutes}] }` | `{ "checklist" }` |
 | GET | `/api/checklists` | – | `{ "checklists":[...] }` |
