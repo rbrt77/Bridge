@@ -1,0 +1,24 @@
+OBSERVATII DESPRE PLANUL INITIAL
+Fisier: particip-la-accessability-hackathon-sequential-heron.md (commit b0cfe8f)
+================================================================================
+
+Format intrare:
+[Nume] [Data] [Sectiune §]
+- observatie / sugestie
+
+
+--- Ce e bine ---
+
+
+
+--- Ce trebuie schimbat ---
+
+
+
+--- Ce lipseste ---
+
+
+
+--- Intrebari deschise ---
+
+
