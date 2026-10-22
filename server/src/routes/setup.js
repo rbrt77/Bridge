@@ -1,11 +1,16 @@
-// Owner: Track C (F10, SHOULD). One step per screen; paste error → known-issues search.
+// Owner: Track D (F10, SHOULD). One step per screen; paste error → known-issues match → fix with source.
 import { Router } from 'express';
 import { env } from '../env.js';
-import { notImplemented } from '../middleware/errors.js';
+import { mock } from '../utils/mock.js';
+import { getStep, findFix } from '../services/setup.js';
 
 const r = Router();
-r.post('/step', (req, res) => {
-  if (env.mock) return res.json({ step: { index: 0, total: 12, title: 'Install dependencies', command: 'npm install', expect: 'added 312 packages', if_fails: 'See known issue #3: delete node_modules and retry.' }, fix: null });
-  throw notImplemented('setup step'); // TODO(C): parse docs/setup.md into steps; error_text → retrieval(doc_type known-issues)
+r.post('/step', async (req, res) => {
+  if (env.mock) {
+    const m = mock('setup');
+    return res.json({ step: m.step, fix: req.body?.error_text ? m.fix : null });
+  }
+  const [step, fix] = await Promise.all([getStep(req.body?.step_index ?? 0), findFix(req.body?.error_text, req.user)]);
+  res.json({ step, fix });
 });
 export default r;
