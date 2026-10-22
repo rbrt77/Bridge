@@ -100,4 +100,4 @@ Realtime: client subscribes to `help_messages` inserts filtered by `thread_id`. 
 
 ## Standup (F12, SHOULD) — Track C
 | POST | `/api/standup/draft` | `{ "voice_note_text"? }` | `{ "yesterday","today","blockers" }` |
-| POST | `/api/standup/post-slack` | `{ "text" }` | `{ "ok":true }` |
+| POST | `/api/standup/post-slack` | `{ "text" }` or `{ "yesterday","today","blockers" }` (formatted server-side) | `{ "ok":true }`; `503 slack_not_configured` when `SLACK_WEBHOOK_URL` is empty |
