@@ -1,4 +1,6 @@
-// Owner: Track B. Magic-link sign-in (no password, no CAPTCHA). Rendered outside Layout, so it owns its <main>.
+// Owner: Track B. Email + password sign-in (accounts are created by supabase/seed/team.mjs, no sign-up).
+// Supabase keeps the session in localStorage, so you stay signed in until you sign out.
+// Rendered outside Layout, so it owns its <main>.
 import { useEffect, useRef, useState } from 'react';
 import { Link, Navigate, useLocation } from 'react-router';
 import { supabase } from '../lib/supabaseClient.js';
@@ -13,32 +15,28 @@ export default function Login() {
   const from = useLocation().state?.from ?? '/today';
   const heading = useRef(null);
   const [email, setEmail] = useState('');
-  const [phase, setPhase] = useState('idle'); // idle | sending | sent
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => { heading.current?.focus(); }, []);
 
   if (mode === 'supabase' && status === 'signedIn') return <Navigate to={from} replace />;
 
-  const send = async (e) => {
-    e?.preventDefault();
-    if (!/^\S+@\S+\.\S+$/.test(email.trim())) {
-      setError('Enter an email address like name@company.com.');
-      return;
-    }
+  const signIn = async (e) => {
+    e.preventDefault();
+    if (!/^\S+@\S+\.\S+$/.test(email.trim())) return setError('Enter an email address like name@company.com.');
+    if (!password) return setError('Enter your password.');
     setError('');
-    setPhase('sending');
-    const { error: err } = await supabase.auth.signInWithOtp({
-      email: email.trim(),
-      options: { emailRedirectTo: window.location.origin + from },
-    });
+    setBusy(true);
+    const { error: err } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
+    setBusy(false);
     if (err) {
-      setPhase('idle');
-      setError(err.message || 'Could not send the link. Check the address and try again.');
+      setError(err.message === 'Invalid login credentials' ? 'Wrong email or password.' : err.message);
       return;
     }
-    setPhase('sent');
-    announce(`Sign-in link sent to ${email.trim()}. Check your inbox.`);
+    announce('Signed in.');
   };
 
   return (
@@ -55,35 +53,43 @@ export default function Login() {
             <p>Demo mode: sign-in is off because Supabase is not configured. You are signed in as Andrei.</p>
             <p className="mt-2"><Link to="/today">Continue to Today</Link></p>
           </div>
-        ) : phase === 'sent' ? (
-          <div className="mt-4 rounded-xl bg-accent-soft p-4">
-            <p>We sent a sign-in link to <strong>{email.trim()}</strong>. Open it on this device to continue.</p>
-            <p className="mt-2 text-muted">The link works once. No email after a minute? Check spam or send it again.</p>
-            <div className="mt-4 flex flex-wrap gap-2">
-              <button type="button" onClick={send} className="btn">Send again</button>
-              <button type="button" onClick={() => setPhase('idle')} className="btn">Use a different email</button>
-            </div>
-          </div>
         ) : (
-          <form onSubmit={send} noValidate className="mt-4 flex flex-col gap-3">
-            <p className="text-muted">We email you a one-time link. No password needed.</p>
+          <form onSubmit={signIn} noValidate className="mt-4 flex flex-col gap-3">
             <label htmlFor="email" className="font-semibold">Work email</label>
             <input
               id="email"
               type="email"
               name="email"
-              autoComplete="email"
+              autoComplete="username"
               inputMode="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               aria-invalid={error ? true : undefined}
-              aria-describedby={error ? 'email-error' : undefined}
+              aria-describedby={error ? 'login-error' : undefined}
               className="field"
             />
-            {error && <p id="email-error" role="alert" className="text-danger">{error}</p>}
-            <button type="submit" disabled={phase === 'sending'} className="btn btn-primary">
-              {phase === 'sending' ? 'Sending…' : 'Email me a sign-in link'}
+            <label htmlFor="password" className="font-semibold">Password</label>
+            <div className="flex gap-2">
+              <input
+                id="password"
+                type={showPassword ? 'text' : 'password'}
+                name="password"
+                autoComplete="current-password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                aria-invalid={error ? true : undefined}
+                aria-describedby={error ? 'login-error' : undefined}
+                className="field flex-1"
+              />
+              <button type="button" onClick={() => setShowPassword((v) => !v)} aria-pressed={showPassword} className="btn">
+                {showPassword ? 'Hide' : 'Show'}
+              </button>
+            </div>
+            {error && <p id="login-error" role="alert" className="text-danger">{error}</p>}
+            <button type="submit" disabled={busy} className="btn btn-primary">
+              {busy ? 'Signing in…' : 'Sign in'}
             </button>
           </form>
         )}

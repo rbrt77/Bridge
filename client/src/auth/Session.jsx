@@ -1,4 +1,4 @@
-// Owner: Track B. Supabase session (magic link) + SessionGuard. Without VITE_SUPABASE_* the app runs as the demo user (MOCK).
+// Owner: Track B. Supabase session (email + password) + SessionGuard. Without VITE_SUPABASE_* the app runs as the demo user (MOCK).
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router';
 import { supabase } from '../lib/supabaseClient.js';

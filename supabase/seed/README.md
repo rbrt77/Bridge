@@ -8,7 +8,20 @@ Safe to run again: existing users are kept, members are upserted, seed questions
 
 **Organisation:** Brightline Software.
 
-**Demo users** (`@brightline.test` inboxes do not exist: get a login link from the Supabase dashboard → Authentication → Users):
+**Team accounts** (email + password, no magic link):
+
+```bash
+cp supabase/seed/team.example.json supabase/seed/team.json   # real emails, gitignored
+# set TEAM_PASSWORD=... in .env
+node --env-file=.env supabase/seed/team.mjs
+```
+
+Everyone in `team.json` becomes `admin` by default (sees Insights, Company and the manager inbox) and gets the
+next person in the list as their manager, so you can both ask and answer. Override per person with
+`"role": "manager" | "member"` or `"manager": "<email>"`. Re-run after any change; role changes reach the
+server within a minute (member cache).
+
+**Demo users** (sign in with email + `TEAM_PASSWORD` after running `team.mjs` below):
 
 | Name | Email | Role | Manager |
 |---|---|---|---|

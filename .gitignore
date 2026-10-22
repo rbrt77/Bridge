@@ -34,3 +34,6 @@ Thumbs.db
 
 # Claude Code local settings
 .claude/settings.local.json
+
+# Real team emails for supabase/seed/team.mjs
+supabase/seed/team.json
