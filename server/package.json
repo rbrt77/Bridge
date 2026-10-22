@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "node --watch --env-file-if-exists=../.env src/index.js",
     "start": "node --env-file-if-exists=../.env src/index.js",
-    "eval": "node --env-file-if-exists=../.env eval/run.js"
+    "eval": "node --env-file-if-exists=../.env eval/run.js",
+    "login": "node --env-file-if-exists=../.env scripts/dev-login.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.49.4",

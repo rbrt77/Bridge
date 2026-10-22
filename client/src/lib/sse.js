@@ -15,7 +15,11 @@ export async function postSse(path, body, handlers, signal) {
     body: JSON.stringify(body),
     signal,
   });
-  if (!res.ok || !res.body) throw new Error(`SSE request failed (${res.status})`);
+  if (!res.ok || !res.body) {
+    // Auth/role errors come back as plain JSON before any stream starts (docs/API.md error shape).
+    const err = await res.json().catch(() => null);
+    throw Object.assign(new Error(err?.error?.message ?? `Request failed (${res.status})`), { code: err?.error?.code, status: res.status });
+  }
 
   const reader = res.body.pipeThrough(new TextDecoderStream()).getReader();
   let buffer = '';
