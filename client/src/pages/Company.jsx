@@ -197,14 +197,19 @@ function RepoSync() {
   return (
     <form onSubmit={sync} aria-labelledby="repo-h" className="card mt-6 grid gap-4">
       <h2 id="repo-h" className="text-xl font-semibold">GitHub repo</h2>
-      <p className="-mt-2 max-w-prose text-muted">Reads the README, docs and CODEOWNERS: the glossary and who to ask come from here.</p>
+      <p className="-mt-2 max-w-prose text-muted">Reads the README, docs, CODEOWNERS and the code: the glossary, who to ask and where things live in the code come from here.</p>
       <div className="grid max-w-md gap-1">
         <label htmlFor="repo-name" className="font-medium">Repo (owner/name)</label>
         <input id="repo-name" value={repo} onChange={(e) => setRepo(e.target.value)} pattern="[\w.-]+/[\w.-]+" spellCheck={false} className="field" required />
       </div>
       <button type="submit" disabled={state.busy || !repo.trim()} className="btn justify-self-start">{state.busy ? 'Syncing…' : 'Sync repo'}</button>
       {state.error && <p role="alert" className="text-danger">Sync failed: {state.error}</p>}
-      {r && <p>Synced {r.synced} files. Found {r.glossary_terms} glossary terms and {r.topic_owners} topic owners.</p>}
+      {r && (
+        <p>
+          Synced {r.synced} files. Found {r.glossary_terms} glossary terms and {r.topic_owners} topic owners
+          {r.code_files != null && `, and mapped ${r.code_files} code files`}.
+        </p>
+      )}
     </form>
   );
 }
