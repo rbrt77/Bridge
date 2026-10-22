@@ -201,15 +201,6 @@ function Standup() {
   const copy = async () => {
     try { await navigator.clipboard.writeText(text); setState((s) => ({ ...s, note: 'Copied.' })); } catch { setState((s) => ({ ...s, note: 'Copy failed. Select the text and copy it by hand.' })); }
   };
-  const post = async () => {
-    setState((s) => ({ ...s, busy: true, error: '', note: '' }));
-    try {
-      await api('/standup/post-slack', { method: 'POST', body: draft });
-      setState({ busy: false, error: '', note: 'Posted to Slack.' });
-    } catch (e) {
-      setState({ busy: false, error: e.message, note: '' });
-    }
-  };
   const field = (name, label) => (
     <div className="flex flex-col gap-1">
       <label htmlFor={`su-${name}`} className="font-medium">{label}</label>
@@ -228,8 +219,7 @@ function Standup() {
           {field('today', 'Today')}
           {field('blockers', 'Blockers')}
           <div className="flex flex-wrap gap-2">
-            <button type="button" onClick={copy} className="btn">Copy</button>
-            <button type="button" onClick={post} disabled={state.busy} className="btn btn-primary">Post to Slack</button>
+            <button type="button" onClick={copy} className="btn btn-primary">Copy</button>
             <button type="button" onClick={make} disabled={state.busy} className="btn">Write it again</button>
           </div>
         </div>

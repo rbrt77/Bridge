@@ -1,4 +1,4 @@
-// Owner: Track C (F3 live). Listens to a meeting: the sound of another tab (Meet, Teams, Slack, Zoom on the web) plus your microphone,
+// Owner: Track C (F3 live). Listens to a meeting: the sound of another tab (Meet, Teams, Zoom on the web) plus your microphone,
 // or only the microphone for a meeting in the room. Cuts it into short standalone clips for live captions and keeps the whole
 // recording in memory for "My tasks". Nothing is stored here; the caller decides what to send.
 

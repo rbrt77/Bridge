@@ -5,8 +5,6 @@ import { env } from '../env.js';
 import { mock } from '../utils/mock.js';
 import { requireRole } from '../middleware/auth.js';
 import { supabaseAdmin as db } from '../utils/supabase.js';
-import { postToSlack } from '../integrations/slack.js';
-import { logger } from '../utils/logger.js';
 import { saveDocument } from '../services/ingest.js';
 import { chunkMarkdown } from '../services/chunker.js';
 
@@ -76,11 +74,7 @@ r.post('/threads', async (req, res) => {
     throw msgError;
   }
 
-  const names = await namesFor(req.user.orgId);
-  // Never the question text: Slack is outside our privacy boundary.
-  postToSlack(`${req.user.name} sent a question to ${names.get(helperId) ?? 'their manager'}. Open Bridge to reply.`)
-    .catch((err) => logger.warn('slack ping failed:', err.message));
-  res.json({ thread: toThread(thread, names) });
+  res.json({ thread: toThread(thread, await namesFor(req.user.orgId)) });
 });
 
 r.get('/threads', async (req, res) => {
