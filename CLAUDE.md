@@ -4,7 +4,7 @@ Planul e în [PLAN.md](PLAN.md), împărțirea pe track-uri în [docs/TRACKS.md]
 
 ## Tracking task-uri (Google Sheet)
 
-Echipa ține evidența task-urilor în sheet-ul **OnRamp checklist**:
+Echipa ține evidența task-urilor în sheet-ul **Bridge checklist**:
 https://docs.google.com/spreadsheets/d/1kDsLvu0M_iSz9_8_xBRAYz-h2QAwJZK9ITNdLFuydAk/edit
 
 | Tab | Cine | Branch |

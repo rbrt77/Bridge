@@ -11,11 +11,11 @@ process.stdin.on('end', () => {
   if (!/\bgit\s+push\b/.test(command)) return;
   console.log(
     JSON.stringify({
-      systemMessage: 'Push detectat: Claude actualizează sheet-ul OnRamp checklist.',
+      systemMessage: 'Push detectat: Claude actualizează sheet-ul Bridge checklist.',
       hookSpecificOutput: {
         hookEventName: 'PostToolUse',
         additionalContext:
-          'A git push just ran. Before replying, update the OnRamp checklist Google Sheet as described in CLAUDE.md, section "Tracking task-uri": find the pusher\'s tab and the task(s) from the pushed commits, then set Status, Început/Terminat and Note. If the Google Sheets connector is unavailable, tell the user what to fill in by hand.',
+          'A git push just ran. Before replying, update the Bridge checklist Google Sheet as described in CLAUDE.md, section "Tracking task-uri": find the pusher\'s tab and the task(s) from the pushed commits, then set Status, Început/Terminat and Note. If the Google Sheets connector is unavailable, tell the user what to fill in by hand.',
       },
     }),
   );
