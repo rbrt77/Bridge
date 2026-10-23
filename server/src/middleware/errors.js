@@ -6,7 +6,8 @@ export function errorHandler(err, req, res, _next) {
     const tooBig = err.code === 'LIMIT_FILE_SIZE';
     return res.status(tooBig ? 413 : 400).json({ error: { code: tooBig ? 'file_too_large' : 'bad_upload', message: tooBig ? 'The file is too large.' : err.message } });
   }
-  res.status(err.status ?? 500).json({ error: { code: err.code ?? 'internal', message: err.expose ? err.message : 'Something went wrong' } });
+  const status = err.status ?? 500;
+  res.status(status).json({ error: { code: err.code ?? (status < 500 ? 'bad_request' : 'internal'), message: err.expose ? err.message : 'Something went wrong' } });
 }
 
 export function notImplemented(what) {

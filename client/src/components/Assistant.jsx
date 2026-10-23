@@ -258,6 +258,10 @@ export default function Assistant() {
           if (a.get_tasks === false) return say('Live captions are off.');
           navigate('/meetings');
           return say('Meeting ended. I opened Meetings; your tasks are on the way.');
+        case 'close':
+          // The goodbye is already being read out; closing does not cut it off.
+          rec.current?.abort();
+          return setOpen(false);
         default:
           return undefined;
       }

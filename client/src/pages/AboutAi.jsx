@@ -7,6 +7,7 @@ const MODELS = [
   ['Background work: glossary, short summaries of documents', 'OpenAI gpt-5-nano'],
   ['Finding the right passages in team documents', 'OpenAI text-embedding-3-small'],
   ['Meeting recordings to text, with who said what', 'ElevenLabs Scribe v2'],
+  ['Live captions during a meeting', 'OpenAI gpt-4o-mini-transcribe'],
   ['Listen and dictate when your browser cannot', 'OpenAI gpt-4o-mini-tts and gpt-4o-mini-transcribe'],
 ];
 
@@ -78,8 +79,8 @@ export default function AboutAi() {
           </tbody>
         </table>
         <p className="mt-3 text-sm text-muted">
-          When possible, reading aloud and dictation run in your browser and nothing leaves your device. Text and audio sent to these
-          systems are used only to answer your request.
+          Reading aloud and dictation use your browser’s own voice features when it has them. Live captions send short audio clips
+          to the system above. Text and audio sent to these systems are used only to answer your request.
         </p>
       </section>
 

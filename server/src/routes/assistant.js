@@ -17,6 +17,7 @@ function mockTurn(text) {
   const act = (type, fields = {}) => ({ type, ...FIELDS, ...fields });
   const num = Number(/\d+/.exec(t)?.[0]) || null;
   const rules = [
+    [/\bclose\b|\bbye\b|that's all/, () => ({ say: 'Closing. Press Alt+V to open me again.', action: act('close') })],
     [/smaller|bigger|calm|slower|contrast/, () => ({
       say: 'Changing your settings.',
       action: act('change_settings', { settings: { textSize: /bigger/.test(t) ? 'bigger' : /smaller/.test(t) ? 'smaller' : null, motion: /calm/.test(t) ? 'reduced' : null, spacing: /calm/.test(t) ? 'wide' : null, pace: /slower/.test(t) ? 'slow' : null, contrast: /contrast/.test(t) ? 'high' : null } }),
