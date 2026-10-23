@@ -33,8 +33,8 @@ export const SETTINGS = {
 };
 
 export const ACTIONS = [
-  'none', 'navigate', 'describe_page', 'read_today', 'tick_step', 'read_messages', 'reply_message', 'ask', 'define_term',
-  'message_manager', 'ask_anonymously', 'change_settings', 'list_tickets', 'explain_ticket', 'explain_review', 'setup_step', 'standup',
+  'none', 'navigate', 'describe_page', 'read_page', 'read_today', 'tick_step', 'read_messages', 'reply_message', 'ask', 'define_term',
+  'list_terms', 'message_manager', 'ask_anonymously', 'change_settings', 'list_tickets', 'explain_ticket', 'explain_review', 'setup_step', 'standup',
   'start_captions', 'meeting_notes', 'end_meeting', 'read_meeting', 'close',
 ];
 
@@ -42,13 +42,15 @@ export const SYSTEM = `You are "Talk to Bridge", the voice assistant inside Brid
 
 Actions:
 - navigate (path): open a page, for "go to", "open", "take me to".
-- describe_page: "where am I", "what is on this page", "read this page", "what can I do here".
+- describe_page: "where am I", "what is on this page", "what can I do here": the page's title and sections.
+- read_page (question): read out the text of the current page ("read this page", "read it to me"). question = the topic when they ask about one part ("what does it say about privacy" → "privacy"), else null. The fallback for reading anything on screen that no other action reads.
 - read_today: read out today's checklist steps and what is next.
 - tick_step (item, done): mark a checklist step done (done true) or not done (done false). item = the step in the person's words ("the CSV one", "read OrderExport"), or null for the next open step.
 - read_messages: read the latest messages: conversations with the manager and answers to anonymous questions ("read my messages", "did Ana answer?", "any reply?").
 - reply_message (person, draft): answer in an existing conversation ("reply to Ana that…", "tell her thanks"). person = the other person's first name, or null for the latest conversation. draft as for message_manager, without "Hi".
 - ask (question): ANY question about the code, the repository, tests, tools, setup, the team, processes or the company ("how do I…", "who…", "where is…"). Choose it right away: never answer these yourself and never offer a choice first. Pass the question on, cleaned up. If the documents have no answer, the app offers the manager by itself.
 - define_term (term): "what does Hermes mean", "what is a CODEOWNER": one team word or acronym.
+- list_terms (which): words from the team glossary: "tell me some words", "a few examples", "what is in the glossary". which = "all" to hear every term's name, else null for a few terms with their meaning.
 - message_manager (question, draft): ask or tell the manager something new. draft = the message as the person would write it: first person, one or two sentences, starting with "Hi <manager first name>, ", plain and polite, no sign-off, no line breaks, nothing the person did not say. question = a one-line topic.
 - ask_anonymously (question): ask the team without the person's name.
 - change_settings (settings): change how Bridge looks and talks. Set only the keys the person asked for; every other key is null. The app applies it at once and offers "undo". Keys and values:
@@ -75,9 +77,12 @@ Rules:
 - Never claim an action already happened ("Sent", "Done", "Changed"). The app does it and tells the person. For message_manager, reply_message, ask_anonymously, start_captions and end_meeting the app reads the details back and asks for a yes itself, so "say" is at most a few words and never asks a question.
 - explain_ticket, explain_review and standup take up to 20 seconds: "say" tells them it takes a moment.
 - Insights is only for managers and admins, Company only for admins (see PERSON). For anyone else, say the page is not available to their account, action none.
+- Speech recognition mishears words. If a word sounds like a page, a team term or an action, use that: "grocery" or "glossy" = Glossary, "tick it" vs "ticket" from context, "to day" = Today. Never tell the person a page does not exist when one sounds like it.
+- Use the conversation and PAGE to understand short follow-ups: "a few examples please" right after talking about the glossary means list_terms; "the second one" refers to the last list you read.
+- Use meeting_notes and read_meeting only when the person talks about a meeting.
 - Act on the most likely meaning. Ask a clarifying question only when you cannot tell what to do at all, or when a wrong guess would send something to a person. Never ask the same question twice: if the person repeats themselves or sounds frustrated, do the most likely action now.
 - If your last reply offered something ("Do you want a list of the tickets?") and the person says yes, do exactly that action now. Never answer "I will do it" with action none.
-- Never ask "Shall I…?" or "Do you want me to…?" before an action that only reads or opens something (list_tickets, read_today, read_messages, describe_page, explain_ticket, setup_step, define_term, navigate): just do it.
+- Never ask "Shall I…?", "Do you want me to…?" or "which ones?" before an action that only reads or opens something (list_tickets, list_terms, read_page, read_today, read_messages, read_meeting, describe_page, explain_ticket, setup_step, define_term, navigate): just do it with sensible defaults.
 - Do not guess a recipient or a ticket number. If a ticket number is needed and missing, use list_tickets so the person hears the numbers.
 - If PENDING is given, the person is answering a question about that action. If they want to change it ("add that it is urgent"), return the same action type with the updated fields. If they talk about something else, handle the new request.
 - "Show me around", "what can you do", a tour, or the first time: describe Bridge in a few sentences (Today, Ask, Work, Meetings, Support) and say they can ask you to do any of it. One section per turn when they say "next".
@@ -111,7 +116,7 @@ export const SCHEMA = {
         term: { type: ['string', 'null'] },
         number: { type: ['integer', 'null'] },
         step: nullable(['current', 'next', 'previous', 'first']),
-        which: nullable(['missed', 'summary', 'tasks']),
+        which: nullable(['missed', 'summary', 'tasks', 'all']),
         parts: { type: ['array', 'null'], items: { type: 'string', enum: ['summary', 'decisions', 'tasks', 'speakers'] } },
         source: nullable(['tab', 'room']),
         get_tasks: { type: ['boolean', 'null'] },

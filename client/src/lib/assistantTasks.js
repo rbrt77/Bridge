@@ -111,6 +111,32 @@ export async function findThread(person, userId) {
 
 export const sendReply = (threadId, body) => api(`/help/threads/${threadId}/messages`, { method: 'POST', body: { body } });
 
+/** A few glossary terms with their meaning, or (all) every term's name. */
+export async function termsText(all) {
+  const { terms } = await api('/glossary');
+  if (!terms.length) return 'The glossary is empty.';
+  if (all) return `The glossary has ${plural(terms.length, 'term')}: ${terms.map((t) => t.term).join(', ')}. Say "what does" and a word to hear its meaning.`;
+  const some = terms.slice(0, 5).map((t) => `${t.term}: ${t.definition}`).join(' ');
+  const more = terms.length > 5 ? ` There are ${terms.length - 5} more. Say "all terms" to hear every name, or "what does" and a word.` : '';
+  return spoken(`A few words from the team glossary. ${some}${more}`);
+}
+
+/** The text of the page as it is on screen (main content only), for anything no other action reads. `topic`: only the lines about it. */
+export function pageText(topic) {
+  const main = document.querySelector('main');
+  const controls = new Set([...(main?.querySelectorAll('button, select, [role=button]') ?? [])].map((b) => b.innerText.trim())); // "Listen", "Search"… are not content
+  const lines = (main?.innerText ?? '').split('\n').map((l) => l.trim()).filter((l) => l && !controls.has(l));
+  const want = words(topic ?? '').filter((w) => w.length > 3);
+  if (want.length) {
+    const hits = lines.filter((l) => words(l).some((x) => want.some((w) => x.startsWith(w.slice(0, 5)))));
+    if (hits.length) return spoken(hits.slice(0, 8).join('. '));
+    return `This page does not mention ${topic}. Say "read this page" to hear all of it.`;
+  }
+  const text = spoken(lines.join('. ').replace(/\.\./g, '.'));
+  if (!text) return 'This page has no text yet.';
+  return text.length > 1500 ? `${text.slice(0, 1500).replace(/\s+\S*$/, '')}… That is the first part of the page. Ask me about anything specific on it.` : text;
+}
+
 export async function termText(term) {
   const { terms } = await api('/glossary');
   const q = term.toLowerCase().trim();

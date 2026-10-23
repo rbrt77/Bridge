@@ -10,7 +10,7 @@ import { askAnonymously } from '../lib/help.js';
 import { canCaptureTab } from '../lib/meetingCapture.js';
 import { createRecognizer, speak, startRecording, stopSpeaking, transcribeOnServer } from '../lib/speech.js';
 import {
-  describePage, findThread, flatSettings, latestSavedMeeting, meetingText, messagesText, ticketsText, reviewText, saveChecklist, sendReply, settingsPatch, setupText,
+  describePage, findThread, flatSettings, latestSavedMeeting, pageText, termsText, meetingText, messagesText, ticketsText, reviewText, saveChecklist, sendReply, settingsPatch, setupText,
   spoken, standupDraft, termText, ticketText, tickStep, todayText,
 } from '../lib/assistantTasks.js';
 import { diffPrefs, mergePrefs } from '../a11y/workStyle.js';
@@ -43,7 +43,7 @@ const CONFIRM = {
 
 const today = () => new Date().toLocaleDateString('sv-SE');
 // Actions whose own result is the reply: the model's intro would only repeat it.
-const QUIET = new Set(['change_settings', 'describe_page', 'define_term', 'tick_step', 'read_meeting']);
+const QUIET = new Set(['change_settings', 'describe_page', 'read_page', 'define_term', 'list_terms', 'tick_step', 'read_meeting']);
 
 function read(key) {
   try { return JSON.parse(localStorage.getItem(key)); } catch { return null; }
@@ -171,6 +171,10 @@ export default function Assistant() {
           return navigate(a.path);
         case 'describe_page':
           return say(describePage(m.live), { queue: true });
+        case 'read_page':
+          return say(pageText(a.question), { queue: true });
+        case 'list_terms':
+          return say(await termsText(a.which === 'all'), { queue: true });
         case 'read_today':
           return say(await todayText(), { queue: true });
         case 'tick_step': {

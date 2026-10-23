@@ -30,6 +30,8 @@ function mockTurn(text) {
     [/setup/, () => ({ say: 'Here is the setup step.', action: act('setup_step', { step: /next/.test(t) ? 'next' : 'current', question: /error/.test(t) ? text : null }) })],
     [/standup/, () => ({ say: 'Writing your standup. This takes a moment.', action: act('standup') })],
     [/done|tick|mark/, () => ({ say: 'Marking it done.', action: act('tick_step', { done: true }) })],
+    [/glossary|some words|examples|all terms/, () => ({ say: '', action: act('list_terms', { which: /all/.test(t) ? 'all' : null }) })],
+    [/read (this|the) page|read it/, () => ({ say: '', action: act('read_page') })],
     [/mean|what is/, () => ({ say: '', action: act('define_term', { term: /(?:mean|what is)\s+(\w+)|(\w+)\s+mean/.exec(t)?.slice(1).find(Boolean) ?? 'Hermes' }) })],
     [/message|repl(y|ies)|answer/, () => ({ say: 'Here are your messages.', action: act('read_messages') })],
     [/where am i|this page/, () => ({ say: '', action: act('describe_page') })],
