@@ -2,7 +2,7 @@
 // Questions are about HOW someone works; never ask for or name a diagnosis.
 import { DEFAULT_PREFS } from './ProfileProvider.jsx';
 
-const GROUPS = ['display', 'output', 'input'];
+const GROUPS = ['display', 'output'];
 
 /** Deep-merges a partial Prefs into prefs. null/undefined values mean "no change". */
 export function mergePrefs(prefs, patch = {}) {
@@ -18,11 +18,8 @@ export function mergePrefs(prefs, patch = {}) {
 export const QUICK_STARTS = [
   { id: 'written-first', label: 'Written-first', hint: 'Short written summaries first.', patch: { output: { tldr: true, length: 'short' } } },
   { id: 'step-by-step', label: 'Step-by-step', hint: 'Numbered steps for anything you have to do.', patch: { output: { steps: true, tldr: true } } },
-  { id: 'listen-first', label: 'Listen-first', hint: 'Answers can be read aloud.', patch: { output: { audio: true } } },
-  { id: 'visual-first', label: 'Visual-first', hint: 'Diagrams when there is a flow, more space.', patch: { output: { diagrams: true }, display: { spacing: 'wide' } } },
   { id: 'screen-reader', label: 'Screen-reader mode', hint: 'Headings and lists, no tables, less motion.', patch: { output: { screenReader: true }, display: { motion: 'reduced' } } },
   { id: 'calm', label: 'Calm mode', hint: 'Less motion, more space, short literal answers.', patch: { display: { motion: 'reduced', spacing: 'wide' }, output: { length: 'short', literal: true } } },
-  { id: 'keyboard-voice', label: 'Keyboard & voice', hint: 'Talk instead of typing, hear answers back.', patch: { input: { voice: true }, output: { audio: true } } },
 ];
 
 /** Applying a preset merges its patch; removing it resets its keys to default, then re-applies the presets still on. */
@@ -55,7 +52,6 @@ export const QUESTIONS = [
     legend: 'After a meeting, how do you want to catch up?',
     options: [
       { value: 'read', label: 'Read a written summary', patch: { output: { tldr: true } } },
-      { value: 'listen', label: 'Listen to it read aloud', patch: { output: { audio: true } } },
       { value: 'tasks', label: 'Just a short list of my tasks', patch: { output: { steps: true, length: 'short' } } },
       NONE,
     ],
@@ -66,7 +62,6 @@ export const QUESTIONS = [
     options: [
       { value: 'literal', label: 'Plain, literal wording (no idioms or sarcasm)', patch: { output: { literal: true } } },
       { value: 'todo', label: 'Each comment turned into a step to do', patch: { output: { steps: true } } },
-      { value: 'visual', label: 'A diagram when the change touches a flow', patch: { output: { diagrams: true } } },
       NONE,
     ],
   },
@@ -76,7 +71,6 @@ export const QUESTIONS = [
     options: [
       { value: 'short', label: 'Short and direct messages', patch: { output: { length: 'short', literal: true } } },
       { value: 'examples', label: 'With examples and detail', patch: { output: { length: 'detailed' } } },
-      { value: 'voice', label: 'Speaking rather than typing', patch: { input: { voice: true } } },
       NONE,
     ],
   },
@@ -119,13 +113,8 @@ export const LABELS = {
     pace: ['Reading speed', { normal: 'Normal', slow: 'Slow' }],
     tldr: ['One-line summary first'],
     steps: ['Numbered steps'],
-    audio: ['Read answers aloud'],
     literal: ['Literal language'],
     screenReader: ['Screen-reader friendly answers'],
-    diagrams: ['Offer diagrams'],
-  },
-  input: {
-    voice: ['Voice input'],
   },
 };
 

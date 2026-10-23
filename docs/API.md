@@ -29,7 +29,7 @@ event: error    data: {"code":"…","message":"…"}
 | PUT | `/api/profile` | `{ "prefs": Prefs }` | `{ "ok": true }` |
 | DELETE | `/api/profile` | – | `{ "ok": true }` |
 
-`Prefs = { preset:[...], display:{ textSize:"m|l|xl", contrast:"normal|high", font:"default|readable", spacing:"normal|wide", motion:"full|reduced" }, output:{ length:"short|normal|detailed", steps:bool, tldr:bool, audio:bool, literal:bool, screenReader:bool, diagrams:bool }, input:{ voice:bool } }`
+`Prefs = { preset:[...], display:{ textSize:"m|l|xl", contrast:"normal|high", font:"default|readable", spacing:"normal|wide", motion:"full|reduced" }, output:{ length:"short|normal|detailed", pace:"normal|slow", steps:bool, tldr:bool, literal:bool, screenReader:bool } }`
 
 ## Ask + handoff (F5, F6) — Track A
 | Method | Path | Body | Response |
@@ -110,6 +110,6 @@ The server only proposes an action; the client runs it with the APIs above (`cli
 
 | Method | Path | Body | Response |
 |---|---|---|---|
-| POST | `/api/assistant` | `{ "text", "history"?:[{role:"user"\|"assistant",text}], "page"?:{path,title,live}, "settings"?:{textSize,pace,audio,…} (flat Work style values), "pending"?:Action }` | `{ "say", "action":Action }` |
+| POST | `/api/assistant` | `{ "text", "history"?:[{role:"user"\|"assistant",text}], "page"?:{path,title,live}, "settings"?:{textSize,pace,tldr,…} (flat Work style values), "pending"?:Action }` | `{ "say", "action":Action }` |
 
 `Action = { type, path, question, draft, person, item, done, term, number, step, which, parts, source, get_tasks, settings }` (unused fields `null`), `type` one of `none`, `navigate`, `describe_page`, `read_today`, `tick_step`, `read_messages`, `reply_message`, `ask`, `define_term`, `message_manager`, `ask_anonymously`, `change_settings`, `list_tickets`, `explain_ticket`, `explain_review`, `setup_step`, `standup`, `start_captions`, `meeting_notes`, `end_meeting`, `read_meeting` (`parts`: any of summary, decisions, tasks, speakers). `page.meeting` = state of the last processed meeting. The server adds `recipient` (manager name) on `message_manager` and `url` (GitHub issue/PR in `DEMO_REPO`) on `explain_ticket` / `explain_review`. `settings.textSize` may be `"smaller"`/`"bigger"` (the client moves one step).

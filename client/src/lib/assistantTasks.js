@@ -208,13 +208,13 @@ export async function standupDraft() {
 }
 
 /**
- * Flat settings from the model (textSize, pace, audio…) → { patch, limit }. textSize "smaller"/"bigger" moves one step from now;
+ * Flat settings from the model (textSize, pace, tldr…) → { patch, limit }. textSize "smaller"/"bigger" moves one step from now;
  * at the end of the scale it is left out and `limit` says so.
  */
-const GROUP = { textSize: 'display', contrast: 'display', font: 'display', spacing: 'display', motion: 'display', voice: 'input' };
+const GROUP = { textSize: 'display', contrast: 'display', font: 'display', spacing: 'display', motion: 'display' };
 const SIZES = ['m', 'l', 'xl'];
 export function settingsPatch(settings, prefs) {
-  const patch = { display: {}, output: {}, input: {} };
+  const patch = { display: {}, output: {} };
   let limit = '';
   for (const [k, v] of Object.entries(settings ?? {})) {
     if (v == null) continue;
@@ -228,4 +228,4 @@ export function settingsPatch(settings, prefs) {
   }
   return { patch, limit };
 }
-export const flatSettings = (prefs) => ({ ...prefs.display, ...prefs.output, ...prefs.input });
+export const flatSettings = (prefs) => ({ ...prefs.display, ...prefs.output });

@@ -6,20 +6,20 @@ import { supabase } from '../lib/supabaseClient.js';
 export const DEFAULT_PREFS = {
   preset: [],
   display: { textSize: 'm', contrast: 'normal', font: 'default', spacing: 'normal', motion: 'full' },
-  output: { length: 'normal', pace: 'normal', steps: false, tldr: false, audio: false, literal: false, screenReader: false, diagrams: false },
-  input: { voice: false },
+  output: { length: 'normal', pace: 'normal', steps: false, tldr: false, literal: false, screenReader: false },
 };
 const KEY = 'bridge.prefs';
 const SYNC_KEY = 'bridge.prefs.sync';
 const ProfileContext = createContext(null);
 
-/** Fills in keys missing from older saved profiles or from the server. */
+const known = (group, values) => Object.fromEntries(Object.entries(values ?? {}).filter(([k]) => k in DEFAULT_PREFS[group]));
+
+/** Fills in keys missing from older saved profiles or from the server, and drops settings that no longer exist. */
 function withDefaults(p) {
   return {
     preset: Array.isArray(p?.preset) ? p.preset : [],
-    display: { ...DEFAULT_PREFS.display, ...p?.display },
-    output: { ...DEFAULT_PREFS.output, ...p?.output },
-    input: { ...DEFAULT_PREFS.input, ...p?.input },
+    display: { ...DEFAULT_PREFS.display, ...known('display', p?.display) },
+    output: { ...DEFAULT_PREFS.output, ...known('output', p?.output) },
   };
 }
 

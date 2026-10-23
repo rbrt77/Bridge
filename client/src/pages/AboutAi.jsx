@@ -11,7 +11,7 @@ const MODELS = [
 ];
 
 const KEPT = [
-  'Your work style settings (text size, contrast, answer length, steps, audio).',
+  'Your work style settings (text size, contrast, answer length, steps, reading speed).',
   'Checklists you save from a ticket, and the tasks, decisions and summary from a meeting.',
   'Messages you send to your manager, and answers your manager saves to the team docs.',
   'Anonymous questions, without your name or account. Only you can check the answer, with a code kept in your browser.',

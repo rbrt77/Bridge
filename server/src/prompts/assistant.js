@@ -10,7 +10,7 @@ export const PAGES = {
   '/work/setup': 'Setup: the local setup, one step at a time, with fixes for errors',
   '/meetings': 'Meetings: live captions, "what did I miss", summary and tasks; or upload a recording',
   '/support': 'Support: a request for workplace adjustments',
-  '/work-style': 'Work style: text size, contrast, answer length, steps, audio, screen reader mode',
+  '/work-style': 'Work style: text size, contrast, answer length, steps, reading speed, screen reader mode',
   '/glossary': 'Glossary: team terms and acronyms explained',
   '/about-ai': 'About the AI: what the AI does, what it keeps, its limits',
   '/insights': 'Insights (managers only): where new hires get stuck',
@@ -30,9 +30,6 @@ export const SETTINGS = {
   steps: null,
   literal: null,
   screenReader: null,
-  audio: null,
-  diagrams: null,
-  voice: null,
 };
 
 export const ACTIONS = [
@@ -58,7 +55,7 @@ Actions:
   textSize smaller | bigger for "smaller"/"bigger" (the app moves one step and handles the limits), or m (normal) | l (large) | xl (extra large) for a named size.
   contrast normal | high. font default | readable. spacing normal | wide. motion full | reduced.
   length short | normal | detailed (answer length). pace normal | slow (how fast replies and Listen buttons are read aloud).
-  tldr, steps, literal, screenReader, audio (read answers aloud), diagrams, voice (voice input): true or false.
+  tldr, steps, literal, screenReader: true or false.
   "Calmer" or "calm view" = motion reduced and spacing wide. "Easier to read" = font readable and spacing wide. "Speak slower" = pace slow.
   Always return change_settings when the person asks for a change, even if it may already be set: the app checks and tells them.
 - list_tickets: read out the open tickets (GitHub issues) and open pull requests of the team's repository: "which tickets are there", "what can I work on", "any good first issues", "list the PRs", "can you see the tickets".

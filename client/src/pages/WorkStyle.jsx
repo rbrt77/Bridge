@@ -120,14 +120,13 @@ export default function WorkStyle() {
 
       <section aria-labelledby="answers-h" className="card mt-6">
         <h2 id="answers-h" className="text-xl font-semibold">Answers</h2>
-        <p className="text-muted">How Ask, tickets, reviews and meeting notes are written for you.</p>
+        <p className="text-muted">How answers in Ask are written for you. Reading speed is for every Listen button and Talk to Bridge.</p>
         <div className="mt-3 grid gap-3 sm:grid-cols-2">
           <SelectSetting group="output" name="length" prefs={prefs} onChange={set} />
           <SelectSetting group="output" name="pace" prefs={prefs} onChange={set} />
         </div>
         <div className="mt-2 grid sm:grid-cols-2 sm:gap-x-4">
-          {['tldr', 'steps', 'literal', 'screenReader', 'audio', 'diagrams'].map((k) => <ToggleSetting key={k} group="output" name={k} prefs={prefs} onChange={set} />)}
-          <ToggleSetting group="input" name="voice" prefs={prefs} onChange={set} />
+          {['tldr', 'steps', 'literal', 'screenReader'].map((k) => <ToggleSetting key={k} group="output" name={k} prefs={prefs} onChange={set} />)}
         </div>
       </section>
 

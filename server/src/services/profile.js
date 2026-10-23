@@ -7,10 +7,9 @@ const MAX_TEXT = 2000;
 
 const ALLOWED = {
   display: { textSize: ['m', 'l', 'xl'], contrast: ['normal', 'high'], font: ['default', 'readable'], spacing: ['normal', 'wide'], motion: ['full', 'reduced'] },
-  output: { length: ['short', 'normal', 'detailed'], steps: 'bool', tldr: 'bool', audio: 'bool', literal: 'bool', screenReader: 'bool', diagrams: 'bool' },
-  input: { voice: 'bool' },
+  output: { length: ['short', 'normal', 'detailed'], pace: ['normal', 'slow'], steps: 'bool', tldr: 'bool', literal: 'bool', screenReader: 'bool' },
 };
-const PRESETS = ['written-first', 'step-by-step', 'listen-first', 'visual-first', 'screen-reader', 'calm', 'keyboard-voice'];
+const PRESETS = ['written-first', 'step-by-step', 'screen-reader', 'calm'];
 
 /**
  * Keeps only known keys with valid values, so nothing else (free text, health data) can be stored.

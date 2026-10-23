@@ -10,10 +10,8 @@ Rules:
   - long or dense text is hard → output.length "short", output.tldr true
   - wants instructions as a sequence → output.steps true
   - idioms, sarcasm or vague wording confuse them → output.literal true
-  - prefers listening → output.audio true
+  - wants things read aloud more slowly → output.pace "slow"
   - uses a screen reader → output.screenReader true, display.motion "reduced"
-  - understands better with pictures or flows → output.diagrams true
-  - prefers speaking to typing → input.voice true
   - small text is hard → display.textSize "l" ("xl" if they say very large)
   - needs stronger contrast → display.contrast "high"
   - letters blur or a clearer font helps → display.font "readable"
@@ -38,12 +36,10 @@ export const SCHEMA = group({
   }),
   output: group({
     length: choice('short', 'normal', 'detailed'),
+    pace: choice('normal', 'slow'),
     steps: flag,
     tldr: flag,
-    audio: flag,
     literal: flag,
     screenReader: flag,
-    diagrams: flag,
   }),
-  input: group({ voice: flag }),
 });
