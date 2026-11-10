@@ -8,7 +8,7 @@ import { api } from '../lib/api.js';
 import { postSse } from '../lib/sse.js';
 import { askAnonymously } from '../lib/help.js';
 import { canCaptureTab } from '../lib/meetingCapture.js';
-import { createRecognizer, speak, startRecording, stopSpeaking, transcribeOnServer } from '../lib/speech.js';
+import { createRecognizer, needsServer, settleDictation, speak, startBackup, startRecording, stopSpeaking, transcribeOnServer } from '../lib/speech.js';
 import {
   describePage, findThread, flatSettings, latestSavedMeeting, pageText, termsText, meetingText, messagesText, ticketsText, reviewText, saveChecklist, sendReply, settingsPatch, setupText,
   spoken, standupDraft, termText, ticketText, tickStep, todayText,
@@ -351,20 +351,26 @@ export default function Assistant() {
     setOpen(true);
     setHeard('');
     let got = '';
+    let confidence = 0;
     let failed = '';
+    let backup = null;
     rec.current = createRecognizer({
-      onResult: (t) => { got = t; setHeard(t); },
+      onResult: (t, _final, c) => { got = t; confidence = c; setHeard(t); },
       onError: (e) => { failed = e; },
-      onEnd: () => {
+      onEnd: async () => {
         rec.current = null;
+        if (needsServer({ text: got, confidence, error: failed })) setMic('transcribing');
+        const { text, server } = await settleDictation({ text: got, confidence, error: failed, backup });
         setMic('idle');
-        if (got.trim()) { tone(440); return latest.current.handle(got); }
+        if (server) setHeard(text);
+        if (text.trim()) { tone(440); return latest.current.handle(text); }
         latest.current.say(failed === 'not-allowed' ? 'The microphone is blocked. Allow it in the browser, or type instead.' : "I didn't hear anything. Press Alt+V and try again.");
       },
     });
     tone(880);
     if (rec.current) {
       rec.current.start();
+      backup = startBackup();
       return setMic('listening');
     }
     try {

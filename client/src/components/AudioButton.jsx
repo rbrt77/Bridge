@@ -27,14 +27,18 @@ export default function AudioButton({ text, slow: slowProp = false, label = 'Lis
     setPlaying(true);
     const id = run.current;
     const done = () => id === run.current && setPlaying(false);
-    if (speak(text, { slow: asSlow, onEnd: done })) return;
-    try {
-      audio.current = await speakOnServer(text, { slow: asSlow, onEnd: done });
-      if (!audio.current) done();
-    } catch (e) {
-      done();
-      announce(e.message, { urgent: true });
-    }
+    const onServer = async () => {
+      try {
+        audio.current = await speakOnServer(text, { slow: asSlow, onEnd: done });
+        if (!audio.current) done();
+      } catch (e) {
+        done();
+        announce(e.message, { urgent: true });
+      }
+    };
+    // The browser voice can exist and still fail (no voice installed): then the server reads it.
+    if (speak(text, { slow: asSlow, onEnd: done, onError: () => id === run.current && onServer() })) return;
+    await onServer();
   };
 
   return (

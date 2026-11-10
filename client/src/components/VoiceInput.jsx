@@ -1,6 +1,7 @@
 // Owner: Track C. Dictation button for any text field: Web Speech API first, else record → POST /api/voice/stt.
+// With Web Speech, a backup recording goes to the server when the browser fails or is unsure (speech.js).
 import { useRef, useState } from 'react';
-import { createRecognizer, startRecording, transcribeOnServer } from '../lib/speech.js';
+import { createRecognizer, needsServer, settleDictation, startBackup, startRecording, transcribeOnServer } from '../lib/speech.js';
 import { useAnnounce } from '../a11y/Announcer.jsx';
 
 export default function VoiceInput({ onText }) {
@@ -27,9 +28,26 @@ export default function VoiceInput({ onText }) {
       return;
     }
 
-    rec.current = createRecognizer({ onResult: (t) => onText(t), onEnd: () => setState('idle') });
+    let got = '';
+    let confidence = 0;
+    let failed = '';
+    let backup = null;
+    rec.current = createRecognizer({
+      onResult: (t, _final, c) => { got = t; confidence = c; onText(t); },
+      onError: (e) => { failed = e; },
+      onEnd: async () => {
+        rec.current = null;
+        if (needsServer({ text: got, confidence, error: failed })) setState('transcribing');
+        const { text, server } = await settleDictation({ text: got, confidence, error: failed, backup });
+        setState('idle');
+        if (server) onText(text);
+        if (text.trim()) return announce(`Heard: ${text}`);
+        announce(failed === 'not-allowed' ? 'The microphone is blocked. Allow it in the browser, or type instead.' : 'I did not hear any words. Try again.');
+      },
+    });
     if (rec.current) {
       rec.current.start();
+      backup = startBackup();
       setState('listening');
       return;
     }

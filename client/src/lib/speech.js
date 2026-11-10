@@ -20,8 +20,11 @@ export function isOwnSpeech(text) {
   return heard.filter((p) => recent.has(p)).length / heard.length >= 0.5;
 }
 
-/** `queue`: speak after what is already playing instead of cutting it off. */
-export function speak(text, { slow = false, onEnd, queue = false } = {}) {
+/**
+ * `queue`: speak after what is already playing instead of cutting it off.
+ * `onError(code)`: the browser voice failed (not when it was stopped on purpose); without it, a failure just ends.
+ */
+export function speak(text, { slow = false, onEnd, onError, queue = false } = {}) {
   if (!('speechSynthesis' in window)) return false;
   remember(text);
   if (!queue) speechSynthesis.cancel();
@@ -29,7 +32,7 @@ export function speak(text, { slow = false, onEnd, queue = false } = {}) {
   u.lang = 'en-US';
   u.rate = slow ? 0.75 : 1;
   u.onend = () => onEnd?.();
-  u.onerror = () => onEnd?.();
+  u.onerror = (e) => (onError && !['interrupted', 'canceled'].includes(e.error) ? onError(e.error) : onEnd?.());
   speechSynthesis.speak(u);
   return true;
 }
@@ -67,7 +70,10 @@ export function createRecognizer({ continuous = false, onResult, onFinal, onInte
   r.continuous = continuous;
   r.interimResults = true;
   r.onresult = (e) => {
-    onResult?.(Array.from(e.results).map((x) => x[0].transcript).join(' '), e.results[e.results.length - 1].isFinal);
+    // Lowest confidence of the final results; 0 = unknown (interim results, Safari).
+    const finals = Array.from(e.results).filter((x) => x.isFinal);
+    const confidence = finals.length ? Math.min(...finals.map((x) => x[0].confidence)) : 0;
+    onResult?.(Array.from(e.results).map((x) => x[0].transcript).join(' '), e.results[e.results.length - 1].isFinal, confidence);
     let interim = '';
     for (let i = e.resultIndex; i < e.results.length; i++) {
       if (e.results[i].isFinal) onFinal?.(e.results[i][0].transcript.trim());
@@ -110,4 +116,31 @@ export async function transcribeOnServer(blob, prompt) {
   const data = await res.json();
   if (!res.ok) throw new Error(data?.error?.message ?? 'Could not understand the recording');
   return data.text;
+}
+
+// Browser dictation is free but can mishear or fail. A backup recording runs alongside it and goes to the server
+// only when the browser failed or was unsure; otherwise it is dropped without leaving the device.
+export const LOW_CONFIDENCE = 0.7;
+const BROWSER_BROKEN = new Set(['network', 'service-not-allowed', 'audio-capture', 'language-not-supported']);
+
+/** Resolves to a recording, or null when the microphone cannot be shared with the recognizer (some phones). */
+export const startBackup = () => startRecording().catch(() => null);
+
+/** Whether the server should write the backup down: the browser heard nothing because it broke, or is unsure. */
+export const needsServer = ({ text, confidence, error }) =>
+  text.trim() ? confidence > 0 && confidence < LOW_CONFIDENCE : BROWSER_BROKEN.has(error);
+
+/**
+ * Ends browser dictation: stops the backup and, when needed, replaces the browser's text with the server's.
+ * @returns {Promise<{text:string, server:boolean}>} server = the text came from the server
+ */
+export async function settleDictation({ text, confidence, error, backup }) {
+  const blob = await (await backup)?.stop();
+  if (!blob?.size || !needsServer({ text, confidence, error })) return { text, server: false };
+  try {
+    const better = (await transcribeOnServer(blob))?.trim();
+    return better ? { text: better, server: true } : { text, server: false };
+  } catch {
+    return { text, server: false };
+  }
 }
